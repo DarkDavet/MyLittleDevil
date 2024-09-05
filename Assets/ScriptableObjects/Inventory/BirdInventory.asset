@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea188569b069be94db0f27aa1460c8b6, type: 3}
+  m_Name: BirdInventory
+  m_EditorClassIdentifier: 
+  savePath: Inventory.Save
+  Container:
+  - ID: 2
+    item: {fileID: 11400000, guid: a656b95f561a3e148a5237a640dd64a5, type: 2}
+    amount: 9
+  - ID: 1
+    item: {fileID: 11400000, guid: 06cb9086883980343ab73fad3268d4cc, type: 2}
+    amount: 8
+  - ID: 0
+    item: {fileID: 11400000, guid: 1d6991882f020214c8ac2a2cf960ba3f, type: 2}
+    amount: 3

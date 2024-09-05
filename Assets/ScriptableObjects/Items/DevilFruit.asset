@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a27305b28692da8428e757064b7c3a00, type: 3}
+  m_Name: DevilFruit
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 7998144309207257809, guid: 11d2d429887282d409510df34b3cf24f, type: 3}
+  id: 0
+  type: 1
+  description: It so tasty. I want MORE!
+  restoreHealthValue: 0

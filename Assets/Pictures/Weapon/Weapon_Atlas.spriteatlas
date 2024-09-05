@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Weapon_Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: a8fbbc3e239c60d41bf28cb079411e12, type: 3}
+    - {fileID: 2800000, guid: 4a6065a0dbe3e4c4f9a4d1d0cb7a555c, type: 3}
+    - {fileID: 2800000, guid: f247f573520e9c8489846c61109536d6, type: 3}
+    - {fileID: 2800000, guid: ca947db5e0d77634f8d8d1b978c5431d, type: 3}
+    - {fileID: 2800000, guid: 15a704631eb2ffd4f97a34a60b5b512f, type: 3}
+    - {fileID: 2800000, guid: 94a328dba422e384cb4bc62ee5983cc3, type: 3}
+    - {fileID: 2800000, guid: 94a328dba422e384cb4bc62ee5983cc3, type: 3}
+    - {fileID: 2800000, guid: 1df71fbd16578e9478ec0e4c032c93c7, type: 3}
+    - {fileID: 2800000, guid: 8185e223e9f18f24892906d6a974a2b3, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 4a6065a0dbe3e4c4f9a4d1d0cb7a555c, type: 3}
+  - {fileID: 21300000, guid: 8185e223e9f18f24892906d6a974a2b3, type: 3}
+  - {fileID: 21300000, guid: 15a704631eb2ffd4f97a34a60b5b512f, type: 3}
+  - {fileID: 21300000, guid: f247f573520e9c8489846c61109536d6, type: 3}
+  - {fileID: 21300000, guid: ca947db5e0d77634f8d8d1b978c5431d, type: 3}
+  - {fileID: 21300000, guid: 94a328dba422e384cb4bc62ee5983cc3, type: 3}
+  - {fileID: 21300000, guid: 1df71fbd16578e9478ec0e4c032c93c7, type: 3}
+  - {fileID: 21300000, guid: a8fbbc3e239c60d41bf28cb079411e12, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - FireBall_Tail
+  - HealBall
+  - Fire_arrow
+  - Lightning
+  - TrueArrow
+  - Ice_arrow
+  - Snow
+  - FireBall
+  m_RenderDataMap: {}
+  m_Tag: Weapon_Atlas
+  m_IsVariant: 0

@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1589312453197200001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1589312453197200000}
+  - component: {fileID: 1589312453197200003}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1589312453197200000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589312453197200001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1589312453197200003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1589312453197200001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0caabd081abaa2f42b8380735962a690, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: FireAttack
+    clip: {fileID: 8300000, guid: a652877b012108e41871f867ada9f176, type: 3}
+    volume: 0.511
+    pitch: 1.98
+    loop: 0
+    source: {fileID: 0}
+  - name: IceAttack
+    clip: {fileID: 8300000, guid: 1d74880bed4586644a16a79a2d9dc8af, type: 3}
+    volume: 0.511
+    pitch: 1.98
+    loop: 0
+    source: {fileID: 0}
+  - name: Heal
+    clip: {fileID: 8300000, guid: cfce0cea076109f478783201b2a9f57f, type: 3}
+    volume: 0.511
+    pitch: 1.98
+    loop: 0
+    source: {fileID: 0}
+  - name: PickItem
+    clip: {fileID: 8300000, guid: ba39bf8baf6d13046889b2d64822381a, type: 3}
+    volume: 0.511
+    pitch: 1.98
+    loop: 0
+    source: {fileID: 0}
+  - name: Hit
+    clip: {fileID: 8300000, guid: 8b23b175a78d6b5458322e3a6c9905d0, type: 3}
+    volume: 0.511
+    pitch: 1.98
+    loop: 0
+    source: {fileID: 0}
+  - name: EnemyDeath
+    clip: {fileID: 8300000, guid: 2b21ef916f6943c439b71a7c74568878, type: 3}
+    volume: 0.511
+    pitch: 1.98
+    loop: 0
+    source: {fileID: 0}

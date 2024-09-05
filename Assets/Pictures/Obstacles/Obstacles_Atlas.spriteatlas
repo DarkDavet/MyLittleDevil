@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Obstacles_Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 5760eb1ea5ece4745af2feaf88da4889, type: 3}
+    - {fileID: 2800000, guid: 58cc746c6ba03e543b761ee64a7d7257, type: 3}
+    - {fileID: 2800000, guid: f914bc91c8face14fa042c7e5c7ef802, type: 3}
+    - {fileID: 2800000, guid: 1eb715f9fe9bc6143b75f07e530f3adb, type: 3}
+    - {fileID: 2800000, guid: ee0c933b109d1324aa7512db8b506d96, type: 3}
+    - {fileID: 2800000, guid: 71dac68fc7c0ddc4baf841debc99135e, type: 3}
+    - {fileID: 2800000, guid: 2e8ba003e7ebb5c43802c1a02901eb8b, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: f914bc91c8face14fa042c7e5c7ef802, type: 3}
+  - {fileID: 21300000, guid: 2e8ba003e7ebb5c43802c1a02901eb8b, type: 3}
+  - {fileID: 21300000, guid: 1eb715f9fe9bc6143b75f07e530f3adb, type: 3}
+  - {fileID: 21300000, guid: ee0c933b109d1324aa7512db8b506d96, type: 3}
+  - {fileID: 21300000, guid: 58cc746c6ba03e543b761ee64a7d7257, type: 3}
+  - {fileID: 21300000, guid: 5760eb1ea5ece4745af2feaf88da4889, type: 3}
+  - {fileID: 21300000, guid: 71dac68fc7c0ddc4baf841debc99135e, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Pipe
+  - CrystalProtecter
+  - Pipe_new 1
+  - Plunger
+  - DamagePieceOfColumn
+  - Column
+  - RotateChainsow
+  m_RenderDataMap: {}
+  m_Tag: Obstacles_Atlas
+  m_IsVariant: 0

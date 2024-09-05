@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8729713687634120345
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8729713687634120350}
+  - component: {fileID: 8729713687634120351}
+  m_Layer: 0
+  m_Name: CloudsSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8729713687634120350
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8729713687634120345}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 11.243838, y: 2.34, z: 7.5841475}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8729713687634120351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8729713687634120345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3d68a5671623fa409fcfa0c2b758c20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clouds:
+  - {fileID: 4667934030363148990, guid: d6f9bcb97ecf83c4792a34f05a2862b7, type: 3}
+  - {fileID: 7874528805333655430, guid: f4384029b9307ad469adc57fd3dfd557, type: 3}
+  - {fileID: 3974150452006374877, guid: a9b0733e6a9fd5c42838c493d3aee5b7, type: 3}
+  - {fileID: 2354289946177553749, guid: a6fcd5bfa1e83784b9d597ba89cfe52a, type: 3}
+  - {fileID: 7425976215871605215, guid: db80e3accc231694f8f3730b0369d426, type: 3}
+  - {fileID: 8784686584177514335, guid: 8aa4329ce2b2dae4782ee18095694f99, type: 3}
+  - {fileID: 321730171941856237, guid: 9febe546d02eea74abcab23e7ed4d9f3, type: 3}
+  - {fileID: 5862957381688566718, guid: 321fe9b41e59ac444a4958ed5dafaa95, type: 3}
+  SpawnRate: 3
+  HeightOffset: 7

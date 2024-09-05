@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Angel_Clouds_Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 2
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 330503d1dd5cd5f4791a89b744866c07, type: 3}
+    - {fileID: 2800000, guid: 4cf4eb886eb399b4c82e090b281f46f8, type: 3}
+    - {fileID: 2800000, guid: 1caaa7ceb54ca4c4e9e133fcc29ee070, type: 3}
+    - {fileID: 2800000, guid: e6df7b70a199ad94693086cbfde0b63e, type: 3}
+    - {fileID: 2800000, guid: c12e115df31d1eb479e027bb07895dd0, type: 3}
+    - {fileID: 2800000, guid: aa09180ff93e24c44bbedd2c04c580e4, type: 3}
+    - {fileID: 2800000, guid: 9e1e540a76be2564490c4ddcf133c0d4, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: e6df7b70a199ad94693086cbfde0b63e, type: 3}
+  - {fileID: 21300000, guid: 330503d1dd5cd5f4791a89b744866c07, type: 3}
+  - {fileID: 21300000, guid: 4cf4eb886eb399b4c82e090b281f46f8, type: 3}
+  - {fileID: 21300000, guid: 9e1e540a76be2564490c4ddcf133c0d4, type: 3}
+  - {fileID: 21300000, guid: c12e115df31d1eb479e027bb07895dd0, type: 3}
+  - {fileID: 21300000, guid: 1caaa7ceb54ca4c4e9e133fcc29ee070, type: 3}
+  - {fileID: 21300000, guid: aa09180ff93e24c44bbedd2c04c580e4, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Angel_Cloud_4
+  - Angel_Cloud_1
+  - Angel_Cloud_2
+  - Angel_Cloud_7
+  - Angel_Cloud_5
+  - Angel_Cloud_3
+  - Angel_Cloud_6
+  m_RenderDataMap: {}
+  m_Tag: Angel_Clouds_Atlas
+  m_IsVariant: 0
