@@ -1,5 +1,9 @@
 # MyLittleDevil
 
+<p align="center">
+  <video src="Assets/Media/mld_anim.mp4" width="800" autoplay loop muted playsinline></video>
+</p>
+
 It is a 2D adventure game inspired by the Flappy Bird mechanics. Play as a little devil on a mission to defeat the forces of heaven. Collect powerful items, cast spells, summon loyal minions, and battle angels while navigating through challenging obstacles.
 
 ## Technical description
