@@ -8,11 +8,12 @@ public class DialogueSystem : MonoBehaviour
 {
     private DialoguesStorage _dialoguesStorage;
     private DialogueSetup _currentDlgSetup;
-    private int line_max_num;
-    private int line_cur_num;
+    private int _lineMaxNum;
+    private int _lineCurNum;
 
     public UnityEvent<DialogueSlot> OnSetNewLine = new UnityEvent<DialogueSlot>();
     public UnityEvent OnDialogueFinished = new UnityEvent();
+
     public void Init(DialoguesStorage dialoguesStorage)
     {
         _dialoguesStorage = dialoguesStorage;
@@ -20,20 +21,30 @@ public class DialogueSystem : MonoBehaviour
 
     public void StartDialogue(string dlg_id)
     {
-        line_cur_num = 0;
         if (FindRequiredDialogue(dlg_id))
         {
-            line_max_num = _currentDlgSetup.DialogueSlots.Count;
-            SetNewLine(); 
+            _lineCurNum = 0;
+            _lineMaxNum = _currentDlgSetup.DialogueSlots.Count;
+
+            if (_lineMaxNum > 0)
+                SetNewLine();
+            else
+                FinishDialogue();
+        }
+        else
+        {
+            Debug.LogError($"Dialogue with ID {dlg_id} not found in storage!");
         }
     }
 
     public void SetNewLine()
     {
-        if (line_cur_num < line_max_num)
+        if (_currentDlgSetup == null) return;
+
+        if (_lineCurNum < _lineMaxNum)
         {
-           OnSetNewLine.Invoke(_currentDlgSetup.DialogueSlots[line_cur_num]);
-           line_cur_num++;
+            OnSetNewLine.Invoke(_currentDlgSetup.DialogueSlots[_lineCurNum]);
+            _lineCurNum++;
         }
         else
         {
@@ -57,8 +68,8 @@ public class DialogueSystem : MonoBehaviour
     private void FinishDialogue()
     {
         _currentDlgSetup = null;
-        line_cur_num = 0;
-        line_max_num = 0;
+        _lineCurNum = 0;
+        _lineMaxNum = 0;
         OnDialogueFinished.Invoke();
     }
 }
