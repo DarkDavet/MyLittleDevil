@@ -13,6 +13,7 @@ public class DialogueSystem : MonoBehaviour
 
     public UnityEvent<DialogueSlot> OnSetNewLine = new UnityEvent<DialogueSlot>();
     public UnityEvent OnDialogueFinished = new UnityEvent();
+    public UnityEvent OnDialogueStarted = new UnityEvent();
 
     public void Init(DialoguesStorage dialoguesStorage)
     {
@@ -21,6 +22,7 @@ public class DialogueSystem : MonoBehaviour
 
     public void StartDialogue(string dlg_id)
     {
+        OnDialogueStarted.Invoke();
         if (FindRequiredDialogue(dlg_id))
         {
             _lineCurNum = 0;
@@ -44,6 +46,7 @@ public class DialogueSystem : MonoBehaviour
         if (_lineCurNum < _lineMaxNum)
         {
             OnSetNewLine.Invoke(_currentDlgSetup.DialogueSlots[_lineCurNum]);
+            Debug.Log($"dlg line: {_lineCurNum} / {_lineMaxNum}");
             _lineCurNum++;
         }
         else

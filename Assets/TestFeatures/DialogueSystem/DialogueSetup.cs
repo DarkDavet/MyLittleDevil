@@ -20,7 +20,7 @@ public class DialogueSetup : ScriptableObject
 [System.Serializable]
 public class DialogueSlot
 {
-    public SlotOwnerVisibilityType visibility = SlotOwnerVisibilityType.Left;
+    public SlotOwnerVisibilityType visibility;
     public string title;
     public Color title_color;
     public Sprite icon;
