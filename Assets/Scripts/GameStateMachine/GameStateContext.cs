@@ -4,18 +4,22 @@ using UnityEngine;
 
 public class GameStateContext : MonoBehaviour
 {
-    private GameStateController stateController;
+    
+    private GameStateController _stateController;
     public void Init()
     {
-        stateController = new GameStateController();
+        _stateController = new GameStateController();
 
-        stateController.AddState(new RunGameState(stateController));
+        _stateController.AddState(new RunGameState(_stateController));
+        _stateController.AddState(new FightGameState(_stateController));
+        _stateController.AddState(new PauseGameState(_stateController));
+        _stateController.AddState(new DialogueGameState(_stateController));
+        _stateController.AddState(new WinGameState(_stateController));
 
-        stateController.SetState<RunGameState>();
+        _stateController.SetState<RunGameState>();
     }
 
-    private void Update()
-    {
-        stateController?.Update();
-    }
+    private void Update() => _stateController?.Update();
+
+    private void OnDestroy() => _stateController?.Dispose();
 }

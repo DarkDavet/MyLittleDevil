@@ -6,32 +6,33 @@ using UnityEngine;
 public class GameStateController
 {
     private Dictionary<Type, GameState> _statesMap = new();
+    public static Action<Type> OnStateChangeRequest;
     private GameState StateCurrent { get; set; }
 
-    public void AddState(GameState state)
+    public GameStateController()
     {
-        _statesMap.Add(state.GetType(), state);
+        OnStateChangeRequest += SetStateByType;
     }
 
-    public void SetState<T>() where T : GameState
+    public void AddState(GameState state) => _statesMap.Add(state.GetType(), state);
+    
+    private void SetStateByType(Type type)
     {
-        var type = typeof(T);
-
-        if (StateCurrent != null && StateCurrent.GetType() == type)
-        {
-            return;
-        }
+        if (StateCurrent != null && StateCurrent.GetType() == type) return;
 
         if (_statesMap.TryGetValue(type, out var newState))
         {
             StateCurrent?.Exit();
             StateCurrent = newState;
             StateCurrent.Enter();
+            Debug.Log($"[State] Switched to: {type.Name}");
         }
     }
 
-    public void Update()
-    {
-        StateCurrent?.Update();
-    }
+    public void SetState<T>() where T : GameState => SetStateByType(typeof(T));
+
+    public void Update() => StateCurrent?.Update();
+
+    public void Dispose() => OnStateChangeRequest -= SetStateByType;
 }
+
