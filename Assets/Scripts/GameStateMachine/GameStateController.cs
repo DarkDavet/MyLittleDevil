@@ -9,6 +9,12 @@ public class GameStateController
     public static Action<Type> OnStateChangeRequest;
     private GameState StateCurrent { get; set; }
 
+    public Player Player { get; set; }
+    public CameraMoving CameraMoving { get; set; }
+    public PlayerControls PlayerControls { get; set; }
+    public IceShooting IceShooting { get; set; }
+    public FireShooting FireShooting { get; set; }
+
     public GameStateController()
     {
         OnStateChangeRequest += SetStateByType;

@@ -4,11 +4,22 @@ using UnityEngine;
 
 public class GameStateContext : MonoBehaviour
 {
-    
+    [SerializeField] private Player player;
+    [SerializeField] private CameraMoving cameraMoving;
+    [SerializeField] private FireShooting fireShooting;
+    [SerializeField] private IceShooting iceShooting;
+    [SerializeField] private PlayerControls playerInput;
+
     private GameStateController _stateController;
     public void Init()
     {
         _stateController = new GameStateController();
+
+        _stateController.Player = player;
+        _stateController.CameraMoving = cameraMoving;
+        _stateController.FireShooting = fireShooting;
+        _stateController.IceShooting = iceShooting; 
+        _stateController.PlayerControls = playerInput;
 
         _stateController.AddState(new RunGameState(_stateController));
         _stateController.AddState(new FightGameState(_stateController));

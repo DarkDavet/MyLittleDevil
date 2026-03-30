@@ -10,7 +10,7 @@ public class DialogueGameState : GameState
 
     public override void Enter()
     {
-
+        
     }
 
     public override void Update()
