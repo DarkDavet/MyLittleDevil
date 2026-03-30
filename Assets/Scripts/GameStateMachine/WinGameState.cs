@@ -2,16 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WinGameState : MonoBehaviour
+public class WinGameState : GameState
 {
-    // Start is called before the first frame update
-    void Start()
+    public WinGameState(GameStateController stateController) : base(stateController)
+    {
+    }
+
+    public override void Enter()
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Update()
+    {
+        
+    }
+
+    public override void Exit()
     {
         
     }

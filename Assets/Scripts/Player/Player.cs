@@ -12,6 +12,7 @@ public class Player: MonoBehaviour
     [SerializeField] private float _heightOfFlyight;
     private LogicScript logic;
     private bool IsAliveBird = true;
+    
     private bool isVictory = false;
     private Animator animator;
 

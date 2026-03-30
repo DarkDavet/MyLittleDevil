@@ -5,12 +5,13 @@ using UnityEngine;
 public class GameStateContext : MonoBehaviour
 {
     private GameStateController stateController;
-    // Start is called before the first frame update
-    private void Start()
+    public void Init()
     {
         stateController = new GameStateController();
 
         stateController.AddState(new RunGameState(stateController));
+
+        stateController.SetState<RunGameState>();
     }
 
     private void Update()

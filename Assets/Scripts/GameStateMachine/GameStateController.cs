@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameStateController : MonoBehaviour
+public class GameStateController
 {
     private Dictionary<Type, GameState> _statesMap = new();
     private GameState StateCurrent { get; set; }

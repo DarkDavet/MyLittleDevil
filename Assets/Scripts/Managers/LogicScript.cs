@@ -12,6 +12,7 @@ public class LogicScript : MonoBehaviour
     [SerializeField] private GameObject GameOverScreen;
     [SerializeField] private GameObject VictoryScreen;
     [SerializeField] private GameObject PlayerHealthBar;
+    [SerializeField] private CameraMoving cameraMoving;
 
     private void Awake()
     {
@@ -30,6 +31,11 @@ public class LogicScript : MonoBehaviour
         inventory.Clear();
         //Destroy(PlayerHealthBar);
 
+    }
+
+    public void CutscenePause()
+    {
+        cameraMoving.IsCameraStop = true;
     }
 
     public void Victory()

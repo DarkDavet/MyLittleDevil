@@ -2,17 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueGameState : MonoBehaviour
+public class DialogueGameState : GameState
 {
-    // Start is called before the first frame update
-    void Start()
+    public DialogueGameState(GameStateController stateController) : base(stateController)
     {
-        
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Enter()
     {
-        
+
+    }
+
+    public override void Update()
+    {
+
+    }
+
+    public override void Exit()
+    {
+
     }
 }
