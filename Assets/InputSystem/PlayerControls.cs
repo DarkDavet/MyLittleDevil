@@ -53,6 +53,33 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseSlot1"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e6a7a1c-2735-468a-b63b-21428f911183"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseSlot2"",
+                    ""type"": ""Button"",
+                    ""id"": ""eeacbc9e-0b33-4980-8130-aee930e75337"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""UseSlot3"",
+                    ""type"": ""Button"",
+                    ""id"": ""392bbd74-8624-4a3e-9dc9-59821d230c9f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -88,6 +115,39 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                     ""action"": ""IceShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ea5fbf21-12ec-46dc-84c3-e8760d3430fb"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseSlot1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e8344467-0550-4206-9fa0-05a89bf72c46"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseSlot2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""535c02e6-70de-41b3-b16a-752ff2ae164b"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""UseSlot3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -99,6 +159,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_FireShoot = m_Player.FindAction("FireShoot", throwIfNotFound: true);
         m_Player_IceShoot = m_Player.FindAction("IceShoot", throwIfNotFound: true);
+        m_Player_UseSlot1 = m_Player.FindAction("UseSlot1", throwIfNotFound: true);
+        m_Player_UseSlot2 = m_Player.FindAction("UseSlot2", throwIfNotFound: true);
+        m_Player_UseSlot3 = m_Player.FindAction("UseSlot3", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -161,6 +224,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_FireShoot;
     private readonly InputAction m_Player_IceShoot;
+    private readonly InputAction m_Player_UseSlot1;
+    private readonly InputAction m_Player_UseSlot2;
+    private readonly InputAction m_Player_UseSlot3;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -168,6 +234,9 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @FireShoot => m_Wrapper.m_Player_FireShoot;
         public InputAction @IceShoot => m_Wrapper.m_Player_IceShoot;
+        public InputAction @UseSlot1 => m_Wrapper.m_Player_UseSlot1;
+        public InputAction @UseSlot2 => m_Wrapper.m_Player_UseSlot2;
+        public InputAction @UseSlot3 => m_Wrapper.m_Player_UseSlot3;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -186,6 +255,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @IceShoot.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnIceShoot;
                 @IceShoot.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnIceShoot;
                 @IceShoot.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnIceShoot;
+                @UseSlot1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot1;
+                @UseSlot1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot1;
+                @UseSlot1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot1;
+                @UseSlot2.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot2;
+                @UseSlot2.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot2;
+                @UseSlot2.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot2;
+                @UseSlot3.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot3;
+                @UseSlot3.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot3;
+                @UseSlot3.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnUseSlot3;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -199,6 +277,15 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
                 @IceShoot.started += instance.OnIceShoot;
                 @IceShoot.performed += instance.OnIceShoot;
                 @IceShoot.canceled += instance.OnIceShoot;
+                @UseSlot1.started += instance.OnUseSlot1;
+                @UseSlot1.performed += instance.OnUseSlot1;
+                @UseSlot1.canceled += instance.OnUseSlot1;
+                @UseSlot2.started += instance.OnUseSlot2;
+                @UseSlot2.performed += instance.OnUseSlot2;
+                @UseSlot2.canceled += instance.OnUseSlot2;
+                @UseSlot3.started += instance.OnUseSlot3;
+                @UseSlot3.performed += instance.OnUseSlot3;
+                @UseSlot3.canceled += instance.OnUseSlot3;
             }
         }
     }
@@ -208,5 +295,8 @@ public partial class @PlayerControls : IInputActionCollection2, IDisposable
         void OnJump(InputAction.CallbackContext context);
         void OnFireShoot(InputAction.CallbackContext context);
         void OnIceShoot(InputAction.CallbackContext context);
+        void OnUseSlot1(InputAction.CallbackContext context);
+        void OnUseSlot2(InputAction.CallbackContext context);
+        void OnUseSlot3(InputAction.CallbackContext context);
     }
 }

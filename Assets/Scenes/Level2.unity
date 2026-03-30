@@ -1935,6 +1935,10 @@ PrefabInstance:
       propertyPath: aspect
       value: 
       objectReference: {fileID: 190599770}
+    - target: {fileID: 2770841550032848421, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+      propertyPath: _inventory
+      value: 
+      objectReference: {fileID: 11400000, guid: dde867d3aa6b3c546bcb5d1092c69b7e, type: 2}
     - target: {fileID: 6590513100892867961, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
       propertyPath: m_Enabled
       value: 0

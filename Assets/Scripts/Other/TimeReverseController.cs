@@ -19,7 +19,7 @@ public class TimeReverseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R) && _player.CheckBirdStatus())
+        if ( _player.CheckBirdStatus())
         {
             isReversing = !isReversing;
             if (isReversing)
