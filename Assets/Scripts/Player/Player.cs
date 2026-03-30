@@ -26,15 +26,13 @@ public class Player: MonoBehaviour
         logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
         animator = GetComponent<Animator>();
     }
-    private void Update()
+    public void Jump()
     {
-        if (Input.GetButtonDown("Jump") && IsAliveBird)
+        if (IsAliveBird)
         {
             _body.velocity = Vector2.up * _heightOfFlyight;
                
         }
-          
-        //SaveLoader();
     }
 
     public void OnCollisionEnter2D(Collision2D collision)

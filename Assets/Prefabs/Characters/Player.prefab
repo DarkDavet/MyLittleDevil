@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54532c863f73bf54aaa36c72c68fb7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   spriteAtlas: {fileID: 4343727234628468602, guid: 70738f269321c18418d502ab858f1b11, type: 2}
   spriteName: EyeBall
 --- !u!1 &1410718472083591284
@@ -196,6 +197,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54532c863f73bf54aaa36c72c68fb7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   spriteAtlas: {fileID: 4343727234628468602, guid: 70738f269321c18418d502ab858f1b11, type: 2}
   spriteName: DevilWing
 --- !u!1 &1504896322057887998
@@ -295,6 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54532c863f73bf54aaa36c72c68fb7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   spriteAtlas: {fileID: 4343727234628468602, guid: 70738f269321c18418d502ab858f1b11, type: 2}
   spriteName: DevilWing
 --- !u!1 &2353710290149154568
@@ -418,6 +421,7 @@ GameObject:
   - component: {fileID: 569910984614710528}
   - component: {fileID: 5928426369686578740}
   - component: {fileID: 5835621078599938711}
+  - component: {fileID: 3405905858576837992}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -495,7 +499,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: dde867d3aa6b3c546bcb5d1092c69b7e, type: 2}
-  _health: {fileID: 0}
   _body: {fileID: 6929047861307334388}
   _heightOfFlyight: 5
 --- !u!114 &5928426369686578740
@@ -510,10 +513,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35f297f738076bc43b36d786b5098b4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bird: {fileID: 569910984614710528}
-  _arrowFirePrefab: {fileID: 2637118288374962673, guid: 8ba90f56dc7e0344885cfdefe53ab5ed, type: 3}
-  _arrowIcePrefab: {fileID: 3585213124421764652, guid: d37bfb6d2f331f14b805f9a4c68c8008, type: 3}
-  _arrowSpawnPoint: {fileID: 7054090566700406414}
+  _player: {fileID: 0}
+  aspect: {fileID: 0}
+  _projectilePrefab: {fileID: 0}
+  _projectileSpawnPoint: {fileID: 0}
   _fireRate: 1
 --- !u!95 &5835621078599938711
 Animator:
@@ -535,6 +538,18 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &3405905858576837992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4033478549934806907}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ef887edd963c224bb009ec157e1faf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5303111366437780533
 GameObject:
   m_ObjectHideFlags: 0
@@ -663,6 +678,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54532c863f73bf54aaa36c72c68fb7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   spriteAtlas: {fileID: 4343727234628468602, guid: 70738f269321c18418d502ab858f1b11, type: 2}
   spriteName: UpdatedTheLittleDevil
 --- !u!1 &5808713507089750764
@@ -783,6 +799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54532c863f73bf54aaa36c72c68fb7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   spriteAtlas: {fileID: 4343727234628468602, guid: 70738f269321c18418d502ab858f1b11, type: 2}
   spriteName: EyeBall
 --- !u!1 &6121309251527704123
@@ -882,6 +899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54532c863f73bf54aaa36c72c68fb7c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  type: 0
   spriteAtlas: {fileID: 4343727234628468602, guid: 70738f269321c18418d502ab858f1b11, type: 2}
   spriteName: Mouth
 --- !u!1 &7526959787077298795

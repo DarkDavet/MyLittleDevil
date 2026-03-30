@@ -4,16 +4,11 @@ using UnityEngine;
 
 public class FireShooting : Shooting
 {
-    protected override void Shoot()
+    public override void Shoot()
     {
-        if (aspect.ShowToggle() == true  && aspect.isActiveAndEnabled)
+        if (_player.CheckBirdStatus() && Time.time >= nextTimeToShoot)
         {
-            animator.SetTrigger("Shoot");
-            pool.SpawnFromPool("Fire", _projectileSpawnPoint.position, Quaternion.identity);
-            FindObjectOfType<AudioManager>().Play("FireAttack");
-        }  
-        else if (aspect.isActiveAndEnabled == false)
-        {
+            nextTimeToShoot = Time.time + 1f / _fireRate;
             animator.SetTrigger("Shoot");
             pool.SpawnFromPool("Fire", _projectileSpawnPoint.position, Quaternion.identity);
             FindObjectOfType<AudioManager>().Play("FireAttack");

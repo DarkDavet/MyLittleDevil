@@ -12,7 +12,7 @@ public abstract class Shooting: MonoBehaviour
     protected Animator animator;
     protected PoolManager pool;
 
-    private float nextTimeToShoot = 0f;
+    protected float nextTimeToShoot = 0f;
 
     private void Start()
     {
@@ -20,15 +20,5 @@ public abstract class Shooting: MonoBehaviour
         pool = PoolManager.Instance;
     }
 
-    private void Update()
-    {
-        if (Input.GetButtonDown("Fire1") && _player.CheckBirdStatus() && Time.time >= nextTimeToShoot)
-        {
-            nextTimeToShoot = Time.time + 1f / _fireRate;
-            Shoot();
-        }
-    }
-
-    protected abstract void Shoot();
-
+    public abstract void Shoot();
 }

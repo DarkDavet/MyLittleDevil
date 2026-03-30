@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class IceShooting : Shooting
 {
-    protected override void Shoot()
+    public override void Shoot()
     {
-        if (aspect.ShowToggle() == false)
+        if (_player.CheckBirdStatus() && Time.time >= nextTimeToShoot)
         {
+            nextTimeToShoot = Time.time + 1f / _fireRate;
             animator.SetTrigger("IceShoot");
             pool.SpawnFromPool("Ice", _projectileSpawnPoint.position, Quaternion.identity);
             FindObjectOfType<AudioManager>().Play("IceAttack");
