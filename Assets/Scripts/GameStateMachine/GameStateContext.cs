@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameStateContext : MonoBehaviour
 {
     [SerializeField] private Player player;
+    [SerializeField] private InventoryObject inventory;
     [SerializeField] private CameraMoving cameraMoving;
     [SerializeField] private FireShooting fireShooting;
     [SerializeField] private IceShooting iceShooting;
@@ -17,6 +18,7 @@ public class GameStateContext : MonoBehaviour
         _stateController = new GameStateController();
 
         _stateController.Player = player;
+        _stateController.Inventory = inventory;
         _stateController.CameraMoving = cameraMoving;
         _stateController.FireShooting = fireShooting;
         _stateController.IceShooting = iceShooting; 
@@ -27,6 +29,7 @@ public class GameStateContext : MonoBehaviour
         _stateController.AddState(new FightGameState(_stateController));
         _stateController.AddState(new PauseGameState(_stateController));
         _stateController.AddState(new DialogueGameState(_stateController));
+        _stateController.AddState(new LoseGameState(_stateController));
         _stateController.AddState(new WinGameState(_stateController));
 
         _stateController.SetState<RunGameState>();

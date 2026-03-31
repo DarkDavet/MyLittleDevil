@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class GameState
 {
     protected readonly GameStateController GameStateController;
-
+    public virtual bool IsFinalState => false;
     public GameState(GameStateController gameStateController)
     {
         GameStateController = gameStateController;
