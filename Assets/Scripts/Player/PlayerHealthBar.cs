@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealthBar: MonoBehaviour, IHealthObserver
+public class PlayerHealthBar: MonoBehaviour
 {
     public List<GameObject> hearts;
 
-    private void Start()
+    private void Awake()
     {
-        PlayerHealthSystem.instance.AddObserver(this);
-        UpdateHearts(PlayerHealthSystem.instance.currentHealth);
+        GameEvents.OnDamageGot += UpdateHearts;
+        GameEvents.OnHealthHealed += UpdateHearts;
+    }
+    public void Init()
+    {
+        
     }
     public void OnHealthChanged(int currentHealth)
     {
@@ -29,10 +33,5 @@ public class PlayerHealthBar: MonoBehaviour, IHealthObserver
                 hearts[i].SetActive(false);
             }
         }
-    }
-
-    private void OnDestroy()
-    {
-        PlayerHealthSystem.instance.RemoveObserver(this);
     }
 }

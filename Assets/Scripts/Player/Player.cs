@@ -6,102 +6,45 @@ using UnityEngine.UI;
 
 public class Player: MonoBehaviour
 {
-    public static Player instance;
     public InventoryObject inventory;
-    [SerializeField] private Rigidbody2D _body;
     [SerializeField] private float _heightOfFlyight;
-    private LogicScript logic;
-    private bool IsAliveBird = true;
     
-    private bool isVictory = false;
-    private Animator animator;
+    private Animator _animator;
+    private Rigidbody2D _rb;
+    private PlayerHealthSystem _health;
 
     private void Awake()
     {
-        instance = this;
+        _animator = GetComponent<Animator>();
+        _rb = GetComponent<Rigidbody2D>();
+        _health = GetComponent<PlayerHealthSystem>();
     }
 
-    private void Start()
-    {
-        logic = GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicScript>();
-        animator = GetComponent<Animator>();
-    }
     public void Jump()
     {
-        if (IsAliveBird)
-        {
-            _body.velocity = Vector2.up * _heightOfFlyight;
-               
-        }
+        _rb.velocity = Vector2.up * _heightOfFlyight;
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Danger") && !isVictory)
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            logic.GameOver();
-            IsAliveBird = false;
+            _health.TakeDamage(1);
+            _animator.SetTrigger("Hit");
         }
-        if (!isVictory)
-        {
-            if (collision.gameObject.CompareTag("Enemy") && PlayerHealthSystem.instance.currentHealth == 0)
-            {
-                logic.GameOver();
-                IsAliveBird = false;
-            }
-            else if (collision.gameObject.CompareTag("Enemy") && PlayerHealthSystem.instance.currentHealth > 0)
-            {
-                PlayerHealthSystem.instance.TakeDamage(1);
-                animator.SetTrigger("Hit");
-            }
-        }    
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Finish"))
+        if (collision.CompareTag("Danger"))
         {
-            isVictory = true;
-            logic.Victory();
-            IsAliveBird = false;
-        }
-        if (collision.CompareTag("Danger") && !isVictory)
-        {
-            Debug.Log("You're dead");
-            logic.GameOver();
-            IsAliveBird = false;
+            this.RequestState<LoseGameState>();
         }
         if (collision.CompareTag("Item"))
             TakeItem(collision);
     }
-    public bool CheckBirdStatus()
-    {
-        if (IsAliveBird)
-        {
-            return true;
-        }
-        else return false;
-    }
-
-    public void ChangeVictoryStatus()
-    {
-        if (!isVictory && IsAliveBird == true)
-        {
-            isVictory = true;
-            IsAliveBird = false;
-            LogicScript._instance.Victory();
-        }  
-    }
-
-    public void ChangeGameOverStatus()
-    {
-        if (!isVictory && IsAliveBird == true)
-        {
-            logic.GameOver();
-            IsAliveBird = false;
-        }
-    }
+   
     public void TakeItem(Collider2D other)
     {
         var item = other.GetComponent<Item>();
@@ -115,19 +58,6 @@ public class Player: MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        //inventory.Save();
         inventory.Clear();
     }
-
-   /* public void SaveLoader()
-    {
-        if (Input.GetKeyUp(KeyCode.E))
-        {
-            inventory.Save();
-        }
-        if (Input.GetKeyUp(KeyCode.F))
-        {
-            inventory.Load();
-        }
-    }*/
 }

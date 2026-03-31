@@ -12,8 +12,7 @@ public class LoseGameState : GameState
     }
     public override void Enter()
     {
-        _stateController.UIManager.GameOverScreen.SetActive(true);
-        _stateController.UIManager.VictoryScreen.SetActive(false);
+        _stateController.UIManager.LooseScreen.SetActive(true);
         _stateController.Inventory.Clear();
     }
 

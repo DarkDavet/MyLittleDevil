@@ -47,6 +47,5 @@ public class BossHealth: BaseEnemyHealth
     {
         base.Die();
         Destroy(_bossHud);
-        _bird.ChangeVictoryStatus();
     }
 }

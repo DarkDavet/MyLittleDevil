@@ -9,9 +9,9 @@ public class GameStateController
     public static Action<Type> OnStateChangeRequest;
     public static Action<Type> OnForceStateChangeRequest;
     public static Action OnBackRequest;
+
     public GameState StateCurrent { get; private set; }
     public GameState StatePrevious { get; private set; }
-
     public Player Player { get; set; }
     public InventoryObject Inventory { get; set; }
     public CameraMoving CameraMoving { get; set; }
@@ -19,6 +19,7 @@ public class GameStateController
     public IceShooting IceShooting { get; set; }
     public FireShooting FireShooting { get; set; }
     public UIManager UIManager { get; set; }
+    public SceneLoader SceneLoader { get; set; }
 
     public GameStateController()
     {

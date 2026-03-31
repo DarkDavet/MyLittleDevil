@@ -11,6 +11,7 @@ public class GameStateContext : MonoBehaviour
     [SerializeField] private IceShooting iceShooting;
     [SerializeField] private PlayerControls playerInput;
     [SerializeField] private UIManager uiManager;
+    [SerializeField] private SceneLoader sceneLoader;
 
     private GameStateController _stateController;
     public void Init()

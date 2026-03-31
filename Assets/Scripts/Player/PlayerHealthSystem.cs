@@ -4,47 +4,22 @@ using UnityEngine;
 
 public class PlayerHealthSystem : MonoBehaviour
 {
-    public static PlayerHealthSystem instance;
     public int maxHealth;
     public int currentHealth;
-    private List<IHealthObserver> observers = new List<IHealthObserver>();
-
-    private void Awake()
-    {
-        instance = this;
-    }
 
     private void Start()
     {
         maxHealth = 3;
         currentHealth = maxHealth;
-        NotifyObservers();
-    }
-
-    public void AddObserver(IHealthObserver observer)
-    {
-        observers.Add(observer);
-    }
-
-    public void RemoveObserver(IHealthObserver observer)
-    {
-        observers.Remove(observer);
-    }
-
-    private void NotifyObservers()
-    {
-        foreach (var observer in observers)
-        {
-            observer.OnHealthChanged(currentHealth);
-        }
+       
     }
 
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
-        NotifyObservers();
-        CheckGameOver();
+        GameEvents.TriggerDamageGot(currentHealth);
+        CheckDeadStatus();
     }
 
     public void Heal(int amount)
@@ -52,14 +27,14 @@ public class PlayerHealthSystem : MonoBehaviour
         currentHealth += amount;
         FindObjectOfType<AudioManager>().Play("Heal");
         if (currentHealth > maxHealth) currentHealth = maxHealth;
-        NotifyObservers();
+        GameEvents.TriggerHealthHealed(currentHealth);
     }
 
-    private void CheckGameOver()   //WARNING!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    private void CheckDeadStatus()  
     {
         if (currentHealth <= 0)
         {
-            Player.instance.ChangeGameOverStatus();
+            this.RequestState<LoseGameState>();
         }
     }
 }

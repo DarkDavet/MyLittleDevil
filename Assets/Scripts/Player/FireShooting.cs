@@ -6,7 +6,7 @@ public class FireShooting : Shooting
 {
     public override void Shoot()
     {
-        if (_player.CheckBirdStatus() && Time.time >= nextTimeToShoot)
+        if (Time.time >= nextTimeToShoot)
         {
             nextTimeToShoot = Time.time + 1f / _fireRate;
             animator.SetTrigger("Shoot");
