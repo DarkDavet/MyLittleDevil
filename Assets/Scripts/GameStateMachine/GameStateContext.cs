@@ -9,6 +9,7 @@ public class GameStateContext : MonoBehaviour
     [SerializeField] private FireShooting fireShooting;
     [SerializeField] private IceShooting iceShooting;
     [SerializeField] private PlayerControls playerInput;
+    [SerializeField] private UIManager uiManager;
 
     private GameStateController _stateController;
     public void Init()
@@ -20,6 +21,7 @@ public class GameStateContext : MonoBehaviour
         _stateController.FireShooting = fireShooting;
         _stateController.IceShooting = iceShooting; 
         _stateController.PlayerControls = playerInput;
+        _stateController.UIManager = uiManager;
 
         _stateController.AddState(new RunGameState(_stateController));
         _stateController.AddState(new FightGameState(_stateController));

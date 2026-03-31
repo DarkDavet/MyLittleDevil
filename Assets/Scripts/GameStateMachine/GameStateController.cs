@@ -7,17 +7,21 @@ public class GameStateController
 {
     private Dictionary<Type, GameState> _statesMap = new();
     public static Action<Type> OnStateChangeRequest;
-    private GameState StateCurrent { get; set; }
+    public static Action OnBackRequest;
+    public GameState StateCurrent { get; private set; }
+    public GameState StatePrevious { get; private set; }
 
     public Player Player { get; set; }
     public CameraMoving CameraMoving { get; set; }
     public PlayerControls PlayerControls { get; set; }
     public IceShooting IceShooting { get; set; }
     public FireShooting FireShooting { get; set; }
+    public UIManager UIManager { get; set; }
 
     public GameStateController()
     {
         OnStateChangeRequest += SetStateByType;
+        OnBackRequest += BackToPreviousState;
     }
 
     public void AddState(GameState state) => _statesMap.Add(state.GetType(), state);
@@ -29,9 +33,20 @@ public class GameStateController
         if (_statesMap.TryGetValue(type, out var newState))
         {
             StateCurrent?.Exit();
+
+            StatePrevious = StateCurrent;
+
             StateCurrent = newState;
             StateCurrent.Enter();
             Debug.Log($"[State] Switched to: {type.Name}");
+        }
+    }
+
+    public void BackToPreviousState()
+    {
+        if (StatePrevious != null)
+        {
+            SetStateByType(StatePrevious.GetType());
         }
     }
 
@@ -39,6 +54,10 @@ public class GameStateController
 
     public void Update() => StateCurrent?.Update();
 
-    public void Dispose() => OnStateChangeRequest -= SetStateByType;
+    public void Dispose()
+    {
+        OnStateChangeRequest -= SetStateByType;
+        OnBackRequest -= BackToPreviousState;
+    }   
 }
 

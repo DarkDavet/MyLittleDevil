@@ -8,4 +8,9 @@ public static class StateExtensions
     {
         GameStateController.OnStateChangeRequest?.Invoke(typeof(T));
     }
+
+    public static void RequestPreviousState(this object sender)
+    {
+        GameStateController.OnBackRequest?.Invoke();
+    }
 }
