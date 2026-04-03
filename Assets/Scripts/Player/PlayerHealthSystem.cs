@@ -16,7 +16,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         maxHealth = 3;
         currentHealth = maxHealth;
-       
+        GameEvents.TriggerUpdatedPlayerHealth(currentHealth);
     }
 
     public void TakeDamage(int damage)
@@ -32,7 +32,7 @@ public class PlayerHealthSystem : MonoBehaviour
         currentHealth += amount;
         FindObjectOfType<AudioManager>().Play("Heal");
         if (currentHealth > maxHealth) currentHealth = maxHealth;
-        GameEvents.TriggerHealthHealed(currentHealth);
+        GameEvents.TriggerUpdatedPlayerHealth(currentHealth);
     }
 
     private void CheckDeadStatus()  
@@ -41,5 +41,10 @@ public class PlayerHealthSystem : MonoBehaviour
         {
             this.RequestState<LoseGameState>();
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnHealthHealed -= Heal;
     }
 }

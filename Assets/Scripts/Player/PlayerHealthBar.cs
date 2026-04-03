@@ -6,19 +6,11 @@ public class PlayerHealthBar: MonoBehaviour
 {
     public List<GameObject> hearts;
 
-    private void Awake()
+    private void OnEnable()
     {
         GameEvents.OnUpdatePlayerHealth += UpdateHearts;
-        GameEvents.OnHealthHealed += UpdateHearts;
     }
-    public void Init()
-    {
-        
-    }
-    public void OnHealthChanged(int currentHealth)
-    {
-        UpdateHearts(currentHealth);
-    }
+ 
 
     public void UpdateHearts(int currentHealth)
     {
@@ -34,4 +26,11 @@ public class PlayerHealthBar: MonoBehaviour
             }
         }
     }
+
+    private void OnDisable()
+    {
+        GameEvents.OnUpdatePlayerHealth -= UpdateHearts;
+    }
+
+
 }
