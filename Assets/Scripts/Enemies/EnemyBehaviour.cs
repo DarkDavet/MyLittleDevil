@@ -29,28 +29,15 @@ public class EnemyBehaviour : BaseAIBehaviour
 
     private void MovementX()
     {
-        transform.Translate(movementDirectionX * speed * Time.deltaTime);
-        Debug.Log("Enemy is moving!");
+        if (player == null) return;
 
-        float currentPosition = transform.position.x - minBorder.position.x;
+        float targetX = minBorder.position.x + targetPosition.x;
+        Vector3 targetPos = new Vector3(targetX, transform.position.y, transform.position.z);
 
-        if (currentPosition <= minX)
-        {
-            Debug.Log("Enemy is moving right!");
-            movementDirectionX = Vector2.right * 2;
-            targetPosition.x = Random.Range(minX, maxX);
-        }
-        else if (currentPosition >= maxX)
-        {
-            Debug.Log("Enemy is moving left!");
-            movementDirectionX = Vector2.left;
-            targetPosition.x = Random.Range(minX, maxX);
-        }
+        transform.position = Vector3.MoveTowards(transform.position, targetPos, speed * Time.deltaTime);
 
-        if ((movementDirectionX == Vector2.right && currentPosition >= targetPosition.x) ||
-            (movementDirectionX == Vector2.left && currentPosition <= targetPosition.x))
+        if (Mathf.Abs(transform.position.x - targetX) < 0.1f)
         {
-            movementDirectionX *= -1;
             targetPosition.x = Random.Range(minX, maxX);
         }
     }

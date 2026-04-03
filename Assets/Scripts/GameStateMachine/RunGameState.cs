@@ -11,6 +11,7 @@ public class RunGameState : GameState
     }
     public override void Enter()
     {
+        Debug.Log($"RS activated");
         GameStateController.CameraMoving.SetActive(true, 0.5f);
         TimeManager.Instance.TakeItSlow(1.5f);
     }
