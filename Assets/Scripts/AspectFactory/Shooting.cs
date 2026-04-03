@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class Shooting: MonoBehaviour
 {
     [SerializeField] protected Player _player;
-    [SerializeField] protected AspectManager aspect;
     [SerializeField] protected GameObject _projectilePrefab;
     [SerializeField] protected Transform _projectileSpawnPoint;
     [SerializeField] protected float _fireRate = 1f;
