@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,15 +6,24 @@ using UnityEngine;
 public class CameraMoving : MonoBehaviour
 {
     [SerializeField] private float _speedOfCamera;
-    private bool isCameraStop;
-    public bool IsCameraStop {  get { return isCameraStop; } set { isCameraStop = value; } }
 
-    private void Update()
+    private float _currentThrottle = 1f; 
+    private Tween _stopTween;
+
+    public void MoveCamera()
     {
-        if (!isCameraStop)
-        {
-            transform.position = new Vector3(transform.position.x + _speedOfCamera * Time.deltaTime, transform.position.y, transform.position.z);
-        }
-        
+        float step = _speedOfCamera * _currentThrottle * Time.deltaTime;
+        transform.position += new Vector3(step, 0, 0);
+    }
+
+    public void SetActive(bool isActive, float duration = 0.5f)
+    {
+        _stopTween?.Kill();
+
+        float targetThrottle = isActive ? 1f : 0f;
+
+        _stopTween = DOTween.To(() => _currentThrottle, x => _currentThrottle = x, targetThrottle, duration)
+            .SetEase(Ease.OutQuad) 
+            .SetUpdate(true);      
     }
 }

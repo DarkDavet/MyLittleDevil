@@ -12,9 +12,7 @@ public class LoseGameState : GameState
     }
     public override void Enter()
     {
-        if (_stateController.PlayerInput == null) Debug.LogError("??????: PlayerControls ?? ???????? ? ?????????!");
-        if (_stateController.UIManager == null) Debug.LogError("??????: UIManager ?? ???????? ? ?????????!");
-        if (_stateController.UIManager.LooseScreen == null) Debug.LogError("??????: ?????? LooseScreen ?? ???????? ?????? UIManager!");
+        GameStateController.CameraMoving.SetActive(false, 0.8f);
         _stateController.PlayerInput.DisablePlayerControls();
         _stateController.UIManager.LooseScreen.SetActive(true);
         _stateController.Inventory.Clear();
@@ -22,10 +20,11 @@ public class LoseGameState : GameState
 
     public override void Update()
     {
-       
+        _stateController.CameraMoving.MoveCamera();
     }
 
     public override void Exit()
     {
+        
     }
 }

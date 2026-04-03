@@ -13,6 +13,7 @@ public class WinGameState : GameState
 
     public override void Enter()
     {
+        GameStateController.CameraMoving.SetActive(false, 0.8f);
         _stateController.PlayerInput.DisablePlayerControls();
         _stateController.SceneLoader.UnlockNewLevel();
         _stateController.UIManager.WinScreen.SetActive(true);
@@ -20,7 +21,7 @@ public class WinGameState : GameState
 
     public override void Update()
     {
-        
+        _stateController.CameraMoving.MoveCamera();
     }
 
     public override void Exit()
