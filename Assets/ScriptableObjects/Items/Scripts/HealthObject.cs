@@ -13,7 +13,7 @@ public class HealthObject : ItemObject
 
     public override void Use()
     {
-        PlayerHealthSystem.instance.Heal(1);
+        GameEvents.TriggerHealthHealed(1);
         Debug.Log("Healing is working");
     }
 }

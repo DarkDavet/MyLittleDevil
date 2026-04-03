@@ -7,6 +7,11 @@ public class PlayerHealthSystem : MonoBehaviour
     public int maxHealth;
     public int currentHealth;
 
+    private void Awake()
+    {
+        GameEvents.OnHealthHealed += Heal;
+    }
+
     private void Start()
     {
         maxHealth = 3;
@@ -18,7 +23,7 @@ public class PlayerHealthSystem : MonoBehaviour
     {
         currentHealth -= damage;
         if (currentHealth < 0) currentHealth = 0;
-        GameEvents.TriggerDamageGot(currentHealth);
+        GameEvents.TriggerUpdatedPlayerHealth(currentHealth);
         CheckDeadStatus();
     }
 

@@ -9,7 +9,7 @@ public class GameEvents
     public static event Action OnWin;
     public static event Action OnFightStarted;
     public static event Action OnFightFinished;
-    public static event Action<int> OnDamageGot;  //is not used for a while
+   // public static event Action<int> OnDamageGot;  //is not used for a while
     public static event Action<int> OnHealthHealed;
     public static event Action<int> OnUpdatePlayerHealth;
 

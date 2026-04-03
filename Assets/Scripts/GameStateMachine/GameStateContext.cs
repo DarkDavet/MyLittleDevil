@@ -9,7 +9,7 @@ public class GameStateContext : MonoBehaviour
     [SerializeField] private CameraMoving cameraMoving;
     [SerializeField] private FireShooting fireShooting;
     [SerializeField] private IceShooting iceShooting;
-    [SerializeField] private PlayerControls playerInput;
+    [SerializeField] private PlayerInputHandler playerInput;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private SceneLoader sceneLoader;
 
@@ -23,8 +23,9 @@ public class GameStateContext : MonoBehaviour
         _stateController.CameraMoving = cameraMoving;
         _stateController.FireShooting = fireShooting;
         _stateController.IceShooting = iceShooting; 
-        _stateController.PlayerControls = playerInput;
+        _stateController.PlayerInput = playerInput;
         _stateController.UIManager = uiManager;
+        _stateController.SceneLoader = sceneLoader;
 
         _stateController.AddState(new RunGameState(_stateController));
         _stateController.AddState(new FightGameState(_stateController));

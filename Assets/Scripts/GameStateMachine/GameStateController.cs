@@ -15,7 +15,7 @@ public class GameStateController
     public Player Player { get; set; }
     public InventoryObject Inventory { get; set; }
     public CameraMoving CameraMoving { get; set; }
-    public PlayerControls PlayerControls { get; set; }
+    public PlayerInputHandler PlayerInput { get; set; }
     public IceShooting IceShooting { get; set; }
     public FireShooting FireShooting { get; set; }
     public UIManager UIManager { get; set; }

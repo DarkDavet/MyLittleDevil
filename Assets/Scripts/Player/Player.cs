@@ -32,6 +32,10 @@ public class Player: MonoBehaviour
             _health.TakeDamage(1);
             _animator.SetTrigger("Hit");
         }
+        if (collision.gameObject.CompareTag("Danger"))
+        {
+            this.RequestState<LoseGameState>();
+        }
     }
 
 

@@ -12,7 +12,7 @@ public class DialogueGameState : GameState
 
     public override void Enter()
     {
-       _stateController.PlayerControls.Disable();
+       
     }
 
     public override void Update()

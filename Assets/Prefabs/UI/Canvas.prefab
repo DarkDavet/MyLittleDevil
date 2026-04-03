@@ -660,6 +660,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74f26e0dc6e59b04f8567ab5397dcde9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LooseScreen: {fileID: 8840844576514966716}
+  WinScreen: {fileID: 8840844576837698722}
+  PlayerHealthBar: {fileID: 0}
   pauseButton: {fileID: 5628930509226279014}
   pauseMenu: {fileID: 3230821863855777970}
 --- !u!1001 &4499409273908836429
@@ -1027,6 +1030,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 225ad2f2ff7e41041b7323034c2adb7b, type: 3}
+--- !u!1 &8840844576837698722 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1196163368909341280, guid: 225ad2f2ff7e41041b7323034c2adb7b, type: 3}
+  m_PrefabInstance: {fileID: 7649748187849459394}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8840844576837698723 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1196163368909341281, guid: 225ad2f2ff7e41041b7323034c2adb7b, type: 3}
@@ -1145,6 +1153,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 67ea871bb97c2f845b5769a7ecc8977a, type: 3}
+--- !u!1 &8840844576514966716 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1500414058600906872, guid: 67ea871bb97c2f845b5769a7ecc8977a, type: 3}
+  m_PrefabInstance: {fileID: 7954051756838995140}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8840844576514966717 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1500414058600906873, guid: 67ea871bb97c2f845b5769a7ecc8977a, type: 3}

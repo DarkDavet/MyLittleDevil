@@ -13,7 +13,7 @@ public class WinGameState : GameState
 
     public override void Enter()
     {
-        _stateController.PlayerControls.Disable();
+        _stateController.PlayerInput.DisablePlayerControls();
         _stateController.SceneLoader.UnlockNewLevel();
         _stateController.UIManager.WinScreen.SetActive(true);
     }

@@ -8,7 +8,7 @@ public class PlayerHealthBar: MonoBehaviour
 
     private void Awake()
     {
-        GameEvents.OnDamageGot += UpdateHearts;
+        GameEvents.OnUpdatePlayerHealth += UpdateHearts;
         GameEvents.OnHealthHealed += UpdateHearts;
     }
     public void Init()
