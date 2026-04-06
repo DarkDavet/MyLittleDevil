@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1061585464633236959}
   - component: {fileID: 1061585464633236958}
+  - component: {fileID: 6969983456001264524}
+  - component: {fileID: 3649160277074595340}
   m_Layer: 5
   m_Name: DialogueContainer
   m_TagString: Untagged
@@ -51,6 +53,42 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &6969983456001264524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061585464633236956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c7459fd87b13b94d93679a78dd67b5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OnSetNewLine:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDialogueFinished:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDialogueStarted:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &3649160277074595340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061585464633236956}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 379f46016b2cf6042ae1c727add7db9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 1061585465504387623}
+  left_slot: {fileID: 1178608314646954385}
+  right_slot: {fileID: 5492052301672255732}
 --- !u!1 &1061585465026444140
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,6 +175,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1061585465218013361}
   - component: {fileID: 1061585465218013360}
+  - component: {fileID: 1178608314646954385}
   m_Layer: 5
   m_Name: speaker_left_slot
   m_TagString: Untagged
@@ -178,6 +217,21 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1178608314646954385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061585465218013366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 704f33e78fe1e6f438f738890ec67997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 1061585465749044663}
+  title: {fileID: 1061585465742572465}
+  canvasGroup: {fileID: 1061585465218013360}
 --- !u!1 &1061585465258381415
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,6 +879,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1061585466469937896}
   - component: {fileID: 1061585466469937899}
+  - component: {fileID: 5492052301672255732}
   m_Layer: 5
   m_Name: speaker_right_slot
   m_TagString: Untagged
@@ -866,3 +921,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &5492052301672255732
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061585466469937897}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 704f33e78fe1e6f438f738890ec67997, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  icon: {fileID: 1061585465026444142}
+  title: {fileID: 1061585466272086461}
+  canvasGroup: {fileID: 1061585466469937899}

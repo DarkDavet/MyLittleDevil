@@ -81,6 +81,7 @@ public class DialogueContainerUI : MonoBehaviour, IPointerClickHandler
     {
         _canvasGroup.DOFade(0, anim_duration).OnComplete(() => {
             _canvasGroup.blocksRaycasts = false;
+            GameEvents.TriggerDialogueFinished();
         });
     }
 
