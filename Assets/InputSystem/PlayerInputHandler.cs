@@ -24,9 +24,9 @@ public class PlayerInputHandler : MonoBehaviour
     {
         _controls.Enable();
 
-        _controls.Player.Jump.performed += OnJump;
-        _controls.Player.FireShoot.performed += OnFireShoot;
-        _controls.Player.IceShoot.performed += OnIceShoot;
+        if (_player != null) _controls.Player.Jump.performed += OnJump;
+        if (_fireShooting != null) _controls.Player.FireShoot.performed += OnFireShoot;
+        if (_iceShooting != null) _controls.Player.IceShoot.performed += OnIceShoot;
 
         _controls.Player.UseSlot1.performed += ctx => TryUseSlot(0);
         _controls.Player.UseSlot2.performed += ctx => TryUseSlot(1);
@@ -35,9 +35,9 @@ public class PlayerInputHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        _controls.Player.Jump.performed -= OnJump;
-        _controls.Player.FireShoot.performed -= OnFireShoot;
-        _controls.Player.IceShoot.performed -= OnIceShoot;
+        if (_player != null) _controls.Player.Jump.performed -= OnJump;
+        if (_fireShooting != null) _controls.Player.FireShoot.performed -= OnFireShoot;
+        if (_iceShooting != null) _controls.Player.IceShoot.performed -= OnIceShoot;
         _controls.Disable();
     }
 
@@ -70,6 +70,6 @@ public class PlayerInputHandler : MonoBehaviour
     }
 
     private void OnJump(InputAction.CallbackContext context) => _player.Jump();
-    private void OnFireShoot(InputAction.CallbackContext context) => _fireShooting.Shoot();
-    private void OnIceShoot(InputAction.CallbackContext context) => _iceShooting.Shoot();
+    private void OnFireShoot(InputAction.CallbackContext context) => _fireShooting?.Shoot();
+    private void OnIceShoot(InputAction.CallbackContext context) => _iceShooting?.Shoot();
 }
