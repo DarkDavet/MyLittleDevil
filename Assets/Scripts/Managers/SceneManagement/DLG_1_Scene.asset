@@ -14,5 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneID: DLG_1
   sceneName: DLG_Scene_1
-  isUnlockedByDefault: 0
-  isDialogueScene: 1
+  isUnlockedByDefault: 1

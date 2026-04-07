@@ -10,6 +10,9 @@ public class SceneLoader : MonoBehaviour
     public void OpenNextScene()
     {
         if (nextScene == null) return;
+
+        PlayerPrefs.SetString("LastPlayedLevel", nextScene.sceneID);
+        PlayerPrefs.Save();
         SceneManager.LoadScene(nextScene.sceneName);
     }
 
