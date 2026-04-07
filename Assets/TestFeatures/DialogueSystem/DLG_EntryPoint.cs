@@ -9,8 +9,6 @@ public class DLG_EntryPoint : MonoBehaviour
     [SerializeField] private DialogueSystem dlgSystem;
     [SerializeField] private DialogueContainerUI dlgUI;
 
-    [SerializeField] private int nextSceneId;
-
     [Header("Dialogue ID:")]
     [SerializeField] private string dlg_Id;
 
@@ -28,7 +26,8 @@ public class DLG_EntryPoint : MonoBehaviour
 
     private void OnDialogueFinished()
     {
-        sceneLoader.OpenLevel(nextSceneId);
+        sceneLoader.UnlockNewScene();
+        sceneLoader.OpenNextScene();
     }
 
 }

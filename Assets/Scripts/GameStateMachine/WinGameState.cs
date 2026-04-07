@@ -15,7 +15,7 @@ public class WinGameState : GameState
     {
         GameStateController.CameraMoving.SetActive(false, 0.8f);
         _stateController.PlayerInput.DisablePlayerControls();
-        _stateController.SceneLoader.UnlockNewLevel();
+        _stateController.SceneLoader.UnlockNewScene();
         _stateController.UIManager.WinScreen.SetActive(true);
     }
 
