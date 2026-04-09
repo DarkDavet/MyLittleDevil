@@ -16,13 +16,16 @@ public class PlayerHealthBar: MonoBehaviour
     {
         for (int i = 0; i < hearts.Count; i++)
         {
-            if (i < currentHealth)
+            if (hearts[i] != null)
             {
-                hearts[i].SetActive(true);
-            }
-            else
-            {
-                hearts[i].SetActive(false);
+                if (i < currentHealth)
+                {
+                    hearts[i].SetActive(true);
+                }
+                else
+                {
+                    hearts[i].SetActive(false);
+                }
             }
         }
     }

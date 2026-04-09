@@ -4,14 +4,27 @@ using UnityEngine;
 
 public class PlayerHealthSystem : MonoBehaviour
 {
+    /// <summary>
+    /// Maximum health value for the player.
+    /// </summary>
     public int maxHealth;
+    
+    /// <summary>
+    /// Current health value for the player.
+    /// </summary>
     public int currentHealth;
 
+    /// <summary>
+    /// Initializes event listeners.
+    /// </summary>
     private void Awake()
     {
         GameEvents.OnHealthHealed += Heal;
     }
 
+    /// <summary>
+    /// Initializes health values and triggers health update event.
+    /// </summary>
     private void Start()
     {
         maxHealth = 3;
@@ -19,6 +32,10 @@ public class PlayerHealthSystem : MonoBehaviour
         GameEvents.TriggerUpdatedPlayerHealth(currentHealth);
     }
 
+    /// <summary>
+    /// Reduces the player's health by the specified damage amount.
+    /// </summary>
+    /// <param name="damage">Amount of damage to apply.</param>
     public void TakeDamage(int damage)
     {
         currentHealth -= damage;
@@ -27,14 +44,22 @@ public class PlayerHealthSystem : MonoBehaviour
         CheckDeadStatus();
     }
 
+    /// <summary>
+    /// Increases the player's health by the specified amount.
+    /// </summary>
+    /// <param name="amount">Amount of health to restore.</param>
     public void Heal(int amount)
     {
         currentHealth += amount;
         FindObjectOfType<AudioManager>().Play("Heal");
         if (currentHealth > maxHealth) currentHealth = maxHealth;
         GameEvents.TriggerUpdatedPlayerHealth(currentHealth);
+        CheckDeadStatus();
     }
 
+    /// <summary>
+    /// Checks if the player is dead and triggers the game over state if necessary.
+    /// </summary>
     private void CheckDeadStatus()  
     {
         if (currentHealth <= 0)
@@ -43,6 +68,9 @@ public class PlayerHealthSystem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Removes event listeners when the object is destroyed.
+    /// </summary>
     private void OnDestroy()
     {
         GameEvents.OnHealthHealed -= Heal;

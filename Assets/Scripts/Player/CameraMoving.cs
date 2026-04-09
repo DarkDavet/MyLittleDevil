@@ -18,7 +18,10 @@ public class CameraMoving : MonoBehaviour
 
     public void SetActive(bool isActive, float duration = 0.5f)
     {
-        _stopTween?.Kill();
+        if (_stopTween != null)
+        {
+            _stopTween.Kill();
+        }
 
         float targetThrottle = isActive ? 1f : 0f;
 
