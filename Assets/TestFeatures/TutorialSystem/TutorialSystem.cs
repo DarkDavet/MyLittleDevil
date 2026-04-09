@@ -11,6 +11,7 @@ public class TutorialSystem : MonoBehaviour
     public UnityEvent<TutorialSlot> OnOpenNewPage = new UnityEvent<TutorialSlot>();
     public UnityEvent OnTutorialFinished = new UnityEvent();
     public UnityEvent OnTutorialStarted = new UnityEvent();
+    public UnityEvent OnLastPageOpened = new UnityEvent();
 
     public void Init(TutorialStorage tutorialStorage)
     {
@@ -19,6 +20,12 @@ public class TutorialSystem : MonoBehaviour
 
     public void StartTutorial(string tut_id)
     {
+        if (_tutorialStorage == null)
+        {
+            Debug.LogError("TutorialStorage not initialized!");
+            return;
+        }
+
         OnTutorialStarted.Invoke();
         if (FindRequiredTutorial(tut_id))
         {
@@ -38,12 +45,25 @@ public class TutorialSystem : MonoBehaviour
 
     public void OpenNewPage()
     {
-        if (_currentTutSetup == null) return;
-
-        if (_pageCurNum < _pageMaxNum)
+        if (_currentTutSetup == null)
         {
-            OnOpenNewPage.Invoke(_currentTutSetup.TutorialSlots[_pageCurNum]);
-            Debug.Log("tut page: " + _pageCurNum + " / " + _pageMaxNum);
+            Debug.LogError("No tutorial setup found!");
+            return;
+        }
+
+        if (_pageCurNum < _pageMaxNum && _pageCurNum >= 0)
+        {
+            if (_pageCurNum == _pageMaxNum - 1)
+            {
+                OnOpenNewPage.Invoke(_currentTutSetup.TutorialSlots[_pageCurNum]);
+                OnLastPageOpened.Invoke();
+                Debug.Log("tut page: " + _pageCurNum + " / " + _pageMaxNum);
+            }
+            else
+            {
+                OnOpenNewPage.Invoke(_currentTutSetup.TutorialSlots[_pageCurNum]);
+                Debug.Log("tut page: " + _pageCurNum + " / " + _pageMaxNum);
+            }
             _pageCurNum++;
         }
         else
@@ -52,11 +72,22 @@ public class TutorialSystem : MonoBehaviour
         }
     }
 
+    public void CloseTutorialNow()
+    {
+        CloseTutorial();
+    }
+
     private bool FindRequiredTutorial(string tut_id)
     {
+        if (_tutorialStorage == null || _tutorialStorage.TutorialSetups == null)
+        {
+            Debug.LogError("TutorialStorage or TutorialSetups is null!");
+            return false;
+        }
+
         foreach (var setup in _tutorialStorage.TutorialSetups)
         {
-            if (setup.Id == tut_id)
+            if (setup != null && setup.Id == tut_id)
             {
                 _currentTutSetup = setup;
                 return true;
