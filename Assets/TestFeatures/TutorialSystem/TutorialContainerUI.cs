@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,14 +8,19 @@ using UnityEngine.UI;
 public class TutorialContainerUI : MonoBehaviour
 {
     [SerializeField] private TutorialSystem _tutorialSystem;
+    [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private TextMeshProUGUI _titleText;
     [SerializeField] private TextMeshProUGUI _contentText;
     [SerializeField] private GameObject _nextButton;
     [SerializeField] private GameObject _closeButton;
     [SerializeField] private Image _backgroundImage;
+    
+    private Tween _contentTween;
+    private float _animDuration = 0.25f;
 
     void Awake()
     {
+        _canvasGroup = GetComponent<CanvasGroup>();
         _tutorialSystem.OnOpenNewPage.AddListener(OnNewPageOpened);
         _tutorialSystem.OnTutorialFinished.AddListener(OnTutorialFinished);
         _tutorialSystem.OnTutorialStarted.AddListener(OnTutorialStarted);
@@ -36,16 +42,25 @@ public class TutorialContainerUI : MonoBehaviour
         {
             _backgroundImage.enabled = false;
         }
+        
+        _contentTween?.Kill();
+        _contentText.alpha = 0;
+        _contentText.DOFade(1, _animDuration);
     }
 
     private void OnTutorialFinished()
     {
-        gameObject.SetActive(false);
+        _canvasGroup.DOFade(0, _animDuration).OnComplete(() => {
+            gameObject.SetActive(false);
+        });
     }
 
     private void OnTutorialStarted()
     {
         gameObject.SetActive(true);
+        _canvasGroup.alpha = 0;
+        _canvasGroup.DOFade(1, _animDuration);
+        _canvasGroup.blocksRaycasts = true;
     }
 
     private void ShowCloseButton()

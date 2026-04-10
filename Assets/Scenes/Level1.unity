@@ -2198,6 +2198,7 @@ GameObject:
   - component: {fileID: 1547849728}
   - component: {fileID: 1547849727}
   - component: {fileID: 1547849726}
+  - component: {fileID: 1547849729}
   m_Layer: 5
   m_Name: TutorialContainer
   m_TagString: Untagged
@@ -2267,6 +2268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tutorialSystem: {fileID: 1547849726}
+  _canvasGroup: {fileID: 0}
   _titleText: {fileID: 2074915072}
   _contentText: {fileID: 1197390537}
   _nextButton: {fileID: 956553566}
@@ -2298,6 +2300,18 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &1547849729
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547849724}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &1650649421 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8840844577576227549, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
