@@ -12,6 +12,7 @@ public class GameStateContext : MonoBehaviour
     [SerializeField] private PlayerInputHandler playerInput;
     [SerializeField] private UIManager uiManager;
     [SerializeField] private SceneLoader sceneLoader;
+    [SerializeField] private TutorialSystem tutorialSystem;
 
     private GameStateController _stateController;
     public void Init()
@@ -26,6 +27,7 @@ public class GameStateContext : MonoBehaviour
         _stateController.PlayerInput = playerInput;
         _stateController.UIManager = uiManager;
         _stateController.SceneLoader = sceneLoader;
+        _stateController.TutorialSystem = tutorialSystem;
 
         _stateController.AddState(new RunGameState(_stateController));
         _stateController.AddState(new FightGameState(_stateController));

@@ -11,7 +11,5 @@ public class EntryPoint : MonoBehaviour
     private void Start()
     {
         gameStateManager.Init();
-        tutorialSystem.Init(tutorialStorage);
-        tutorialSystem.StartTutorial("tut_1");
     }
 }

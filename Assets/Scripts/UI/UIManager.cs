@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     public GameObject PlayerHealthBar;
     public Button pauseButton;
     public GameObject pauseMenu;
+    public GameObject tutorialMenu;
 
 
     public void Pause()

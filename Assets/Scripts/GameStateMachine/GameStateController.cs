@@ -20,6 +20,7 @@ public class GameStateController
     public FireShooting FireShooting { get; set; }
     public UIManager UIManager { get; set; }
     public SceneLoader SceneLoader { get; set; }
+    public TutorialSystem TutorialSystem { get; set; }
 
     public GameStateController()
     {

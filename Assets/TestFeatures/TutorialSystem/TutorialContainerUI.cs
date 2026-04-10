@@ -51,13 +51,12 @@ public class TutorialContainerUI : MonoBehaviour
     private void OnTutorialFinished()
     {
         _canvasGroup.DOFade(0, _animDuration).OnComplete(() => {
-            gameObject.SetActive(false);
+            CleanListeners();
         });
     }
 
     private void OnTutorialStarted()
     {
-        gameObject.SetActive(true);
         _canvasGroup.alpha = 0;
         _canvasGroup.DOFade(1, _animDuration);
         _canvasGroup.blocksRaycasts = true;
@@ -67,5 +66,20 @@ public class TutorialContainerUI : MonoBehaviour
     {
         _nextButton.SetActive(false);
         _closeButton.SetActive(true);
+    }
+    private void CleanListeners()
+    {
+        if (_tutorialSystem != null)
+        {
+            _tutorialSystem.OnOpenNewPage.RemoveListener(OnNewPageOpened);
+            _tutorialSystem.OnTutorialFinished.RemoveListener(OnTutorialFinished);
+            _tutorialSystem.OnTutorialStarted.RemoveListener(OnTutorialStarted);
+            _tutorialSystem.OnLastPageOpened.RemoveListener(ShowCloseButton);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        CleanListeners();
     }
 }

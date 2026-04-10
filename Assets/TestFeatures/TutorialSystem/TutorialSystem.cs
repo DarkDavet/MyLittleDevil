@@ -3,8 +3,7 @@ using UnityEngine.Events;
 
 public class TutorialSystem : MonoBehaviour
 {
-    private TutorialStorage _tutorialStorage;
-    private TutorialSetup _currentTutSetup;
+    [SerializeField] private TutorialSetup _tutorialSetup;
     private int _pageMaxNum;
     private int _pageCurNum;
 
@@ -13,39 +12,28 @@ public class TutorialSystem : MonoBehaviour
     public UnityEvent OnTutorialStarted = new UnityEvent();
     public UnityEvent OnLastPageOpened = new UnityEvent();
 
-    public void Init(TutorialStorage tutorialStorage)
+    public void StartTutorial()
     {
-        _tutorialStorage = tutorialStorage;
-    }
-
-    public void StartTutorial(string tut_id)
-    {
-        if (_tutorialStorage == null)
+        if (_tutorialSetup == null)
         {
-            Debug.LogError("TutorialStorage not initialized!");
+            Debug.LogError("TutorialSetup not initialized!");
             return;
         }
 
         OnTutorialStarted.Invoke();
-        if (FindRequiredTutorial(tut_id))
-        {
-            _pageCurNum = 0;
-            _pageMaxNum = _currentTutSetup.TutorialSlots.Count;
+        
+        _pageCurNum = 0;
+        _pageMaxNum = _tutorialSetup.TutorialSlots.Count;
 
-            if (_pageMaxNum > 0)
-                OpenNewPage();
-            else
-                CloseTutorial();
-        }
+        if (_pageMaxNum > 0)
+            OpenNewPage();
         else
-        {
-            Debug.LogError("Tutorial with ID " + tut_id + " not found in storage!");
-        }
+            CloseTutorial();
     }
 
     public void OpenNewPage()
     {
-        if (_currentTutSetup == null)
+        if (_tutorialSetup == null)
         {
             Debug.LogError("No tutorial setup found!");
             return;
@@ -55,13 +43,13 @@ public class TutorialSystem : MonoBehaviour
         {
             if (_pageCurNum == _pageMaxNum - 1)
             {
-                OnOpenNewPage.Invoke(_currentTutSetup.TutorialSlots[_pageCurNum]);
+                OnOpenNewPage.Invoke(_tutorialSetup.TutorialSlots[_pageCurNum]);
                 OnLastPageOpened.Invoke();
                 Debug.Log("tut page: " + _pageCurNum + " / " + _pageMaxNum);
             }
             else
             {
-                OnOpenNewPage.Invoke(_currentTutSetup.TutorialSlots[_pageCurNum]);
+                OnOpenNewPage.Invoke(_tutorialSetup.TutorialSlots[_pageCurNum]);
                 Debug.Log("tut page: " + _pageCurNum + " / " + _pageMaxNum);
             }
             _pageCurNum++;
@@ -72,33 +60,10 @@ public class TutorialSystem : MonoBehaviour
         }
     }
 
-    public void CloseTutorialNow()
-    {
-        CloseTutorial();
-    }
 
-    private bool FindRequiredTutorial(string tut_id)
-    {
-        if (_tutorialStorage == null || _tutorialStorage.TutorialSetups == null)
-        {
-            Debug.LogError("TutorialStorage or TutorialSetups is null!");
-            return false;
-        }
-
-        foreach (var setup in _tutorialStorage.TutorialSetups)
-        {
-            if (setup != null && setup.Id == tut_id)
-            {
-                _currentTutSetup = setup;
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void CloseTutorial()
     {
-        _currentTutSetup = null;
         _pageCurNum = 0;
         _pageMaxNum = 0;
         OnTutorialFinished.Invoke();
