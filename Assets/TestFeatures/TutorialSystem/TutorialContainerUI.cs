@@ -8,13 +8,14 @@ using UnityEngine.UI;
 public class TutorialContainerUI : MonoBehaviour
 {
     [SerializeField] private TutorialSystem _tutorialSystem;
-    [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private TextMeshProUGUI _titleText;
     [SerializeField] private TextMeshProUGUI _contentText;
     [SerializeField] private GameObject _nextButton;
     [SerializeField] private GameObject _closeButton;
     [SerializeField] private Image _backgroundImage;
-    
+
+    private CanvasGroup _canvasGroup;
+
     private Tween _contentTween;
     private float _animDuration = 0.25f;
 
@@ -45,20 +46,22 @@ public class TutorialContainerUI : MonoBehaviour
         
         _contentTween?.Kill();
         _contentText.alpha = 0;
-        _contentText.DOFade(1, _animDuration);
+        _contentText.DOFade(1, _animDuration).SetUpdate(true);
     }
 
     private void OnTutorialFinished()
     {
-        _canvasGroup.DOFade(0, _animDuration).OnComplete(() => {
+        _canvasGroup.DOFade(0, _animDuration).SetUpdate(true).OnComplete(() =>
+        {
             CleanListeners();
+            this.RequestPreviousState();
         });
     }
 
     private void OnTutorialStarted()
     {
         _canvasGroup.alpha = 0;
-        _canvasGroup.DOFade(1, _animDuration);
+        _canvasGroup.DOFade(1, _animDuration).SetUpdate(true);
         _canvasGroup.blocksRaycasts = true;
     }
 

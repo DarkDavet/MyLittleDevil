@@ -234,9 +234,9 @@ RectTransform:
   m_Father: {fileID: 1547849725}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -761.805}
   m_SizeDelta: {x: 160, y: 60.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &53270790
@@ -1090,9 +1090,9 @@ RectTransform:
   m_Father: {fileID: 1547849725}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -685.415}
   m_SizeDelta: {x: 160, y: 60.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &956553568
@@ -1437,9 +1437,9 @@ RectTransform:
   m_Father: {fileID: 1547849725}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -614.35}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1197390537
@@ -1804,9 +1804,9 @@ RectTransform:
   m_Father: {fileID: 1547849725}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -373.61}
   m_SizeDelta: {x: 600, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1399680883
@@ -2205,7 +2205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1547849725
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2243,6 +2243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99b325812ee8d00408882b41f64fd1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _tutorialSetup: {fileID: 11400000, guid: 1a44984174caf2f49a58fe4aec0e02ac, type: 2}
   OnOpenNewPage:
     m_PersistentCalls:
       m_Calls: []
@@ -2268,7 +2269,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _tutorialSystem: {fileID: 1547849726}
-  _canvasGroup: {fileID: 0}
   _titleText: {fileID: 2074915072}
   _contentText: {fileID: 1197390537}
   _nextButton: {fileID: 956553566}
@@ -2813,9 +2813,9 @@ RectTransform:
   m_Father: {fileID: 1547849725}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 300, y: -132.87}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2074915072
@@ -3406,6 +3406,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2514073616052141833, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
+      propertyPath: tutorialMenu
+      value: 
+      objectReference: {fileID: 1547849724}
     - target: {fileID: 2514073616052141833, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
       propertyPath: PlayerHealthBar
       value: 

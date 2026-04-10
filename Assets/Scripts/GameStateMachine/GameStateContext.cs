@@ -32,9 +32,9 @@ public class GameStateContext : MonoBehaviour
         _stateController.AddState(new RunGameState(_stateController));
         _stateController.AddState(new FightGameState(_stateController));
         _stateController.AddState(new PauseGameState(_stateController));
-        _stateController.AddState(new DialogueGameState(_stateController));
         _stateController.AddState(new LoseGameState(_stateController));
         _stateController.AddState(new WinGameState(_stateController));
+        _stateController.AddState(new TutorialGameState(_stateController));
 
         _stateController.SetState<RunGameState>();
     }

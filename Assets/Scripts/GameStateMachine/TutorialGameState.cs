@@ -19,7 +19,6 @@ public class TutorialGameState : GameState
         
         if (_stateController.TutorialSystem != null)
         {
-            _stateController.TutorialSystem.OnTutorialFinished.AddListener(TutorialFinished);
             _stateController.TutorialSystem.StartTutorial();
         }
     }
@@ -33,15 +32,5 @@ public class TutorialGameState : GameState
         _stateController.UIManager.tutorialMenu.SetActive(false);
         _stateController.UIManager.pauseButton.gameObject.SetActive(true);
         Time.timeScale = 1;
-        
-        if (_stateController.TutorialSystem != null)
-        {
-            _stateController.TutorialSystem.OnTutorialFinished.RemoveListener(TutorialFinished);
-        }
-    }
-
-    private void TutorialFinished()
-    {
-        this.RequestPreviousState();
     }
 }
