@@ -22,3 +22,4 @@ MonoBehaviour:
     content: Gravity is one of your enemy in the game
     backgroundImage: {fileID: 21300000, guid: 2bdcab4c3b0877041875fc14b872af5f, type: 3}
     showNextButton: 0
+  _isViewed: 1
