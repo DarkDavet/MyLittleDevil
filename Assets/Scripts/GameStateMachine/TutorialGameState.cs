@@ -5,7 +5,6 @@ using UnityEngine;
 public class TutorialGameState : GameState
 {
     private GameStateController _stateController;
-    
     public TutorialGameState(GameStateController stateController) : base(stateController)
     {
         _stateController = stateController;
@@ -16,15 +15,12 @@ public class TutorialGameState : GameState
         _stateController.UIManager.tutorialMenu.SetActive(true);
         _stateController.UIManager.pauseButton.gameObject.SetActive(false);
         Time.timeScale = 0;
-        
-        if (_stateController.TutorialSystem != null)
-        {
-            _stateController.TutorialSystem.StartTutorial();
-        }
+        _stateController.TutorialSystem.StartTutorial();
     }
 
     public override void Update()
     {
+        
     }
 
     public override void Exit()

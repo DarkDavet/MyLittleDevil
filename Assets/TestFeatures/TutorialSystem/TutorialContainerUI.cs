@@ -61,8 +61,8 @@ public class TutorialContainerUI : MonoBehaviour
     private void OnTutorialStarted()
     {
         _canvasGroup.alpha = 0;
-        _canvasGroup.DOFade(1, _animDuration).SetUpdate(true);
         _canvasGroup.blocksRaycasts = true;
+        _canvasGroup.DOFade(1, _animDuration).SetUpdate(true);
     }
 
     private void ShowCloseButton()

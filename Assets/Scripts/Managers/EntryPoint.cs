@@ -5,7 +5,6 @@ using UnityEngine;
 public class EntryPoint : MonoBehaviour
 {
     [SerializeField] private GameStateContext gameStateManager;
-    [SerializeField] private TutorialSystem tutorialSystem;
 
     private void Start()
     {

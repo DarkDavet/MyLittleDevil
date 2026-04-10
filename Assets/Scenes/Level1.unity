@@ -285,7 +285,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1547849726}
         m_TargetAssemblyTypeName: TutorialSystem, Assembly-CSharp
-        m_MethodName: CloseTutorialNow
+        m_MethodName: OpenNewPage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3038,6 +3038,10 @@ PrefabInstance:
       propertyPath: cameraMoving
       value: 
       objectReference: {fileID: 2093300711531099760}
+    - target: {fileID: 6214320805842962439, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: tutorialSystem
+      value: 
+      objectReference: {fileID: 1547849726}
     - target: {fileID: 8177988373182938028, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: m_Name
       value: GameManagers
