@@ -84,6 +84,8 @@ namespace CollectibleSystem
         
         public void SaveTemporaryItems()
         {
+            Debug.Log("Saving temporary items to collected items. Count: " + temporaryItems.Count);
+            
             // Move all temporary items to collected items
             foreach (var item in temporaryItems)
             {
@@ -92,19 +94,25 @@ namespace CollectibleSystem
                     if (collectedItems.ContainsKey(item.Key))
                     {
                         collectedItems[item.Key] += item.Value;
+                        Debug.Log("Added to existing: " + item.Key + " = " + collectedItems[item.Key]);
                     }
                     else
                     {
                         collectedItems[item.Key] = item.Value;
+                        Debug.Log("New item: " + item.Key + " = " + item.Value);
                     }
                 }
             }
+            Debug.Log("Total collected items: " + collectedItems.Count);
+            
             SaveToPlayerPrefs();
             temporaryItems.Clear();
         }
         
         public void SaveToPlayerPrefs()
         {
+            Debug.Log("Saving " + collectedItems.Count + " items to PlayerPrefs");
+            
             int index = 0;
             foreach (var item in collectedItems)
             {
@@ -112,16 +120,22 @@ namespace CollectibleSystem
                 {
                     PlayerPrefs.SetString("ItemId_" + index, item.Key);
                     PlayerPrefs.SetInt("ItemCount_" + index, item.Value);
+                    Debug.Log("  Saved: " + item.Key + " = " + item.Value);
                     index++;
                 }
             }
             PlayerPrefs.SetInt("ItemCount_Total", index);
             PlayerPrefs.Save();
+            Debug.Log("Save complete. Total items saved: " + index);
         }
         
         public void LoadFromPlayerPrefs()
         {
             int count = PlayerPrefs.GetInt("ItemCount_Total", 0);
+            Debug.Log("Loading from PlayerPrefs. Found " + count + " items to load");
+            
+            collectedItems.Clear();
+            
             for (int i = 0; i < count; i++)
             {
                 string id = PlayerPrefs.GetString("ItemId_" + i, string.Empty);
@@ -130,8 +144,10 @@ namespace CollectibleSystem
                 if (!string.IsNullOrEmpty(id))
                 {
                     collectedItems[id] = countValue;
+                    Debug.Log("  Loaded: " + id + " = " + countValue);
                 }
             }
+            Debug.Log("Load complete. Total items loaded: " + collectedItems.Count);
         }
         
         private SaveBehavior GetSaveBehavior(string itemId)

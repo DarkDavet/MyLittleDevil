@@ -926,6 +926,8 @@ MonoBehaviour:
   saveSettings:
   - type: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
     saveBehavior: 1
+  - type: {fileID: 11400000, guid: 3b3cb13bba75683448bd4bf39737f506, type: 2}
+    saveBehavior: 0
 --- !u!4 &593167010
 Transform:
   m_ObjectHideFlags: 0
@@ -2063,7 +2065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22ad875ffb06333459b9f1b22df5268b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  collectibleType: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
+  collectibleType: {fileID: 11400000, guid: 3b3cb13bba75683448bd4bf39737f506, type: 2}
   quantity: 1
   OnCollected:
     m_PersistentCalls:
@@ -2110,7 +2112,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 2bdcab4c3b0877041875fc14b872af5f, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9339623, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
