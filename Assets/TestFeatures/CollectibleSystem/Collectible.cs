@@ -7,13 +7,11 @@ namespace CollectibleSystem
     {
         [SerializeField] private CollectibleType collectibleType;
         [SerializeField] private int quantity = 1;
-        [SerializeField] private int scoreMultiplier = 1;
         
         public UnityEvent<Collectible, int> OnCollected = new UnityEvent<Collectible, int>();
         
         public CollectibleType Type => collectibleType;
         public int Quantity => quantity;
-        public int ScoreMultiplier => scoreMultiplier;
         
         private void OnTriggerEnter2D(Collider2D collision)
        {
@@ -22,8 +20,7 @@ namespace CollectibleSystem
     
            if (collector != null)
            {
-               int totalScore = quantity * scoreMultiplier;
-               collector.Collect(this, totalScore);
+               collector.Collect(this);
 
                Collect();
            }
@@ -31,7 +28,7 @@ namespace CollectibleSystem
         
         public void Collect()
         {
-            OnCollected.Invoke(this, quantity * scoreMultiplier);
+            OnCollected.Invoke(this, quantity);
             Destroy(gameObject);
         }
     }

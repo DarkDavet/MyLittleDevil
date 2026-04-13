@@ -61,9 +61,9 @@ public class Player: MonoBehaviour, ICollectibleCollector
         }
     }
     
-    public void Collect(Collectible collectible, int score)
+    public void Collect(Collectible collectible)
     {
-        CollectibleManager.Instance.Collect(collectible, score);
+        CollectibleManager.Instance.Collect(collectible);
         FindObjectOfType<AudioManager>().Play("PickItem");
     }
 

@@ -4,6 +4,6 @@ namespace CollectibleSystem
 {
     public interface ICollectibleCollector
     {
-        void Collect(Collectible collectible, int score);
+        void Collect(Collectible collectible);
     }
 }
