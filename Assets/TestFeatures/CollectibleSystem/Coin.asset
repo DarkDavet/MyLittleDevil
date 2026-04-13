@@ -15,6 +15,6 @@ MonoBehaviour:
   id: coin
   icon: {fileID: 0}
   displayName: Coin
-  baseScoreValue: 1
   isStackable: 1
   maxStackSize: 1000
+  saveBehavior: 1

@@ -15,6 +15,6 @@ MonoBehaviour:
   id: artifact
   icon: {fileID: 0}
   displayName: Artifact
-  baseScoreValue: 1
   isStackable: 0
   maxStackSize: 100
+  saveBehavior: 0

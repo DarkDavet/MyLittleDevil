@@ -11,21 +11,12 @@ namespace CollectibleSystem
         Never  // Never save this type
     }
     
-    [System.Serializable]
-    public class CollectibleSaveSettings
-    {
-        public CollectibleType type;
-        public SaveBehavior saveBehavior;
-    }
-    
     public class CollectibleManager : MonoBehaviour
     {
         public static CollectibleManager Instance { get; private set; }
         
         public delegate void CollectibleCollectedHandler(Collectible collectible);
         public event CollectibleCollectedHandler OnCollectibleCollected;
-        
-        [SerializeField] private List<CollectibleSaveSettings> saveSettings = new List<CollectibleSaveSettings>();
         
         private Dictionary<string, int> collectedItems = new Dictionary<string, int>();
         private Dictionary<string, int> temporaryItems = new Dictionary<string, int>();
@@ -49,8 +40,7 @@ namespace CollectibleSystem
         {
             if (collectible.Type == null) return;
             
-            // Check save behavior for this type
-            SaveBehavior behavior = GetSaveBehavior(collectible.Type.Id);
+            SaveBehavior behavior = collectible.Type.SaveBehavior;
             
             // OnCollection items go directly to collected items and save immediately
             if (behavior == SaveBehavior.OnCollection)
@@ -65,7 +55,7 @@ namespace CollectibleSystem
                 }
                 SaveToPlayerPrefs();
             }
-
+            // OnLevelComplete items go to temporary storage
             else if (behavior == SaveBehavior.OnLevelComplete)
             {
                 if (temporaryItems.ContainsKey(collectible.Type.Id))
@@ -78,7 +68,7 @@ namespace CollectibleSystem
                 }
             }
             
-            Debug.Log("Collected: " + collectible.Type.DisplayName + " x" + collectible.Quantity);
+            Debug.Log("Collected: " + collectible.Type.DisplayName + " x" + collectible.Quantity + " (Save: " + behavior + ")");
             OnCollectibleCollected?.Invoke(collectible);
         }
         
@@ -89,7 +79,7 @@ namespace CollectibleSystem
             // Move all temporary items to collected items
             foreach (var item in temporaryItems)
             {
-                if (GetSaveBehavior(item.Key) != SaveBehavior.Never)
+                if (item.Value > 0) // Only save if count > 0
                 {
                     if (collectedItems.ContainsKey(item.Key))
                     {
@@ -116,7 +106,7 @@ namespace CollectibleSystem
             int index = 0;
             foreach (var item in collectedItems)
             {
-                if (GetSaveBehavior(item.Key) != SaveBehavior.Never)
+                if (item.Value > 0) // Only save if count > 0
                 {
                     PlayerPrefs.SetString("ItemId_" + index, item.Key);
                     PlayerPrefs.SetInt("ItemCount_" + index, item.Value);
@@ -141,25 +131,13 @@ namespace CollectibleSystem
                 string id = PlayerPrefs.GetString("ItemId_" + i, string.Empty);
                 int countValue = PlayerPrefs.GetInt("ItemCount_" + i, 0);
                 
-                if (!string.IsNullOrEmpty(id))
+                if (!string.IsNullOrEmpty(id) && countValue > 0)
                 {
                     collectedItems[id] = countValue;
                     Debug.Log("  Loaded: " + id + " = " + countValue);
                 }
             }
             Debug.Log("Load complete. Total items loaded: " + collectedItems.Count);
-        }
-        
-        private SaveBehavior GetSaveBehavior(string itemId)
-        {
-            foreach (var setting in saveSettings)
-            {
-                if (setting.type != null && setting.type.Id == itemId)
-                {
-                    return setting.saveBehavior;
-                }
-            }
-            return SaveBehavior.OnGameEnd; // Default behavior
         }
         
         public int GetItemCount(string itemId)
