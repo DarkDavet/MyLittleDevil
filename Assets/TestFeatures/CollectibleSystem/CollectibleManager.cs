@@ -42,7 +42,7 @@ namespace CollectibleSystem
             }
             
             Debug.Log("Collected: " + collectible.Type.DisplayName + " x" + collectible.Quantity + " (Score: " + score + ")");
-            
+            Debug.Log("Total: " + collectible.Type.DisplayName + " x" + ". count = " + GetItemCount("coin"));
             OnCollectibleCollected?.Invoke(collectible, score);
         }
         

@@ -16,12 +16,17 @@ namespace CollectibleSystem
         public int ScoreMultiplier => scoreMultiplier;
         
         private void OnTriggerEnter2D(Collider2D collision)
-        {
-            var collector = collision.GetComponent<ICollectibleCollector>();
-            if (collector != null)
-            {
-                Collect();
-            }
+       {
+           Debug.Log("Предмет коснулся объекта: " + collision.name);
+           var collector = collision.gameObject.GetComponent<ICollectibleCollector>();
+    
+           if (collector != null)
+           {
+               int totalScore = quantity * scoreMultiplier;
+               collector.Collect(this, totalScore);
+
+               Collect();
+           }
         }
         
         public void Collect()

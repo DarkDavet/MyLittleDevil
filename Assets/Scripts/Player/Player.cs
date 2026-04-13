@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using CollectibleSystem;
 
-public class Player: MonoBehaviour
+public class Player: MonoBehaviour, ICollectibleCollector
 {
     public InventoryObject inventory;
     [SerializeField] private float _heightOfFlyight;
@@ -58,6 +59,12 @@ public class Player: MonoBehaviour
             FindObjectOfType<AudioManager>().Play("PickItem");
             Destroy(other.gameObject);
         }
+    }
+    
+    public void Collect(Collectible collectible, int score)
+    {
+        CollectibleManager.Instance.Collect(collectible, score);
+        FindObjectOfType<AudioManager>().Play("PickItem");
     }
 
     private void OnApplicationQuit()

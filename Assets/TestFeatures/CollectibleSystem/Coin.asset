@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c0aba864c57974eb0885cd8fbed470, type: 3}
   m_Name: Coin
   m_EditorClassIdentifier: 
-  id: 
+  id: coin
   icon: {fileID: 0}
-  displayName: 
-  baseScoreValue: 10
+  displayName: Coin
+  baseScoreValue: 1
   isStackable: 1
-  maxStackSize: 100
+  maxStackSize: 1000
