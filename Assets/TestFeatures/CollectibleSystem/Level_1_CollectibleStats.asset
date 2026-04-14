@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c7b5c6847b5ac6e4c84e83784a35d5d7, type: 3}
-  m_Name: DLG_1_Scene
+  m_Script: {fileID: 11500000, guid: a4270c779361f4d498ee465b35635210, type: 3}
+  m_Name: Level_1_CollectibleStats
   m_EditorClassIdentifier: 
-  sceneID: DLG_1
-  sceneName: DLG_Scene_1
-  isUnlockedByDefault: 1
-  collectibleStats: {fileID: 0}
+  levelId: 1
+  collectibleStats:
+  - collectibleTypeId: coin
+    totalCount: 3
+  - collectibleTypeId: artifact
+    totalCount: 1

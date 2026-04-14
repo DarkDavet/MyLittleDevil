@@ -15,4 +15,4 @@ MonoBehaviour:
   sceneID: 1
   sceneName: Level1
   isUnlockedByDefault: 1
-  isDialogueScene: 0
+  collectibleStats: {fileID: 11400000, guid: c9d54bb47b82c084ba38c91813018d3f, type: 2}

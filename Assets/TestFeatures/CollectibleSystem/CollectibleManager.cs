@@ -43,10 +43,10 @@ namespace CollectibleSystem
         public void Collect(Collectible collectible)
         {
             if (collectible.Type == null) return;
-
+            
             SaveBehavior behavior = collectible.Type.SaveBehavior;
             string uid = collectible.UniqueId; // Сохраняем локально для безопасности
-
+            
             if (behavior == SaveBehavior.OnCollection)
             {
                 UpdateItemCount(collectedItems, collectible.Type.Id, collectible.Quantity);
@@ -58,7 +58,10 @@ namespace CollectibleSystem
                 UpdateItemCount(temporaryItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid); // Во временный
             }
-
+            
+            // Update level stats
+            LevelStatsManager.Instance?.UpdateStats(collectible.Type.Id, collectible.Quantity);
+            
             OnCollectibleCollected?.Invoke(collectible);
         }
 

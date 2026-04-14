@@ -8,4 +8,6 @@ public class SceneData : ScriptableObject
     public string sceneID;  
     public string sceneName; 
     public bool isUnlockedByDefault; // for the first level
+    // Stats about collectibles in this level
+    public CollectibleSystem.LevelCollectibleStats collectibleStats;
 }
