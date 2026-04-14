@@ -1,3 +1,4 @@
+using CollectibleSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class WinGameState : GameState
 
     public override void Enter()
     {
+        CollectibleManager.Instance.SaveTemporaryItems();
         GameStateController.CameraMoving.SetActive(false, 0.8f);
         _stateController.PlayerInput.DisablePlayerControls();
         _stateController.SceneLoader.UnlockNewScene();

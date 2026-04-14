@@ -923,11 +923,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f01179718740924d94c3977dfc47825, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveSettings:
-  - type: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
-    saveBehavior: 1
-  - type: {fileID: 11400000, guid: 3b3cb13bba75683448bd4bf39737f506, type: 2}
-    saveBehavior: 0
 --- !u!4 &593167010
 Transform:
   m_ObjectHideFlags: 0
@@ -1581,6 +1576,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectibleType: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
   quantity: 1
+  uniqueId: 3
   OnCollected:
     m_PersistentCalls:
       m_Calls: []
@@ -1846,6 +1842,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectibleType: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
   quantity: 1
+  uniqueId: 1
   OnCollected:
     m_PersistentCalls:
       m_Calls: []
@@ -2067,6 +2064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectibleType: {fileID: 11400000, guid: 3b3cb13bba75683448bd4bf39737f506, type: 2}
   quantity: 1
+  uniqueId: 2
   OnCollected:
     m_PersistentCalls:
       m_Calls: []
