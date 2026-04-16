@@ -10,21 +10,21 @@ namespace CollectibleSystem
         OnGameEnd,  // Save when game ends
         Never  // Never save this type
     }
-    
+
     public class CollectibleManager : MonoBehaviour
     {
         public static CollectibleManager Instance { get; private set; }
-        
+
         public delegate void CollectibleCollectedHandler(Collectible collectible);
         public event CollectibleCollectedHandler OnCollectibleCollected;
-        
+
         private Dictionary<string, int> collectedItems = new Dictionary<string, int>();
         private Dictionary<string, int> temporaryItems = new Dictionary<string, int>();
 
         private HashSet<string> collectedUniqueIds = new HashSet<string>();
         private HashSet<string> tmp_collectedUniqueIds = new HashSet<string>();
 
-        
+
         private void Awake()
         {
             if (Instance == null)
@@ -36,17 +36,17 @@ namespace CollectibleSystem
             {
                 Destroy(gameObject);
             }
-            
+
             LoadFromPlayerPrefs();
         }
 
         public void Collect(Collectible collectible)
         {
             if (collectible.Type == null) return;
-            
+
             SaveBehavior behavior = collectible.Type.SaveBehavior;
             string uid = collectible.UniqueId; // Сохраняем локально для безопасности
-            
+
             if (behavior == SaveBehavior.OnCollection)
             {
                 UpdateItemCount(collectedItems, collectible.Type.Id, collectible.Quantity);
@@ -58,10 +58,18 @@ namespace CollectibleSystem
                 UpdateItemCount(temporaryItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid); // Во временный
             }
-            
-            // Update level stats
-            LevelStatsManager.Instance?.UpdateStats(collectible.Type.Id, collectible.Quantity);
-            
+            else if (behavior == SaveBehavior.OnGameEnd)
+            {
+                UpdateItemCount(temporaryItems, collectible.Type.Id, collectible.Quantity);
+                if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid); // Во временный
+            }
+
+            // Update level stats only for non-temporary items
+            if (behavior == SaveBehavior.OnCollection || behavior == SaveBehavior.OnGameEnd)
+            {
+                LevelStatsManager.Instance?.UpdateStats(collectible.Type.Id, collectible.Quantity);
+            }
+
             OnCollectibleCollected?.Invoke(collectible);
         }
 
@@ -74,10 +82,15 @@ namespace CollectibleSystem
 
         public void SaveTemporaryItems()
         {
+            Debug.Log("Saving temporary items (OnLevelComplete items)");
+
             // Переносим количества
             foreach (var item in temporaryItems)
             {
                 UpdateItemCount(collectedItems, item.Key, item.Value);
+                // Update level stats for each item that was temporarily collected
+                LevelStatsManager.Instance?.UpdateStats(item.Key, item.Value);
+                Debug.Log("  Saved temporary: " + item.Key + " = " + item.Value);
             }
 
             // Переносим уникальные ID
@@ -88,6 +101,11 @@ namespace CollectibleSystem
             tmp_collectedUniqueIds.Clear();
 
             SaveToPlayerPrefs();
+
+            // Save level stats to persist the updated counts
+            LevelStatsManager.Instance?.SaveCurrentLevelStats();
+
+            Debug.Log("Temporary items saved successfully");
         }
 
         public void SaveToPlayerPrefs()
@@ -105,7 +123,7 @@ namespace CollectibleSystem
                 }
             }
             PlayerPrefs.SetInt("ItemCount_Total", index);
-            
+
             // Save unique IDs
             index = 0;
             foreach (var uniqueId in collectedUniqueIds)
@@ -114,31 +132,31 @@ namespace CollectibleSystem
                 index++;
             }
             PlayerPrefs.SetInt("UniqueIdCount_Total", index);
-            
+
             PlayerPrefs.Save();
             Debug.Log("Save complete. Total items saved: " + collectedItems.Count + ", Unique IDs saved: " + collectedUniqueIds.Count);
         }
-        
+
         public void LoadFromPlayerPrefs()
         {
             int count = PlayerPrefs.GetInt("ItemCount_Total", 0);
             Debug.Log("Loading from PlayerPrefs. Found " + count + " items to load");
-            
+
             collectedItems.Clear();
             collectedUniqueIds.Clear();
-            
+
             for (int i = 0; i < count; i++)
             {
                 string id = PlayerPrefs.GetString("ItemId_" + i, string.Empty);
                 int countValue = PlayerPrefs.GetInt("ItemCount_" + i, 0);
-                
+
                 if (!string.IsNullOrEmpty(id) && countValue > 0)
                 {
                     collectedItems[id] = countValue;
                     Debug.Log("  Loaded: " + id + " = " + countValue);
                 }
             }
-            
+
             // Load unique IDs
             int uniqueIdCount = PlayerPrefs.GetInt("UniqueIdCount_Total", 0);
             for (int i = 0; i < uniqueIdCount; i++)
@@ -150,10 +168,10 @@ namespace CollectibleSystem
                     Debug.Log("  Loaded Unique ID: " + uniqueId);
                 }
             }
-            
+
             Debug.Log("Load complete. Total items loaded: " + collectedItems.Count + ", Unique IDs loaded: " + collectedUniqueIds.Count);
         }
-        
+
         public int GetItemCount(string itemId)
         {
             if (collectedItems.TryGetValue(itemId, out int count))
@@ -162,12 +180,21 @@ namespace CollectibleSystem
             }
             return 0;
         }
-        
+
+        public int GetTemporaryItemCount(string itemId)
+        {
+            if (temporaryItems.TryGetValue(itemId, out int count))
+            {
+                return count;
+            }
+            return 0;
+        }
+
         public bool IsUniqueIdCollected(string uniqueId)
         {
             return collectedUniqueIds.Contains(uniqueId);
         }
-        
+
         public Dictionary<string, int> GetAllCollectedItems()
         {
             return collectedItems;

@@ -13,19 +13,190 @@ namespace CollectibleSystem
         public class CollectibleTypeStats
         {
             public string collectibleTypeId;
-            public int totalCount;
-            [NonSerialized] public int collectedCount;
-            [NonSerialized] public int remainingCount;
+            public int totalCount; // This value is preserved in SO and never changed
+        }
+
+        // Runtime data for tracking collected/remaining counts
+        [System.NonSerialized]
+        public List<RuntimeCollectibleStats> runtimeStats = new List<RuntimeCollectibleStats>();
+
+        [System.Serializable]
+        public class RuntimeCollectibleStats
+        {
+            public string collectibleTypeId;
+            public int collectedCount;
+            public int remainingCount;
         }
 
         public string levelId;
         public List<CollectibleTypeStats> collectibleStats;
 
+        [System.Serializable]
+        public class LevelCollectibleStatsData
+        {
+            public string levelId;
+            public List<CollectibleTypeStatsDataEntry> collectibleStats;
+        }
+
+        [System.Serializable]
+        public class CollectibleTypeStatsDataEntry
+        {
+            public string collectibleTypeId;
+            public int totalCount;
+            public int collectedCount;
+            public int remainingCount;
+        }
+
         public void CalculateRemainingCounts()
+        {
+            runtimeStats.Clear();
+            foreach (var stat in collectibleStats)
+            {
+                int collected = GetCollectedCount(stat.collectibleTypeId);
+                // Ensure collected doesn't exceed total
+                int finalCollected = Mathf.Min(collected, stat.totalCount);
+                int remaining = stat.totalCount - finalCollected;
+                runtimeStats.Add(new RuntimeCollectibleStats
+                {
+                    collectibleTypeId = stat.collectibleTypeId,
+                    collectedCount = finalCollected,
+                    remainingCount = remaining
+                });
+            }
+        }
+
+        public int GetCollectedCount(string collectibleTypeId)
+        {
+            foreach (var stat in runtimeStats)
+            {
+                if (stat.collectibleTypeId == collectibleTypeId)
+                {
+                    return stat.collectedCount;
+                }
+            }
+            return 0;
+        }
+
+        public int GetRemainingCount(string collectibleTypeId)
+        {
+            foreach (var stat in runtimeStats)
+            {
+                if (stat.collectibleTypeId == collectibleTypeId)
+                {
+                    return stat.remainingCount;
+                }
+            }
+            return 0;
+        }
+
+        public void IncrementCollectedCount(string collectibleTypeId, int amount)
+        {
+            int total = GetTotalCount(collectibleTypeId);
+            
+            foreach (var stat in runtimeStats)
+            {
+                if (stat.collectibleTypeId == collectibleTypeId)
+                {
+                    int newCollected = stat.collectedCount + amount;
+                    // Don't exceed total count
+                    stat.collectedCount = Mathf.Min(newCollected, total);
+                    stat.remainingCount = total - stat.collectedCount;
+                    return;
+                }
+            }
+            
+            // If not found, only add if it exists in collectibleStats
+            if (HasCollectibleType(collectibleTypeId))
+            {
+                int finalCollected = Mathf.Min(amount, total);
+                runtimeStats.Add(new RuntimeCollectibleStats
+                {
+                    collectibleTypeId = collectibleTypeId,
+                    collectedCount = finalCollected,
+                    remainingCount = total - finalCollected
+                });
+            }
+        }
+
+        public int GetTotalCount(string collectibleTypeId)
         {
             foreach (var stat in collectibleStats)
             {
-                stat.remainingCount = stat.totalCount - stat.collectedCount;
+                if (stat.collectibleTypeId == collectibleTypeId)
+                {
+                    return stat.totalCount;
+                }
+            }
+            return 0;
+        }
+
+        public bool HasCollectibleType(string collectibleTypeId)
+        {
+            foreach (var stat in collectibleStats)
+            {
+                if (stat.collectibleTypeId == collectibleTypeId)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Save/Load methods for persisting collected counts
+        public void SaveLevelStats(string saveKey)
+        {
+            string json = JsonUtility.ToJson(new LevelCollectibleStatsData
+            {
+                levelId = levelId,
+                collectibleStats = runtimeStats.ConvertAll(stat => new CollectibleTypeStatsDataEntry
+                {
+                    collectibleTypeId = stat.collectibleTypeId,
+                    totalCount = GetTotalCount(stat.collectibleTypeId),
+                    collectedCount = stat.collectedCount,
+                    remainingCount = stat.remainingCount
+                }
+                )
+            });
+            PlayerPrefs.SetString(saveKey, json);
+            PlayerPrefs.Save();
+        }
+
+        public void LoadLevelStats(string saveKey)
+        {
+            if (PlayerPrefs.HasKey(saveKey))
+            {
+                string json = PlayerPrefs.GetString(saveKey);
+                LevelCollectibleStatsData data = JsonUtility.FromJson<LevelCollectibleStatsData>(json);
+
+                Debug.Log("Loading level stats for " + levelId + " from save key: " + saveKey);
+                Debug.Log("  Found " + data.collectibleStats.Count + " collectible types");
+                
+                runtimeStats.Clear();
+                foreach (var savedStat in data.collectibleStats)
+                {
+                    runtimeStats.Add(new RuntimeCollectibleStats
+                    {
+                        collectibleTypeId = savedStat.collectibleTypeId,
+                        collectedCount = savedStat.collectedCount,
+                        remainingCount = savedStat.remainingCount
+                    });
+                    Debug.Log("    " + savedStat.collectibleTypeId + 
+                              ": Collected=" + savedStat.collectedCount + 
+                              ", Remaining=" + savedStat.remainingCount);
+                }
+            }
+            else
+            {
+                Debug.Log("No saved data found for " + levelId + " (save key: " + saveKey + ")");
+            }
+        }
+
+        public void ClearLevelStats(string saveKey)
+        {
+            if (PlayerPrefs.HasKey(saveKey))
+            {
+                PlayerPrefs.DeleteKey(saveKey);
+                PlayerPrefs.Save();
             }
         }
     }

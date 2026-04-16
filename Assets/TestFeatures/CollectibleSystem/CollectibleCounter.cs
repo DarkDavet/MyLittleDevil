@@ -23,20 +23,6 @@ public class CollectibleCounter : MonoBehaviour
             }
             
             Debug.Log("Found " + count + " collectibles of type: " + collectibleType.DisplayName);
-            
-            // Update the level stats if they exist
-            if (sceneData != null && sceneData.collectibleStats != null)
-            {
-                foreach (var stat in sceneData.collectibleStats.collectibleStats)
-                {
-                    if (stat.collectibleTypeId == collectibleType.Id)
-                    {
-                        stat.totalCount = count;
-                        Debug.Log("Updated level stats for " + collectibleType.DisplayName + ": total=" + count);
-                        break;
-                    }
-                }
-            }
         }
     }
 }
