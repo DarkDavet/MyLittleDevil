@@ -192,6 +192,24 @@ namespace CollectibleSystem
             }
         }
 
+        public void DisplayLevelProgress(string levelId, LevelCollectibleStats levelStatsAsset)
+        {
+            string saveKey = "LevelStats_" + levelId;
+
+            // Временный объект для загрузки данных без активации рантайма
+            if (PlayerPrefs.HasKey(saveKey))
+            {
+                string json = PlayerPrefs.GetString(saveKey);
+                var data = JsonUtility.FromJson<LevelCollectibleStatsData>(json);
+
+                foreach (var entry in data.collectibleStats)
+                {
+                    // Здесь спавним виджеты (например, 6/10) в ячейку уровня
+                    Debug.Log($"Уровень {levelId}: {entry.collectibleTypeId} {entry.collectedCount}/{entry.totalCount}");
+                }
+            }
+        }
+
         public void ClearLevelStats(string saveKey)
         {
             if (PlayerPrefs.HasKey(saveKey))
