@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CollectibleSystem
@@ -54,23 +54,27 @@ namespace CollectibleSystem
             SaveBehavior behavior = collectible.Type.SaveBehavior;
             string uid = collectible.UniqueId;
 
-            // 1. Логика хранения (куда кладем)
+            // 1. Сначала ВСЕГДА обновляем статистику уровня для UI (только 1 раз!)
+            if (behavior != SaveBehavior.Never)
+            {
+                LevelStatsManager.Instance?.UpdateStats(collectible.Type.Id, collectible.Quantity);
+            }
+
+            // 2. Затем определяем логику сохранения
             if (behavior == SaveBehavior.OnCollection)
             {
                 UpdateItemCount(collectedItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) collectedUniqueIds.Add(uid);
+
                 SaveToPlayerPrefs();
+                // Сохраняем статистику уровня немедленно для этого типа
+                LevelStatsManager.Instance?.SaveCurrentLevelStats();
             }
-            else if (behavior != SaveBehavior.Never) // Для OnLevelComplete и OnGameEnd
+            else if (behavior != SaveBehavior.OnCollection && behavior != SaveBehavior.Never)
             {
                 UpdateItemCount(temporaryItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid);
-            }
-
-            // 2. Логика статистики (ВАЖНО: обновляем всегда, чтобы игрок видел прогресс на уровне)
-            if (behavior != SaveBehavior.Never)
-            {
-                LevelStatsManager.Instance?.UpdateStats(collectible.Type.Id, collectible.Quantity);
+                // Здесь SaveCurrentLevelStats НЕ вызываем, ждем конца уровня
             }
 
             OnCollectibleCollected?.Invoke(collectible);

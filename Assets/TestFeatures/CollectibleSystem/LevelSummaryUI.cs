@@ -12,6 +12,10 @@ public class LevelSummaryUI : MonoBehaviour
     [SerializeField] private CollectibleType coinType;
     [SerializeField] private CollectibleType crystalType;
 
+    private void OnEnable()
+    {
+        ShowSummary();
+    }
     public void ShowSummary()
     {
         // 1. Очищаем старые иконки, если они были
@@ -36,7 +40,8 @@ public class LevelSummaryUI : MonoBehaviour
             if (iconToDisplay != null)
             {
                 var widget = Instantiate(widgetPrefab, container);
-                widget.Setup(iconToDisplay, runtime.collectedCount, runtime.totalCount);
+                int added = LevelStatsManager.Instance.GetAddedThisSession(runtime.collectibleTypeId);
+                widget.Setup(iconToDisplay, runtime.collectedCount, runtime.totalCount, added);
             }
         }
     }

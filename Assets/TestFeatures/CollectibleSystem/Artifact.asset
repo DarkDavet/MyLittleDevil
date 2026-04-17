@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Artifact
   m_EditorClassIdentifier: 
   id: artifact
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: d1cc256eb46668d498925dae878aafbf, type: 3}
   displayName: Artifact
   isStackable: 0
   maxStackSize: 100

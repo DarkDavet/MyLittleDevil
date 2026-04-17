@@ -12,6 +12,8 @@ namespace CollectibleSystem
 
         private LevelCollectibleStats currentLevelStats;
 
+        private Dictionary<string, int> statsAtStartOfSession = new Dictionary<string, int>();
+
         private void Awake()
         {
             if (Instance == null)
@@ -46,6 +48,19 @@ namespace CollectibleSystem
 
                 OnStatsUpdated?.Invoke(currentLevelStats);
             }
+
+            statsAtStartOfSession.Clear();
+            foreach (var stat in currentLevelStats.runtimeStats)
+            {
+                statsAtStartOfSession[stat.collectibleTypeId] = stat.collectedCount;
+            }
+        }
+
+        public int GetAddedThisSession(string typeId)
+        {
+            int current = currentLevelStats.GetCollectedCount(typeId);
+            int start = statsAtStartOfSession.ContainsKey(typeId) ? statsAtStartOfSession[typeId] : 0;
+            return current - start;
         }
 
         public void UpdateStats(string collectibleTypeId, int amount)

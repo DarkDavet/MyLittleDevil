@@ -112,6 +112,7 @@ namespace CollectibleSystem
                 int finalCollected = Mathf.Min(amount, total);
                 runtimeStats.Add(new RuntimeCollectibleStats
                 {
+                    totalCount = total,
                     collectibleTypeId = collectibleTypeId,
                     collectedCount = finalCollected,
                     remainingCount = total - finalCollected
@@ -177,6 +178,7 @@ namespace CollectibleSystem
                 {
                     runtimeStats.Add(new RuntimeCollectibleStats
                     {
+                        totalCount = savedStat.totalCount,
                         collectibleTypeId = savedStat.collectibleTypeId,
                         collectedCount = savedStat.collectedCount,
                         remainingCount = savedStat.remainingCount
