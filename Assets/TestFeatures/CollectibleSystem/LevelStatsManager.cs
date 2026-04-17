@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace CollectibleSystem
@@ -6,12 +6,12 @@ namespace CollectibleSystem
     public class LevelStatsManager : MonoBehaviour
     {
         public static LevelStatsManager Instance { get; private set; }
-        
+
         public delegate void StatsUpdatedHandler(LevelCollectibleStats stats);
         public event StatsUpdatedHandler OnStatsUpdated;
-        
+
         private LevelCollectibleStats currentLevelStats;
-        
+
         private void Awake()
         {
             if (Instance == null)
@@ -24,119 +24,63 @@ namespace CollectibleSystem
                 Destroy(gameObject);
             }
         }
-        
+
         public void InitializeStatsForLevel(SceneData sceneData)
         {
             if (sceneData != null && sceneData.collectibleStats != null)
             {
+                // 1. Привязываем SO статистики к менеджеру
                 currentLevelStats = sceneData.collectibleStats;
+                // Используем sceneID для ключа сохранения
                 string saveKey = "LevelStats_" + sceneData.sceneID;
-                
+
+                // 2. Пытаемся загрузить сохраненный прогресс именно этого уровня
                 currentLevelStats.LoadLevelStats(saveKey);
-                
-                // If no saved data, initialize with zero collected counts
+
+                // 3. Если уровень запущен впервые (runtimeStats пустые после загрузки)
                 if (currentLevelStats.runtimeStats.Count == 0)
                 {
-                    currentLevelStats.runtimeStats.Clear();
-                    
-                    foreach (var stat in currentLevelStats.collectibleStats)
-                    {
-                        // Get count of items already collected (saved in CollectibleManager)
-                        int alreadyCollected = CollectibleManager.Instance.GetItemCount(stat.collectibleTypeId);
-                        int remaining = stat.totalCount - alreadyCollected;
-                        
-                        currentLevelStats.runtimeStats.Add(new LevelCollectibleStats.RuntimeCollectibleStats
-                        {
-                            collectibleTypeId = stat.collectibleTypeId,
-                            collectedCount = alreadyCollected,
-                            remainingCount = remaining
-                        });
-                    }
+                    // Просто инициализируем пустые значения на основе списка collectibleStats в SO
+                    currentLevelStats.CalculateRemainingCounts();
                 }
-                
+
                 OnStatsUpdated?.Invoke(currentLevelStats);
             }
         }
 
-        public LevelCollectibleStats GetCurrentStats()
-        {
-            return currentLevelStats;
-        }
-
-        public List<LevelCollectibleStats.RuntimeCollectibleStats> GetRuntimeStats()
-        {
-            if (currentLevelStats != null)
-            {
-                return currentLevelStats.runtimeStats;
-            }
-            return new List<LevelCollectibleStats.RuntimeCollectibleStats>();
-        }
-
-        public int GetTotalCount(string collectibleTypeId)
-        {
-            if (currentLevelStats != null)
-            {
-                return currentLevelStats.GetTotalCount(collectibleTypeId);
-            }
-            return 0;
-        }
-
-        private List<string> GetAllPlayerPrefsKeys()
-        {
-            List<string> keys = new List<string>();
-            for (int i = 0; i < 1000; i++)
-            {
-                string key = PlayerPrefs.GetString("PlayerPrefsKeys" + i);
-                if (string.IsNullOrEmpty(key))
-                    break;
-                keys.Add(key);
-            }
-            return keys;
-        }
-        
         public void UpdateStats(string collectibleTypeId, int amount)
         {
             if (currentLevelStats == null) return;
-            
-            // Get current collected count and total
-            int currentCollected = currentLevelStats.GetCollectedCount(collectibleTypeId);
-            int total = currentLevelStats.GetTotalCount(collectibleTypeId);
-            
-            // Calculate new collected count, but don't exceed total
-            int newCollected = currentCollected + amount;
-            int finalCollected = Mathf.Min(newCollected, total);
-            
-            // Update the collected count directly
-            foreach (var stat in currentLevelStats.runtimeStats)
-            {
-                if (stat.collectibleTypeId == collectibleTypeId)
-                {
-                    stat.collectedCount = finalCollected;
-                    stat.remainingCount = total - finalCollected;
-                    break;
-                }
-            }
+
+            // Используем внутренний метод SO для обновления — это централизует логику
+            currentLevelStats.IncrementCollectedCount(collectibleTypeId, amount);
+
             OnStatsUpdated?.Invoke(currentLevelStats);
         }
 
-         public void SaveCurrentLevelStats()
-         {
-             if (currentLevelStats != null && currentLevelStats.levelId != null)
-             {
-                 string saveKey = "LevelStats_" + currentLevelStats.levelId;
-                 currentLevelStats.SaveLevelStats(saveKey);
-                 Debug.Log("Saved level stats for: " + currentLevelStats.levelId);
-             }
-         }
+        public void SaveCurrentLevelStats()
+        {
+            // Используем ID уровня из самого SO, чтобы не зависеть от внешних ссылок при сохранении
+            if (currentLevelStats != null && !string.IsNullOrEmpty(currentLevelStats.levelId))
+            {
+                string saveKey = "LevelStats_" + currentLevelStats.levelId;
+                currentLevelStats.SaveLevelStats(saveKey);
+            }
+        }
 
-         public void ClearCurrentLevelStats()
-         {
-             if (currentLevelStats != null && currentLevelStats.levelId != null)
-             {
-                 string saveKey = "LevelStats_" + currentLevelStats.levelId;
-                 currentLevelStats.ClearLevelStats(saveKey);
-                 Debug.Log("Cleared level stats for: " + currentLevelStats.levelId);
-             }
-         }
+        // Хелперы для UI
+        public LevelCollectibleStats GetCurrentStats() => currentLevelStats;
+
+        public int GetTotalCount(string collectibleTypeId) => currentLevelStats?.GetTotalCount(collectibleTypeId) ?? 0;
+
+        public void ClearCurrentLevelStats()
+        {
+            if (currentLevelStats != null)
+            {
+                string saveKey = "LevelStats_" + currentLevelStats.levelId;
+                currentLevelStats.ClearLevelStats(saveKey);
+                currentLevelStats.runtimeStats.Clear(); // Обнуляем в рантайме
+            }
+        }
     }
 }

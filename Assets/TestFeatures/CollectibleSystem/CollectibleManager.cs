@@ -13,6 +13,13 @@ namespace CollectibleSystem
 
     public class CollectibleManager : MonoBehaviour
     {
+        [System.Serializable]
+        public class GlobalSaveData
+        {
+            public List<string> keys;
+            public List<int> values;
+            public List<string> uniqueIds;
+        }
         public static CollectibleManager Instance { get; private set; }
 
         public delegate void CollectibleCollectedHandler(Collectible collectible);
@@ -45,27 +52,23 @@ namespace CollectibleSystem
             if (collectible.Type == null) return;
 
             SaveBehavior behavior = collectible.Type.SaveBehavior;
-            string uid = collectible.UniqueId; // Сохраняем локально для безопасности
+            string uid = collectible.UniqueId;
 
+            // 1. Логика хранения (куда кладем)
             if (behavior == SaveBehavior.OnCollection)
             {
                 UpdateItemCount(collectedItems, collectible.Type.Id, collectible.Quantity);
-                if (!string.IsNullOrEmpty(uid)) collectedUniqueIds.Add(uid); // Сразу в постоянный
+                if (!string.IsNullOrEmpty(uid)) collectedUniqueIds.Add(uid);
                 SaveToPlayerPrefs();
             }
-            else if (behavior == SaveBehavior.OnLevelComplete)
+            else if (behavior != SaveBehavior.Never) // Для OnLevelComplete и OnGameEnd
             {
                 UpdateItemCount(temporaryItems, collectible.Type.Id, collectible.Quantity);
-                if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid); // Во временный
-            }
-            else if (behavior == SaveBehavior.OnGameEnd)
-            {
-                UpdateItemCount(temporaryItems, collectible.Type.Id, collectible.Quantity);
-                if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid); // Во временный
+                if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid);
             }
 
-            // Update level stats only for non-temporary items
-            if (behavior == SaveBehavior.OnCollection || behavior == SaveBehavior.OnGameEnd)
+            // 2. Логика статистики (ВАЖНО: обновляем всегда, чтобы игрок видел прогресс на уровне)
+            if (behavior != SaveBehavior.Never)
             {
                 LevelStatsManager.Instance?.UpdateStats(collectible.Type.Id, collectible.Quantity);
             }
@@ -88,8 +91,6 @@ namespace CollectibleSystem
             foreach (var item in temporaryItems)
             {
                 UpdateItemCount(collectedItems, item.Key, item.Value);
-                // Update level stats for each item that was temporarily collected
-                LevelStatsManager.Instance?.UpdateStats(item.Key, item.Value);
                 Debug.Log("  Saved temporary: " + item.Key + " = " + item.Value);
             }
 
@@ -110,66 +111,42 @@ namespace CollectibleSystem
 
         public void SaveToPlayerPrefs()
         {
-            Debug.Log("Saving " + collectedItems.Count + " items to PlayerPrefs");
-            int index = 0;
-            foreach (var item in collectedItems)
+            var data = new GlobalSaveData
             {
-                if (item.Value > 0) // Only save if count > 0
-                {
-                    PlayerPrefs.SetString("ItemId_" + index, item.Key);
-                    PlayerPrefs.SetInt("ItemCount_" + index, item.Value);
-                    Debug.Log("  Saved: " + item.Key + " = " + item.Value);
-                    index++;
-                }
-            }
-            PlayerPrefs.SetInt("ItemCount_Total", index);
-
-            // Save unique IDs
-            index = 0;
-            foreach (var uniqueId in collectedUniqueIds)
-            {
-                PlayerPrefs.SetString("UniqueId_" + index, uniqueId);
-                index++;
-            }
-            PlayerPrefs.SetInt("UniqueIdCount_Total", index);
-
-            PlayerPrefs.Save();
-            Debug.Log("Save complete. Total items saved: " + collectedItems.Count + ", Unique IDs saved: " + collectedUniqueIds.Count);
+                keys = new List<string>(collectedItems.Keys),
+                values = new List<int>(collectedItems.Values),
+                uniqueIds = new List<string>(collectedUniqueIds)
+            };
+            PlayerPrefs.SetString("GlobalCollectibles", JsonUtility.ToJson(data));
         }
 
         public void LoadFromPlayerPrefs()
         {
-            int count = PlayerPrefs.GetInt("ItemCount_Total", 0);
-            Debug.Log("Loading from PlayerPrefs. Found " + count + " items to load");
-
             collectedItems.Clear();
             collectedUniqueIds.Clear();
 
-            for (int i = 0; i < count; i++)
+            if (PlayerPrefs.HasKey("GlobalCollectibles"))
             {
-                string id = PlayerPrefs.GetString("ItemId_" + i, string.Empty);
-                int countValue = PlayerPrefs.GetInt("ItemCount_" + i, 0);
+                string json = PlayerPrefs.GetString("GlobalCollectibles");
+                GlobalSaveData data = JsonUtility.FromJson<GlobalSaveData>(json);
 
-                if (!string.IsNullOrEmpty(id) && countValue > 0)
+                if (data != null)
                 {
-                    collectedItems[id] = countValue;
-                    Debug.Log("  Loaded: " + id + " = " + countValue);
+                    // Восстанавливаем словарь предметов
+                    for (int i = 0; i < data.keys.Count; i++)
+                    {
+                        collectedItems[data.keys[i]] = data.values[i];
+                    }
+
+                    // Восстанавливаем уникальные ID
+                    if (data.uniqueIds != null)
+                    {
+                        collectedUniqueIds = new HashSet<string>(data.uniqueIds);
+                    }
+
+                    Debug.Log($"Загружено: предметов {collectedItems.Count}, уникальных ID {collectedUniqueIds.Count}");
                 }
             }
-
-            // Load unique IDs
-            int uniqueIdCount = PlayerPrefs.GetInt("UniqueIdCount_Total", 0);
-            for (int i = 0; i < uniqueIdCount; i++)
-            {
-                string uniqueId = PlayerPrefs.GetString("UniqueId_" + i, string.Empty);
-                if (!string.IsNullOrEmpty(uniqueId))
-                {
-                    collectedUniqueIds.Add(uniqueId);
-                    Debug.Log("  Loaded Unique ID: " + uniqueId);
-                }
-            }
-
-            Debug.Log("Load complete. Total items loaded: " + collectedItems.Count + ", Unique IDs loaded: " + collectedUniqueIds.Count);
         }
 
         public int GetItemCount(string itemId)

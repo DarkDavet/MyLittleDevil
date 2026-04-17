@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Unity.Collections;
@@ -23,6 +23,7 @@ namespace CollectibleSystem
         [System.Serializable]
         public class RuntimeCollectibleStats
         {
+            public int totalCount;
             public string collectibleTypeId;
             public int collectedCount;
             public int remainingCount;
@@ -47,21 +48,21 @@ namespace CollectibleSystem
             public int remainingCount;
         }
 
+        private Dictionary<string, RuntimeCollectibleStats> runtimeDict = new Dictionary<string, RuntimeCollectibleStats>();
+
         public void CalculateRemainingCounts()
         {
             runtimeStats.Clear();
+            runtimeDict.Clear();
             foreach (var stat in collectibleStats)
             {
-                int collected = GetCollectedCount(stat.collectibleTypeId);
-                // Ensure collected doesn't exceed total
-                int finalCollected = Mathf.Min(collected, stat.totalCount);
-                int remaining = stat.totalCount - finalCollected;
-                runtimeStats.Add(new RuntimeCollectibleStats
+                var runtime = new RuntimeCollectibleStats
                 {
                     collectibleTypeId = stat.collectibleTypeId,
-                    collectedCount = finalCollected,
-                    remainingCount = remaining
-                });
+                    totalCount = stat.totalCount 
+                };
+                runtimeStats.Add(runtime);
+                runtimeDict[stat.collectibleTypeId] = runtime;
             }
         }
 
