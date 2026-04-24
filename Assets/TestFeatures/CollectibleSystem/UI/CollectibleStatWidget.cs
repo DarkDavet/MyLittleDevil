@@ -16,14 +16,17 @@ public class CollectibleStatWidget : MonoBehaviour
         iconImage.sprite = icon;
         countText.text = $"{collected}/{total}";
 
-        if (added > 0)
+        if (addedText  != null)
         {
-            addedText.gameObject.SetActive(true);
-            addedText.text = $"+{added}";
-        }
-        else
-        {
-            addedText.gameObject.SetActive(false);
-        }
+            if (added > 0)
+            {
+                addedText.gameObject.SetActive(true);
+                addedText.text = $"+{added}";
+            }
+            else
+            {
+                addedText.gameObject.SetActive(false);
+            }
+        }   
     }
 }
