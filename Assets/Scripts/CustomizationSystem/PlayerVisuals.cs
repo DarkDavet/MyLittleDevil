@@ -11,47 +11,69 @@ public class PlayerVisuals : MonoBehaviour
         public SpriteRenderer renderer;
     }
 
-    [SerializeField] private List<VisualSlot> slots; // Настройте в инспекторе
-    [SerializeField] private List<CustomizationItem> allItems; // Все ассеты предметов
+    [Header("References")]
+    [SerializeField] private ItemDatabase database; // Наша центральная база
+    [SerializeField] private List<VisualSlot> slots; // Настройки слотов (Hat -> SpriteRenderer и т.д.)
 
     private void Start()
     {
         ApplyAllSavedItems();
     }
 
+    // Применяет конкретный предмет (вызывается из магазина при примерке)
     public void ApplyItem(CustomizationItem item)
     {
-        foreach (var slot in slots)
+        if (item == null) return;
+
+        for (int i = 0; i < slots.Count; i++)
         {
-            if (slot.category == item.category)
+            if (slots[i].category == item.category)
             {
-                if (slot.renderer != null) slot.renderer.sprite = item.visualSprite;
-                return; // Нашли и выходим
+                if (slots[i].renderer != null)
+                    slots[i].renderer.sprite = item.visualSprite;
+                return;
             }
         }
     }
 
+    // Загружает всё, что наето на игрока, из PlayerPrefs
     public void ApplyAllSavedItems()
     {
-        // Проходим по всем категориям и загружаем сохраненное
-        foreach (var slot in slots)
+        if (database == null)
         {
-            string savedId = PlayerPrefs.GetString("Equipped_" + slot.category.ToString(), "");
+            Debug.LogError("ItemDatabase не назначена в PlayerVisuals на объекте " + gameObject.name);
+            return;
+        }
+
+        // Мы проходим по категориям из Enum, чтобы загрузить всё по отдельности
+        foreach (CustomizationCategory cat in System.Enum.GetValues(typeof(CustomizationCategory)))
+        {
+            string savedId = PlayerPrefs.GetString("Equipped_" + cat.ToString(), "");
+
             if (!string.IsNullOrEmpty(savedId))
             {
-                CustomizationItem item = allItems.Find(x => x.id == savedId);
-                if (item != null) slot.renderer.sprite = item.visualSprite;
+                CustomizationItem item = database.GetItemById(savedId);
+                if (item != null)
+                {
+                    ApplyItem(item);
+                }
+            }
+            else
+            {
+                // Если в этой категории ничего не надето, убедимся, что слот пуст
+                ClearSlot(cat);
             }
         }
     }
 
     public void ClearSlot(CustomizationCategory category)
     {
-        foreach (var slot in slots)
+        for (int i = 0; i < slots.Count; i++)
         {
-            if (slot.category == category)
+            if (slots[i].category == category)
             {
-                if (slot.renderer != null) slot.renderer.sprite = null;
+                if (slots[i].renderer != null)
+                    slots[i].renderer.sprite = null;
                 return;
             }
         }

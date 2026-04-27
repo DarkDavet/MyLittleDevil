@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using CollectibleSystem;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,10 +7,6 @@ public class CustomizationShopUI : MonoBehaviour
 {
     [Header("Panel References")]
     [SerializeField] private GameObject mainPanel;
-    [SerializeField] private GameObject itemGridPanel;
-    [SerializeField] private GameObject detailPanel;
-    [SerializeField] private GameObject confirmPanel;
-    [SerializeField] private GameObject noFundsPanel;
 
     [Header("UI Elements")]
     [SerializeField] private TextMeshProUGUI balanceText;
@@ -27,21 +24,26 @@ public class CustomizationShopUI : MonoBehaviour
 
     private void Awake()
     {
+        // Находим менеджер логики
+        customizationManager = FindObjectOfType<CustomizationManager>();
+
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseShop);
     }
 
     private void Start()
     {
+        // Инициализируем магазин при старте (если нужно сразу показать первую категорию)
+        SelectCategory((int)CustomizationCategory.Hat);
         UpdateBalance();
-        SelectCategory(0);
     }
 
     public void OpenShop()
     {
         mainPanel.SetActive(true);
-        SelectCategory(0);
         UpdateBalance();
+        // При открытии обновляем текущую сетку
+        RefreshShop();
     }
 
     public void CloseShop()
@@ -54,23 +56,18 @@ public class CustomizationShopUI : MonoBehaviour
 
     public void SelectCategory(int categoryIndex)
     {
-        CustomizationCategory[] categories = new CustomizationCategory[] {
-            CustomizationCategory.Hat,
-            CustomizationCategory.Glasses,
-            CustomizationCategory.Effect
-        };
+        // Приводим индекс напрямую к Enum
+        CustomizationCategory selectedCat = (CustomizationCategory)categoryIndex;
 
-        if (categoryIndex >= 0 && categoryIndex < categories.Length)
+        if (itemGrid != null)
         {
-            if (itemGrid != null)
-            {
-                itemGrid.Populate(categories[categoryIndex]);
-            }
+            itemGrid.Populate(selectedCat);
+        }
 
-            if (categoryTabs != null)
-            {
-                categoryTabs.SetCategoryCount(categories.Length);
-            }
+        // Синхронизируем вкладки, если нужно (подсветка активной)
+        if (categoryTabs != null)
+        {
+            categoryTabs.UpdateVisuals(categoryIndex);
         }
     }
 
@@ -80,15 +77,16 @@ public class CustomizationShopUI : MonoBehaviour
 
         if (customizationManager != null)
         {
-            customizationManager.SelectItem(item);
+            customizationManager.SelectItem(item); // Примерка на персонаже
         }
 
         if (detailPanelController != null)
         {
-            detailPanelController.ShowItem(item);
+            detailPanelController.ShowItem(item); // Показ инфо в панели
         }
     }
 
+    // Вызывается из UI кнопки "Купить"
     public void OnBuyClick()
     {
         if (customizationManager != null && selectedItem != null)
@@ -97,13 +95,14 @@ public class CustomizationShopUI : MonoBehaviour
         }
     }
 
+    // Вызывается из модального окна ПОДТВЕРЖДЕНИЯ покупки
     public void ConfirmPurchase()
     {
         if (customizationManager != null)
         {
             customizationManager.ConfirmPurchase();
+            RefreshShop(); // Обновляем состояние кнопок (куплено/надето)
         }
-        UpdateBalance();
     }
 
     public void ToggleEquip()
@@ -115,22 +114,21 @@ public class CustomizationShopUI : MonoBehaviour
             {
                 detailPanelController.UpdateButtons(selectedItem);
             }
+            RefreshShop(); // Чтобы галочка в сетке обновилась
         }
     }
 
-    public void OnConfirmPurchase()
+    public void UpdateBalance()
     {
-        if (confirmationPanelHandler != null)
-            confirmationPanelHandler.ShowPanel();
-    }
-
-    private void UpdateBalance()
-    {
-        // TODO: Подставить реальный метод получения баланса
-        if (balanceText != null)
+        if (balanceText != null && selectedItem != null && selectedItem.currencyType != null)
         {
-            // balanceText.text = "Balance: " + CollectibleManager.Instance.GetBalance().ToString();
-            balanceText.text = "Balance: 0";
+            // Берем баланс конкретной валюты, которая нужна для выбранного предмета
+            int amount = CollectibleManager.Instance.GetItemCount(selectedItem.currencyType.Id);
+            balanceText.text = $"{selectedItem.currencyType.DisplayName}: {amount}";
+        }
+        else if (balanceText != null)
+        {
+            balanceText.text = "Select an item";
         }
     }
 
@@ -140,7 +138,7 @@ public class CustomizationShopUI : MonoBehaviour
             noFundsPanelHandler.ShowPanel();
     }
 
-    private void RefreshShop()
+    public void RefreshShop()
     {
         if (itemGrid != null)
         {

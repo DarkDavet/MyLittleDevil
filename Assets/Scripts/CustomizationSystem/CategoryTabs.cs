@@ -6,109 +6,68 @@ using UnityEngine.UI;
 
 public class CategoryTabs : MonoBehaviour
 {
-    [Header("Tab Buttons")]
-    [SerializeField] private List<Button> tabButtons = new List<Button>();
+    [Header("References")]
+    [SerializeField] private CustomizationShopUI shopUI;
+
+    [Header("Tab Toggles")]
+    // Каждому Toggle в инспекторе соответствует индекс (0 = Hat, 1 = Glasses и т.д.)
     [SerializeField] private List<Toggle> tabToggles = new List<Toggle>();
 
-    [Header("Tab Labels")]
-    [SerializeField] private List<GameObject> tabLabels = new List<GameObject>();
-
-    [Header("Content")]
-    [SerializeField] private GameObject[] categoryPanels;
-
-    private CustomizationManager customizationManager;
-    private int activeCategoryIndex = 0;
-
-    private void Awake()
-    {
-        foreach (var toggle in tabToggles)
-        {
-            toggle.onValueChanged.AddListener(OnTabToggled);
-        }
-
-        foreach (var button in tabButtons)
-        {
-            button.onClick.AddListener(OnTabButtonClicked);
-        }
-    }
+    [Header("Visual Elements (Optional)")]
+    // Если хочешь менять цвет текста или иконки при активации
+    [SerializeField] private Color activeColor = Color.white;
+    [SerializeField] private Color inactiveColor = Color.gray;
 
     private void Start()
     {
-        ShowCategory(0);
-    }
-
-    private void OnTabToggled(bool isOn)
-    {
-        if (!isOn) return;
-
+        // Настраиваем слушателей программно, чтобы не делать это руками в инспекторе
         for (int i = 0; i < tabToggles.Count; i++)
         {
-            if (tabToggles[i].isOn)
-            {
-                activeCategoryIndex = i;
-                ShowCategory(i);
-                break;
-            }
+            int index = i; // Локальная переменная для замыкания
+            tabToggles[i].onValueChanged.AddListener((isOn) => {
+                if (isOn) OnTabSelected(index);
+            });
         }
-    }
 
-    private void OnTabButtonClicked()
-    {
-        for (int i = 0; i < tabButtons.Count; i++)
+        // Активируем первую вкладку по умолчанию
+        if (tabToggles.Count > 0)
         {
-            if (tabButtons[i] == EventSystem.current.currentSelectedGameObject)
-            {
-                activeCategoryIndex = i;
-                ActivateTab(i);
-                ShowCategory(i);
-                break;
-            }
+            tabToggles[0].isOn = true;
+            OnTabSelected(0);
         }
     }
 
-    private void ActivateTab(int index)
+    private void OnTabSelected(int index)
+    {
+        // 1. Уведомляем главный UI о смене категории
+        if (shopUI != null)
+        {
+            shopUI.SelectCategory(index);
+        }
+
+        // 2. Обновляем визуальную часть (цвета текстов и т.д.)
+        UpdateVisuals(index);
+    }
+
+    public void UpdateVisuals(int activeIndex)
     {
         for (int i = 0; i < tabToggles.Count; i++)
         {
-            tabToggles[i].isOn = (i == index);
-        }
-
-        for (int i = 0; i < tabLabels.Count; i++)
-        {
-            if (tabLabels[i] != null)
+            // Пример: меняем цвет текста внутри Toggle, если он есть
+            var label = tabToggles[i].GetComponentInChildren<TMPro.TextMeshProUGUI>();
+            if (label != null)
             {
-                tabLabels[i].SetActive(i == index);
+                label.color = (i == activeIndex) ? activeColor : inactiveColor;
             }
         }
     }
 
-    private void ShowCategory(int index)
+    // Метод для внешней активации вкладки (например, из ShopUI)
+    public void SetActiveTab(int index)
     {
-        for (int i = 0; i < categoryPanels.Length; i++)
+        if (index >= 0 && index < tabToggles.Count)
         {
-            if (categoryPanels[i] != null)
-            {
-                categoryPanels[i].SetActive(i == index);
-            }
-        }
-    }
-
-    public void SetCategoryCount(int count)
-    {
-        if (tabToggles.Count < count)
-        {
-            Debug.LogWarning("Not enough tab toggles assigned in inspector!");
-            return;
-        }
-
-        List<CustomizationCategory> categories = new List<CustomizationCategory> { CustomizationCategory.Hat, CustomizationCategory.Glasses, CustomizationCategory.Effect };
-
-        for (int i = 0; i < count; i++)
-        {
-            if (i < categories.Count)
-            {
-                ActivateTab(i);
-            }
+            tabToggles[index].isOn = true;
         }
     }
 }

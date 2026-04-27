@@ -4,24 +4,31 @@ using UnityEngine.UI;
 
 public class ItemDetailPanel : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private CustomizationShopUI shopUI;
+
     [Header("UI Elements")]
     [SerializeField] private Image detailImage;
     [SerializeField] private TextMeshProUGUI detailTitle;
     [SerializeField] private TextMeshProUGUI detailDescription;
     [SerializeField] private TextMeshProUGUI detailPrice;
+
+    [Header("Buttons & Panels")]
     [SerializeField] private Button buyButton;
-    [SerializeField] private Button equipButton;
+    [SerializeField] private Button toggleEquipButton; // Одна универсальная кнопка
+    [SerializeField] private TextMeshProUGUI equipButtonText; // Текст "Equip" или "Unequip"
+
     [SerializeField] private GameObject buyPanel;
     [SerializeField] private GameObject equipPanel;
 
-    private CustomizationManager customizationManager;
-
     private void Awake()
     {
+        // Подписываемся на события главного UI
         if (buyButton != null)
-            buyButton.onClick.AddListener(OnBuyClick);
-        if (equipButton != null)
-            equipButton.onClick.AddListener(OnEquipClick);
+            buyButton.onClick.AddListener(() => shopUI.OnBuyClick());
+
+        if (toggleEquipButton != null)
+            toggleEquipButton.onClick.AddListener(() => shopUI.ToggleEquip());
     }
 
     private void Start()
@@ -35,52 +42,41 @@ public class ItemDetailPanel : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        if (detailImage != null)
-            detailImage.sprite = item.visualSprite;
-        if (detailTitle != null)
-            detailTitle.text = item.displayName;
-        if (detailDescription != null)
-            detailDescription.text = item.description;
+        if (detailImage != null) detailImage.sprite = item.icon; // Лучше показывать иконку
+        if (detailTitle != null) detailTitle.text = item.displayName;
 
-        bool unlocked = item.IsUnlocked;
+        // Описание (убедитесь, что в CustomizationItem есть поле description)
+        if (detailDescription != null) detailDescription.text = item.displayName;
 
-        buyPanel.SetActive(!unlocked);
-        equipPanel.SetActive(unlocked);
-
-        if (detailPrice != null)
-        {
-            detailPrice.text = unlocked ? "" : item.price.ToString();
-        }
-    }
-
-    public void HideDetails()
-    {
-        gameObject.SetActive(false);
-    }
-
-    private void OnBuyClick()
-    {
-        if (customizationManager != null)
-        {
-            customizationManager.OnBuyButtonClick();
-        }
-    }
-
-    private void OnEquipClick()
-    {
-        if (customizationManager != null)
-        {
-            customizationManager.ToggleEquipSelectedItem();
-        }
+        UpdateButtons(item);
     }
 
     public void UpdateButtons(CustomizationItem item)
     {
         if (item == null) return;
 
-        if (buyPanel != null)
-            buyPanel.SetActive(!item.IsUnlocked);
-        if (equipPanel != null)
-            equipPanel.SetActive(item.IsUnlocked);
+        bool unlocked = item.IsUnlocked;
+        bool equipped = item.IsEquipped;
+
+        // Переключаем панели Купить / Надеть
+        if (buyPanel != null) buyPanel.SetActive(!unlocked);
+        if (equipPanel != null) equipPanel.SetActive(unlocked);
+
+        // Обновляем цену
+        if (detailPrice != null)
+        {
+            detailPrice.text = unlocked ? "Owned" : item.price.ToString();
+        }
+
+        // Обновляем текст кнопки надевания
+        if (equipButtonText != null)
+        {
+            equipButtonText.text = equipped ? "Unequip" : "Equip";
+        }
+    }
+
+    public void HideDetails()
+    {
+        gameObject.SetActive(false);
     }
 }

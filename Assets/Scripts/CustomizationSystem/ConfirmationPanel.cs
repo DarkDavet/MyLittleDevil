@@ -1,34 +1,36 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class ConfirmationPanel : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private CustomizationShopUI shopUI;
+
+    [Header("UI Elements")]
     [SerializeField] private Button confirmButton;
     [SerializeField] private Button cancelButton;
-    [SerializeField] private CustomizationManager customizationManager;
 
     private void Awake()
     {
+        // Панель должна быть выключена при старте
         gameObject.SetActive(false);
 
         if (confirmButton != null)
             confirmButton.onClick.AddListener(OnConfirm);
+
         if (cancelButton != null)
-            cancelButton.onClick.AddListener(OnCancel);
+            cancelButton.onClick.AddListener(HidePanel);
     }
 
     private void OnConfirm()
     {
-        if (customizationManager != null)
+        if (shopUI != null)
         {
-            customizationManager.ConfirmPurchase();
+            // Вызываем подтверждение через главный UI, 
+            // чтобы он сам обновил баланс и сетку после покупки
+            shopUI.ConfirmPurchase();
         }
-        gameObject.SetActive(false);
-    }
-
-    private void OnCancel()
-    {
-        gameObject.SetActive(false);
+        HidePanel();
     }
 
     public void ShowPanel()

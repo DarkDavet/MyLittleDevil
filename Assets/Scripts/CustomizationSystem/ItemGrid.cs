@@ -1,113 +1,71 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ItemGrid : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] private int itemsPerRow = 4;
-    [SerializeField] private float verticalSpacing = 10f;
-    [SerializeField] private float horizontalSpacing = 10f;
-
     [Header("References")]
-    [SerializeField] private GameObject itemSlotPrefab;
+    [SerializeField] private ItemDatabase database; // Наша база данных
+    [SerializeField] private ShopItemSlot itemSlotPrefab;
     [SerializeField] private Transform itemsContainer;
     [SerializeField] private CustomizationManager customizationManager;
+    [SerializeField] private CustomizationShopUI shopUI; // Ссылка на главный UI
 
     private List<ShopItemSlot> activeSlots = new List<ShopItemSlot>();
-    private List<CustomizationItem> currentItems = new List<CustomizationItem>();
 
     public void Populate(CustomizationCategory category)
     {
         ClearItems();
 
-        List<CustomizationItem> items = customizationManager.GetAllItems();
-        items.RemoveAll(i => i.category != category);
-        currentItems.AddRange(items);
-
-        for (int i = 0; i < items.Count; i++)
+        if (database == null)
         {
-            GameObject slotObj = Instantiate(itemSlotPrefab, itemsContainer);
-            slotObj.SetActive(true);
-
-            ShopItemSlot slot = slotObj.GetComponent<ShopItemSlot>();
-            if (slot != null)
-            {
-                slot.Setup(items[i], customizationManager);
-                activeSlots.Add(slot);
-            }
+            Debug.LogError("ItemDatabase не назначена в ItemGrid!");
+            return;
         }
 
-        StartCoroutine(RepositionItems());
+        // Фильтруем предметы из базы по категории
+        foreach (var item in database.allItems)
+        {
+            if (item.category == category)
+            {
+                CreateSlot(item);
+            }
+        }
     }
 
-    private System.Collections.IEnumerator RepositionItems()
+    private void CreateSlot(CustomizationItem item)
     {
-        yield return null;
+        ShopItemSlot newSlot = Instantiate(itemSlotPrefab, itemsContainer);
+        newSlot.gameObject.SetActive(true);
 
-        RectTransform containerRect = itemsContainer as RectTransform;
-        float totalWidth = 0f;
-        float totalHeight = 0f;
+        // Настраиваем ячейку
+        newSlot.Setup(item, customizationManager);
 
-        for (int i = 0; i < activeSlots.Count; i++)
+        // Добавляем обработку клика, чтобы уведомлять главный UI
+        Button btn = newSlot.GetComponent<Button>();
+        if (btn != null)
         {
-            ShopItemSlot slot = activeSlots[i];
-            RectTransform rect = slot.GetComponent<RectTransform>();
-
-            int row = i / itemsPerRow;
-            int col = i % itemsPerRow;
-
-            float xPos = col * (rect.rect.width + horizontalSpacing);
-            float yPos = -(row * (rect.rect.height + verticalSpacing));
-
-            rect.anchoredPosition = new Vector2(xPos, yPos);
-
-            if (col == itemsPerRow - 1 || i == activeSlots.Count - 1)
-            {
-                totalHeight = (row + 1) * (rect.rect.height + verticalSpacing);
-            }
+            btn.onClick.AddListener(() => shopUI.OnItemClicked(item));
         }
 
-        if (activeSlots.Count > 0)
-        {
-            RectTransform firstSlot = activeSlots[0].GetComponent<RectTransform>();
-            totalWidth = itemsPerRow * (firstSlot.rect.width + horizontalSpacing);
-        }
-
-        containerRect.sizeDelta = new Vector2(totalWidth, totalHeight);
-    }
-
-    private void ClearItems()
-    {
-        foreach (ShopItemSlot slot in activeSlots)
-        {
-            if (slot != null && slot.gameObject != null)
-            {
-                Destroy(slot.gameObject);
-            }
-        }
-        activeSlots.Clear();
-        currentItems.Clear();
+        activeSlots.Add(newSlot);
     }
 
     public void RefreshAll()
     {
         foreach (ShopItemSlot slot in activeSlots)
         {
-            slot.RefreshState();
+            if (slot != null) slot.RefreshState();
         }
     }
 
-    public void OnItemScrolled(float scrollValue)
+    private void ClearItems()
     {
-        if (itemsContainer != null)
+        foreach (ShopItemSlot slot in activeSlots)
         {
-            RectTransform rect = itemsContainer as RectTransform;
-            rect.anchoredPosition = new Vector2(
-                rect.anchoredPosition.x,
-                Mathf.Clamp(rect.anchoredPosition.y + scrollValue, -1000f, 1000f)
-            );
+            if (slot != null) Destroy(slot.gameObject);
         }
+        activeSlots.Clear();
     }
 }
