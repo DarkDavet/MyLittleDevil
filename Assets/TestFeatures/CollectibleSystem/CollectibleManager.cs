@@ -180,5 +180,16 @@ namespace CollectibleSystem
         {
             return collectedItems;
         }
+
+        public bool SpendItem(string id, int amount)
+        {
+            if (GetItemCount(id) >= amount)
+            {
+                collectedItems[id] -= amount;
+                SaveToPlayerPrefs();
+                return true;
+            }
+            return false;
+        }
     }
 }
