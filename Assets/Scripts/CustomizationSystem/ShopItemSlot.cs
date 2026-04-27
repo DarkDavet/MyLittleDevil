@@ -40,12 +40,12 @@ public class ShopItemSlot : MonoBehaviour
 
         if (item.IsUnlocked)
         {
-            manager.EquipSelectedItem();
+            // Если куплено — переключаем состояние (надеть/снять)
+            manager.ToggleEquipSelectedItem();
         }
         else
         {
-            // Если не куплено — просто примеряем (SelectItem это уже сделал)
-            // Игрок нажмет на общую кнопку "Купить" в интерфейсе магазина
+            // Если не куплено — просто примеряем
         }
     }
 }

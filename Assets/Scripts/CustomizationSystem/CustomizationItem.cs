@@ -29,4 +29,11 @@ public class CustomizationItem : ScriptableObject
         PlayerPrefs.SetString("Equipped_" + this.currencyType.Id, id);
         PlayerPrefs.Save();
     }
+
+    public void Unequip()
+    {
+        // Очищаем сохранение именно для этой категории
+        PlayerPrefs.DeleteKey("Equipped_" + this.category.ToString());
+        PlayerPrefs.Save();
+    }
 }

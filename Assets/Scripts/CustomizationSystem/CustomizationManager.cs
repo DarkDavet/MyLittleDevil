@@ -17,39 +17,20 @@ public class CustomizationManager : MonoBehaviour
     public void SelectItem(CustomizationItem item)
     {
         currentSelectedItem = item;
-        previewer.ApplyPreview(item);
+        // Используем ApplyItem, чтобы предмет встал в свой слот (шапка на голову и т.д.)
+        previewer.ApplyItem(item);
     }
 
     public void OnBuyButtonClick()
     {
-        if (currentSelectedItem == null) return;
-        if (currentSelectedItem.IsUnlocked) return; 
+        if (currentSelectedItem == null || currentSelectedItem.IsUnlocked) return;
 
         int playerBalance = CollectibleManager.Instance.GetItemCount(currentSelectedItem.currencyType.Id);
 
         if (playerBalance >= currentSelectedItem.price)
-        {
             confirmPanel.SetActive(true);
-        }
         else
-        {
             noFundsPanel.SetActive(true);
-        }
-    }
-
-    public void EquipSelectedItem()
-    {
-        if (currentSelectedItem == null || !currentSelectedItem.IsUnlocked) return;
-
-        currentSelectedItem.Equip();
-
-        // Обновляем все кнопки в магазине, чтобы "галочка" перескочила на новый предмет
-        foreach (var slot in FindObjectsOfType<ShopItemSlot>())
-        {
-            slot.RefreshState();
-        }
-
-        Debug.Log($"Предмет {currentSelectedItem.displayName} надет!");
     }
 
     public void ConfirmPurchase()
@@ -62,15 +43,42 @@ public class CustomizationManager : MonoBehaviour
         if (CollectibleManager.Instance.SpendItem(currencyId, price))
         {
             currentSelectedItem.Unlock();
+            currentSelectedItem.Equip(); // Сразу надеваем после покупки
             confirmPanel.SetActive(false);
 
-
-            Debug.Log($"Purchased item: {currentSelectedItem.displayName}. cost: {price} {currencyId}");
+            RefreshAllShopSlots();
+            Debug.Log($"Куплено и надето: {currentSelectedItem.displayName}");
         }
         else
         {
             confirmPanel.SetActive(false);
             noFundsPanel.SetActive(true);
+        }
+    }
+
+    public void ToggleEquipSelectedItem()
+    {
+        if (currentSelectedItem == null || !currentSelectedItem.IsUnlocked) return;
+
+        if (currentSelectedItem.IsEquipped)
+        {
+            currentSelectedItem.Unequip();
+            previewer.ClearSlot(currentSelectedItem.category);
+        }
+        else
+        {
+            currentSelectedItem.Equip();
+            previewer.ApplyItem(currentSelectedItem);
+        }
+
+        RefreshAllShopSlots();
+    }
+
+    public void RefreshAllShopSlots()
+    {
+        foreach (var slot in FindObjectsOfType<ShopItemSlot>())
+        {
+            slot.RefreshState();
         }
     }
 }

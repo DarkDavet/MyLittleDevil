@@ -21,11 +21,13 @@ public class PlayerVisuals : MonoBehaviour
 
     public void ApplyItem(CustomizationItem item)
     {
-        // Ищем нужный рендерер по категории предмета
-        var slot = slots.Find(s => s.category == item.category);
-        if (slot.renderer != null)
+        foreach (var slot in slots)
         {
-            slot.renderer.sprite = item.visualSprite;
+            if (slot.category == item.category)
+            {
+                if (slot.renderer != null) slot.renderer.sprite = item.visualSprite;
+                return; // Нашли и выходим
+            }
         }
     }
 
@@ -39,6 +41,18 @@ public class PlayerVisuals : MonoBehaviour
             {
                 CustomizationItem item = allItems.Find(x => x.id == savedId);
                 if (item != null) slot.renderer.sprite = item.visualSprite;
+            }
+        }
+    }
+
+    public void ClearSlot(CustomizationCategory category)
+    {
+        foreach (var slot in slots)
+        {
+            if (slot.category == category)
+            {
+                if (slot.renderer != null) slot.renderer.sprite = null;
+                return;
             }
         }
     }
