@@ -11,6 +11,7 @@ public class CustomizationItem : ScriptableObject
     public string id;
     public CustomizationCategory category;
     public string displayName;
+    public string description;
     public Sprite visualSprite; 
     public Sprite icon;        
 

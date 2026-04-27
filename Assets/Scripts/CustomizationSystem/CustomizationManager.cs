@@ -81,4 +81,16 @@ public class CustomizationManager : MonoBehaviour
             slot.RefreshState();
         }
     }
+
+    public List<CustomizationItem> GetAllItems()
+    {
+        List<CustomizationItem> allItems = new List<CustomizationItem>();
+
+        foreach (var asset in Resources.LoadAll<CustomizationItem>("Customization"))
+        {
+            allItems.Add(asset);
+        }
+
+        return allItems;
+    }
 }
