@@ -12,6 +12,7 @@ public class ShopItemSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private GameObject priceTag;
     [SerializeField] private GameObject ownedTag;
+    [SerializeField] private GameObject equippedMark;
 
     private CustomizationManager manager;
 
@@ -26,23 +27,25 @@ public class ShopItemSlot : MonoBehaviour
     public void RefreshState()
     {
         bool unlocked = item.IsUnlocked;
-        priceTag.SetActive(!unlocked);
-        ownedTag.SetActive(unlocked);
+        bool equipped = item.IsEquipped;
 
-        if (!unlocked)
-            priceText.text = item.price.ToString();
+        priceTag.SetActive(!unlocked);
+        ownedTag.SetActive(unlocked && !equipped); // Показываем "Куплено", только если не надето
+        equippedMark.SetActive(equipped);
     }
 
     public void OnClick()
     {
-        // При клике сначала примеряем
         manager.SelectItem(item);
 
-        // Если уже куплено — надеваем сразу
         if (item.IsUnlocked)
         {
-            // Здесь можно вызвать метод надевания (Equip)
-            Debug.Log("Предмет надет!");
+            manager.EquipSelectedItem();
+        }
+        else
+        {
+            // Если не куплено — просто примеряем (SelectItem это уже сделал)
+            // Игрок нажмет на общую кнопку "Купить" в интерфейсе магазина
         }
     }
 }

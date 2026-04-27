@@ -1,4 +1,4 @@
-using CollectibleSystem;
+﻿using CollectibleSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -35,6 +35,21 @@ public class CustomizationManager : MonoBehaviour
         {
             noFundsPanel.SetActive(true);
         }
+    }
+
+    public void EquipSelectedItem()
+    {
+        if (currentSelectedItem == null || !currentSelectedItem.IsUnlocked) return;
+
+        currentSelectedItem.Equip();
+
+        // Обновляем все кнопки в магазине, чтобы "галочка" перескочила на новый предмет
+        foreach (var slot in FindObjectsOfType<ShopItemSlot>())
+        {
+            slot.RefreshState();
+        }
+
+        Debug.Log($"Предмет {currentSelectedItem.displayName} надет!");
     }
 
     public void ConfirmPurchase()
