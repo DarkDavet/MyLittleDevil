@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ShopItemSlot : MonoBehaviour
 {
-    [SerializeField] private CustomizationItem item;
+    
     [Header("UI Elements")]
     [SerializeField] private Image icon;
     [SerializeField] private TextMeshProUGUI priceText;
@@ -15,37 +15,58 @@ public class ShopItemSlot : MonoBehaviour
     [SerializeField] private GameObject equippedMark;
 
     private CustomizationManager manager;
+    private CustomizationShopUI shopUI;
+    private CustomizationItem item;
 
     public void Setup(CustomizationItem newItem, CustomizationManager shopManager)
     {
         item = newItem;
         manager = shopManager;
+
+        // Находим ShopUI, чтобы передавать клики
+        shopUI = FindObjectOfType<CustomizationShopUI>();
+
+        // Автоматически настраиваем кнопку на самом объекте слота
+        Button btn = GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(HandleClick);
+        }
+
         icon.sprite = item.icon;
+        if (priceText != null) priceText.text = item.price.ToString();
+
         RefreshState();
     }
 
     public void RefreshState()
     {
+        if (item == null) return;
+
         bool unlocked = item.IsUnlocked;
         bool equipped = item.IsEquipped;
 
-        priceTag.SetActive(!unlocked);
-        ownedTag.SetActive(unlocked && !equipped); // Показываем "Куплено", только если не надето
-        equippedMark.SetActive(equipped);
+        if (priceTag != null) priceTag.SetActive(!unlocked);
+        if (ownedTag != null) ownedTag.SetActive(unlocked && !equipped);
+        if (equippedMark != null) equippedMark.SetActive(equipped);
     }
 
-    public void OnClick()
+    private void HandleClick()
     {
-        manager.SelectItem(item);
+        if (item == null) return;
 
-        if (item.IsUnlocked)
+        // 1. Уведомляем магазин, чтобы обновить панель деталей и примерку
+        if (shopUI != null)
         {
-            // Если куплено — переключаем состояние (надеть/снять)
-            manager.ToggleEquipSelectedItem();
+            shopUI.OnItemClicked(item);
         }
-        else
+
+        // 2. Если предмет уже куплен, его можно сразу надеть/снять кликом по слоту
+        if (item.IsUnlocked && manager != null)
         {
-            // Если не куплено — просто примеряем
+            manager.ToggleEquipSelectedItem();
+            RefreshState();
         }
     }
 }
