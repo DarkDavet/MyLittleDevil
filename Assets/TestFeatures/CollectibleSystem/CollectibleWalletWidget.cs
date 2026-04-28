@@ -1,4 +1,4 @@
-using CollectibleSystem;
+﻿using CollectibleSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +15,18 @@ public class CollectibleWalletWidget : MonoBehaviour
 
     private void OnEnable()
     {
+        if (CollectibleManager.Instance != null)
+        {
+            CollectibleManager.Instance.OnBalanceChanged += RefreshUI;
+        }
         RefreshUI();
+    }
+    private void OnDisable()
+    {
+        if (CollectibleManager.Instance != null)
+        {
+            CollectibleManager.Instance.OnBalanceChanged -= RefreshUI;
+        }
     }
 
     public void RefreshUI()
@@ -29,7 +40,7 @@ public class CollectibleWalletWidget : MonoBehaviour
         {
             int count = CollectibleManager.Instance.GetItemCount(type.Id);
 
-            if (count > 0)
+            if (count > 0)  // убрать условие, если нужны 0 в шлавном меню !!!
             {
                 WalletSlotUI newSlot = Instantiate(slotPrefab, container);
                 newSlot.Setup(type.Icon, count);

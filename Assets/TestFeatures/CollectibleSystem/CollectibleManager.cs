@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,6 +32,7 @@ namespace CollectibleSystem
         private HashSet<string> collectedUniqueIds = new HashSet<string>();
         private HashSet<string> tmp_collectedUniqueIds = new HashSet<string>();
 
+        public event Action OnBalanceChanged;
 
         private void Awake()
         {
@@ -122,6 +124,7 @@ namespace CollectibleSystem
                 uniqueIds = new List<string>(collectedUniqueIds)
             };
             PlayerPrefs.SetString("GlobalCollectibles", JsonUtility.ToJson(data));
+            OnBalanceChanged?.Invoke();
         }
 
         public void LoadFromPlayerPrefs()
