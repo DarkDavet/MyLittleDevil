@@ -11,10 +11,11 @@ public class CharacterPreview : MonoBehaviour
     }
 
     [SerializeField] private List<VisualSlot> slots;
+    [SerializeField] private ItemDatabase database;
 
     private void Start()
     {
-        
+        ApplyAllSavedItems();
     }
 
     // Метод для "примерки" или надевания предмета
@@ -33,6 +34,27 @@ public class CharacterPreview : MonoBehaviour
         }
     }
 
+    public void ApplyAllSavedItems()
+    {
+        foreach (var slot in slots)
+        {
+            string savedId = PlayerPrefs.GetString("Equipped_" + slot.category.ToString(), "");
+
+            if (!string.IsNullOrEmpty(savedId))
+            {
+                CustomizationItem item = database.GetItemById(savedId);
+                if (item != null)
+                {
+                    slot.renderer.sprite = item.visualSprite;
+                    continue; // Переходим к следующему слоту
+                }
+            }
+
+            // Если для этой категории ничего не сохранено — ОБЯЗАТЕЛЬНО очищаем слот
+            slot.renderer.sprite = null;
+        }
+    }
+
     // Метод для снятия предмета (очистки слота)
     public void ClearSlot(CustomizationCategory category)
     {
@@ -40,25 +62,6 @@ public class CharacterPreview : MonoBehaviour
         if (slot.renderer != null)
         {
             slot.renderer.sprite = null;
-        }
-    }
-
-    // Метод для загрузки всех сохраненных предметов (вызывайте в Start)
-    public void LoadAllEquipped(List<CustomizationItem> allItems)
-    {
-        foreach (var slot in slots)
-        {
-            // Считываем сохраненный ID для этой категории
-            string savedId = PlayerPrefs.GetString("Equipped_" + slot.category.ToString(), "");
-
-            if (!string.IsNullOrEmpty(savedId))
-            {
-                CustomizationItem item = allItems.Find(x => x.id == savedId);
-                if (item != null)
-                {
-                    slot.renderer.sprite = item.visualSprite;
-                }
-            }
         }
     }
 }

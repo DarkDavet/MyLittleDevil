@@ -22,18 +22,18 @@ public class CustomizationItem : ScriptableObject
 
     public void Unlock() => PlayerPrefs.SetInt("Unlocked_" + id, 1);
 
-    public bool IsEquipped => PlayerPrefs.GetString("Equipped_" + this.currencyType.Id, "") == id;
+    public bool IsEquipped => PlayerPrefs.GetString("Equipped_" + this.category.ToString(), "") == id;
 
     public void Equip()
     {
-        // Сохраняем ID надетого предмета для конкретной категории (например, для шапок, тел и т.д.)
-        PlayerPrefs.SetString("Equipped_" + this.currencyType.Id, id);
+        // Используем category.ToString(), чтобы сохранить предмет в нужный слот (Hat, Glasses и т.д.)
+        PlayerPrefs.SetString("Equipped_" + this.category.ToString(), id);
         PlayerPrefs.Save();
     }
 
     public void Unequip()
     {
-        // Очищаем сохранение именно для этой категории
+        // Очищаем по категории
         PlayerPrefs.DeleteKey("Equipped_" + this.category.ToString());
         PlayerPrefs.Save();
     }

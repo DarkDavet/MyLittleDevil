@@ -63,10 +63,10 @@ public class ShopItemSlot : MonoBehaviour
         }
 
         // 2. Если предмет уже куплен, его можно сразу надеть/снять кликом по слоту
-        if (item.IsUnlocked && manager != null)
-        {
-            manager.ToggleEquipSelectedItem();
-            RefreshState();
-        }
+        /* if (item.IsUnlocked && manager != null)
+         {
+             manager.ToggleEquipSelectedItem();
+             RefreshState();
+         }*/
     }
 }

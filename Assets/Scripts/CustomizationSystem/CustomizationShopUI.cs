@@ -101,7 +101,12 @@ public class CustomizationShopUI : MonoBehaviour
         if (customizationManager != null)
         {
             customizationManager.ConfirmPurchase();
-            RefreshShop(); // Обновляем состояние кнопок (куплено/надето)
+
+            // Обновляем панель деталей, чтобы кнопка стала "Unequip"
+            if (selectedItem != null && detailPanelController != null)
+            {
+                detailPanelController.UpdateButtons(selectedItem);
+            }
         }
     }
 

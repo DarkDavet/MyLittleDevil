@@ -7,6 +7,7 @@ using UnityEngine;
 public class CustomizationManager : MonoBehaviour
 {
     [SerializeField] private CharacterPreview previewer;
+    [SerializeField] private CustomizationShopUI shopUI; // Ссылка на главный UI
 
     [Header("UI Panels")]
     [SerializeField] private GameObject confirmPanel;
@@ -17,7 +18,7 @@ public class CustomizationManager : MonoBehaviour
     public void SelectItem(CustomizationItem item)
     {
         currentSelectedItem = item;
-        // Используем ApplyItem, чтобы предмет встал в свой слот (шапка на голову и т.д.)
+        previewer.ApplyAllSavedItems();
         previewer.ApplyItem(item);
     }
 
@@ -43,10 +44,21 @@ public class CustomizationManager : MonoBehaviour
         if (CollectibleManager.Instance.SpendItem(currencyId, price))
         {
             currentSelectedItem.Unlock();
-            currentSelectedItem.Equip(); // Сразу надеваем после покупки
+            currentSelectedItem.Equip(); // Логически надеваем
+
+            // Визуально надеваем (чтобы предмет остался на герое после покупки)
+            previewer.ApplyItem(currentSelectedItem);
+
             confirmPanel.SetActive(false);
 
-            RefreshAllShopSlots();
+            // ОБНОВЛЯЕМ ВЕСЬ UI
+            if (shopUI != null)
+            {
+                shopUI.RefreshShop(); // Обновит сетку и баланс
+                // Обновляем панель деталей, чтобы кнопка стала "Unequip"
+                shopUI.OnItemClicked(currentSelectedItem);
+            }
+
             Debug.Log($"Куплено и надето: {currentSelectedItem.displayName}");
         }
         else
@@ -71,26 +83,20 @@ public class CustomizationManager : MonoBehaviour
             previewer.ApplyItem(currentSelectedItem);
         }
 
-        RefreshAllShopSlots();
+        // Обновляем UI после переключения
+        if (shopUI != null)
+        {
+            shopUI.RefreshShop();
+        }
     }
 
     public void RefreshAllShopSlots()
     {
+        // Теперь этот метод можно заменить вызовом shopUI.RefreshShop(),
+        // но оставим для совместимости
         foreach (var slot in FindObjectsOfType<ShopItemSlot>())
         {
             slot.RefreshState();
         }
-    }
-
-    public List<CustomizationItem> GetAllItems()
-    {
-        List<CustomizationItem> allItems = new List<CustomizationItem>();
-
-        foreach (var asset in Resources.LoadAll<CustomizationItem>("Customization"))
-        {
-            allItems.Add(asset);
-        }
-
-        return allItems;
     }
 }
