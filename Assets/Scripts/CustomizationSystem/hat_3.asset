@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e58648b2ad544fc449d78c2de84864f5, type: 3}
+  m_Name: hat_3
+  m_EditorClassIdentifier: 
+  id: hat_3
+  category: 0
+  displayName: Funny hat
+  description: You're so funny in this hat
+  visualSprite: {fileID: 21300000, guid: ec4d6b737fb2fe44397aaaee7db09602, type: 3}
+  icon: {fileID: 21300000, guid: bc74ba6d53715e3438cd0682b28de43f, type: 3}
+  currencyType: {fileID: 11400000, guid: 3b3cb13bba75683448bd4bf39737f506, type: 2}
+  price: 1

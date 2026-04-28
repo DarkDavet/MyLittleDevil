@@ -12,6 +12,11 @@ public class CharacterPreview : MonoBehaviour
 
     [SerializeField] private List<VisualSlot> slots;
 
+    private void Start()
+    {
+        
+    }
+
     // Метод для "примерки" или надевания предмета
     public void ApplyItem(CustomizationItem item)
     {
