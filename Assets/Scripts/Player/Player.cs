@@ -71,4 +71,12 @@ public class Player: MonoBehaviour, ICollectibleCollector
     {
         inventory.Clear();
     }
+
+    /// <summary>
+    /// Returns the horizontal movement delta this frame (for distance tracking).
+    /// </summary>
+    public float GetMovementDelta()
+    {
+        return Mathf.Abs(_rb.velocity.x * Time.deltaTime);
+    }
 }
