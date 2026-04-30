@@ -20,34 +20,61 @@
 
 ## Быстрый старт
 
-### Шаг 1: Создайте AchievementType
+### Шаг 1: Создайте AchievementType ScriptableObject
 
 Right-click в Project → **Create** → **Achievement System** → **Achievement**
 
 Настройте:
 - **ID**: `kill_10_enemies` (уникальный идентификатор)
 - **Title**: `Monster Slayer`
+- **Description**: `Kill 10 enemies`
 - **Required Progress**: `10`
 - **Progress Type**: `Counter`
+- **Category**: `Combat`
+- **Icon**: Sprite для иконки ачивки
 
 ### Шаг 2: Добавьте AchievementEventListener на сцену
 
 1. Создайте пустой GameObject → `AchievementListeners`
 2. Добавьте компонент **`AchievementEventListener`**
-3. В Inspector настройте триггеры:
+3. В Inspector вы увидите 8 секций для каждого типа события:
 
 | Section | Описание |
 |---|---|
-| **On Kill Triggers** | Ачивки, которые обновляются при убийстве врага |
-| **On Collect Triggers** | Ачивки, которые обновляются при подборе предмета |
-| **On Damage Dealt Triggers** | Ачивки, которые обновляются при нанесении урона |
-| **On Healed Triggers** | Ачивки, которые обновляются при лечении |
-| **On Distance Traveled Triggers** | Ачивки, которые обновляются при прохождении дистанции |
-| **On Dialogue Finished Triggers** | Ачивки, которые обновляются после диалога |
-| **On Level Complete Triggers** | Ачивки, которые обновляются при завершении уровня |
-| **On Chest Opened Triggers** | Ачивки, которые обновляются при открытии сундука |
+| **On Kill Achievements** | Ачивки, которые обновляются при убийстве врага |
+| **On Collect Achievements** | Ачивки, которые обновляются при подборе предмета |
+| **On Damage Dealt Achievements** | Ачивки, которые обновляются при нанесении урона |
+| **On Healed Achievements** | Ачивки, которые обновляются при лечении |
+| **On Distance Traveled Achievements** | Ачивки, которые обновляются при прохождении дистанции |
+| **On Dialogue Finished Achievements** | Ачивки, которые обновляются после диалога |
+| **On Level Complete Achievements** | Ачивки, которые обновляются при завершении уровня |
+| **On Chest Opened Achievements** | Ачивки, которые обновляются при открытии сундука |
 
-В каждом разделе добавьте записи с **Achievement ID** и **Progress Amount**.
+**В каждой секции просто перетащите AchievementType ScriptableObject из Project в поле Size:**
+- Установите Size = 1 (или больше для нескольких ачивок)
+- Перетащите нужные AchievementType ассеты в ячейки [0], [1], и т.д.
+
+![Inspector Setup](#)
+
+```
+┌─────────────────────────────────────────────────┐
+│ Achievement Listener                            │
+├─────────────────────────────────────────────────┤
+│ On Kill Achievements:                           │
+│   [0] → kill_10_enemies (AchievementType)       │
+│   [1] → kill_50_enemies (AchievementType)       │
+│   Size: 2                                       │
+├─────────────────────────────────────────────────┤
+│ On Collect Achievements:                        │
+│   [0] → collect_20_coins (AchievementType)      │
+│   Size: 1                                       │
+├─────────────────────────────────────────────────┤
+│ On Damage Dealt Achievements:                   │
+│   Size: 0                                       │
+├─────────────────────────────────────────────────┤
+│ ... (остальные секции)                          │
+└─────────────────────────────────────────────────┘
+```
 
 ### Шаг 3: Вызывайте события из игровой логики
 
@@ -108,9 +135,6 @@ bool isUnlocked = AchievementManager.Instance.IsAchievementUnlocked("kill_10_ene
 
 // Получить текущий прогресс
 int progress = AchievementManager.Instance.GetAchievementProgress("kill_10_enemies");
-
-// Получить список всех ачивок
-var allAchievements = FindObjectOfType<AchievementSystem>().GetAllAchievements();
 ```
 
 ## Интеграция с существующими системами
@@ -155,10 +179,10 @@ private void OnWin()
 
 ```
 AchievementEventListener (на сцене)
-  └─ On Kill Triggers
-       ├─ Achievement ID: "kill_1_enemy" → Progress: 1
-       ├─ Achievement ID: "kill_50_enemies" → Progress: 1
-       └─ Achievement ID: "boss_slayer" → Progress: 1 (если враг — босс)
+  └─ On Kill Achievements
+       ├─ [0] → kill_1_enemy (AchievementType)
+       ├─ [1] → kill_50_enemies (AchievementType)
+       └─ [2] → boss_slayer (AchievementType)
 ```
 
 ### Паттерн 2: Условные ачивки
@@ -190,6 +214,22 @@ private void Update()
 }
 ```
 
+### Паттерн 4: Ачивки с кастомным прогрессом
+
+```csharp
+// Если нужно добавить больше чем 1 к прогрессу
+public void OnDamageDealt(float damage)
+{
+    AchievementEvents.TriggerDamageDealt(damage);
+    
+    // Кастомная ачивка: нанести 100 урона за бой
+    if (damage >= 50f)
+    {
+        AchievementManager.Instance.UpdateProgress("big_hit", 1);
+    }
+}
+```
+
 ## Удаленные компоненты
 
 Следующие компоненты были удалены и заменены на AchievementEventListener:
@@ -200,3 +240,18 @@ private void Update()
 - ~~DialogueCondition~~
 
 Если вы использовали эти компоненты в сценах, замените их на **AchievementEventListener**.
+
+## Troubleshooting
+
+### Ачивка не разблокировывается
+
+1. Убедитесь, что `AchievementEventListener` добавлен на сцену
+2. Проверьте, что событие вызывается в нужном месте кода
+3. Убедитесь, что AchievementType правильно настроен (ID совпадает)
+4. Проверьте консоль Unity на наличие ошибок
+
+### AchievementType пустой в Inspector
+
+1. Убедитесь, что ScriptableObject создан правильно (Right-click → Create → Achievement System → Achievement)
+2. Проверьте, что все поля заполнены (особенно ID)
+3. Нажмите `Ctrl+S` чтобы сохранить изменения в ScriptableObject
