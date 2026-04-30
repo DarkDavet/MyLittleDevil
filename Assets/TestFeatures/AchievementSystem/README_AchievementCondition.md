@@ -1,103 +1,202 @@
-# AchievementCondition Usage Guide
+# AchievementSystem — Usage Guide
 
-## What is AchievementCondition?
+## Новая событийно-ориентированная архитектура
 
-`AchievementCondition` is a MonoBehaviour component you **attach to GameObjects in the Unity Editor**. When certain in-game events happen (player collects an item, kills an enemy, travels distance, etc.), the condition automatically notifies the `AchievementManager` to update progress.
+Система использует **статический Event Bus** (`AchievementEvents`) для отправки событий и **AchievementEventListener** для автоматической обработки.
 
-## How It Works — Simple Flow
+## Как это работает
 
 ```
-1. You create an AchievementType asset (e.g., "Collect 10 coins")
-       ↓
-2. You attach a CollectibleCondition component to a GameObject in your scene
-       ↓
-3. You set the Achievement ID field to match the achievement ("collect_10_coins")
-       ↓
-4. When the player collects an item → CollectibleCondition detects it → calls NotifyProgress()
-       ↓
-5. AchievementManager receives the update → checks if progress reached target → unlocks if yes
+[Игровая логика]          [AchievementEvents]          [AchievementEventListener]
+       │                          │                              │
+       │  AchievementEvents      │    AchievementEvents       │  Подписывается на
+       │  .TriggerKill()        │──► OnKill event ──────────►│  события
+       │  .TriggerCollect()     │──► OnCollect event ───────►│
+       │  .TriggerDamageDealt() │──► OnDamageDealt event ───►│
+       │                          │                              │
+       │                          │                    AchievementManager
+       │                          │                    UpdateProgress()
 ```
 
-## Step-by-Step Example: "Collect 10 Coins"
+## Быстрый старт
 
-### Step 1: Create the Achievement Type
+### Шаг 1: Создайте AchievementType
 
-1. In Unity Project window: **Right-click** → **Create** → **Achievement System** → **Achievement**
-2. Rename to `FirstTenCoins`
-3. In Inspector:
-   - **ID**: `collect_10_coins`
-   - **Title**: `Coin Collector`
-   - **Description**: `Collect 10 coins`
-   - **Required Progress**: `10`
-   - **Progress Type**: `Counter`
+Right-click в Project → **Create** → **Achievement System** → **Achievement**
 
-### Step 2: Create a Trigger GameObject
+Настройте:
+- **ID**: `kill_10_enemies` (уникальный идентификатор)
+- **Title**: `Monster Slayer`
+- **Required Progress**: `10`
+- **Progress Type**: `Counter`
 
-1. In Hierarchy: **Right-click** → **Create Empty**
-2. Rename to `CoinCollector`
-3. Add a **BoxCollider2D** component:
-   - Set **Is Trigger** = ✓
-   - Adjust size to cover your coin spawn area
+### Шаг 2: Добавьте AchievementEventListener на сцену
 
-### Step 3: Add the Condition Component
+1. Создайте пустой GameObject → `AchievementListeners`
+2. Добавьте компонент **`AchievementEventListener`**
+3. В Inspector настройте триггеры:
 
-1. Select `CoinCollector` GameObject
-2. In Inspector: **Add Component** → `CollectibleCondition`
-3. In the CollectibleCondition inspector:
-   - **Achievement ID**: `collect_10_coins` (must match the AchievementType ID exactly)
-   - **Progress Per Action**: `1` (how much progress each collection gives)
+| Section | Описание |
+|---|---|
+| **On Kill Triggers** | Ачивки, которые обновляются при убийстве врага |
+| **On Collect Triggers** | Ачивки, которые обновляются при подборе предмета |
+| **On Damage Dealt Triggers** | Ачивки, которые обновляются при нанесении урона |
+| **On Healed Triggers** | Ачивки, которые обновляются при лечении |
+| **On Distance Traveled Triggers** | Ачивки, которые обновляются при прохождении дистанции |
+| **On Dialogue Finished Triggers** | Ачивки, которые обновляются после диалога |
+| **On Level Complete Triggers** | Ачивки, которые обновляются при завершении уровня |
+| **On Chest Opened Triggers** | Ачивки, которые обновляются при открытии сундука |
 
-### Step 4: Test
+В каждом разделе добавьте записи с **Achievement ID** и **Progress Amount**.
 
-When your player collects a coin while inside the BoxCollider2D area, the achievement progress increases by 1. After 10 coins, the achievement unlocks automatically.
-
-## Available Condition Types
-
-| Component | Use Case | Setup |
-|---|---|---|
-| `CollectibleCondition` | Player picks up an item | Set Achievement ID, ensure Collider2D + IsTrigger |
-| `KillCondition` | Player defeats an enemy | Set Achievement ID, set Enemy Tag (default: "Enemy") |
-| `DistanceCondition` | Player travels distance | Set Achievement ID, set Distance Per Unit |
-| `TimeCondition` | Player spends time playing | Set Achievement ID, set Time Per Action (in seconds) |
-| `DialogueCondition` | Player finishes a dialogue | Attach to GameObject with DialogueSystem component |
-
-## Manual Trigger (No Condition Component Needed)
-
-If you don't want to use condition components, you can trigger achievements from **any script**:
+### Шаг 3: Вызывайте события из игровой логики
 
 ```csharp
 using AchievementSystem;
 
-public class MyCustomScript : MonoBehaviour
+public class EnemyHealth : MonoBehaviour
 {
-    private void SomeEvent()
+    public void Die()
     {
-        // Increment progress by 1
-        AchievementManager.Instance.UpdateProgress("collect_10_coins", 1);
+        // Убиваем врага
+        Destroy(gameObject);
         
-        // Or unlock immediately (for binary achievements)
-        AchievementManager.Instance.UnlockAchievement("defeat_boss");
+        // Сообщаем систему о достижении
+        AchievementEvents.TriggerKill();
+    }
+}
+
+public class PlayerCombat : MonoBehaviour
+{
+    public void DealDamage(float damage)
+    {
+        // Наносим урон
+        target.TakeDamage(damage);
+        
+        // Сообщаем систему о достижении
+        AchievementEvents.TriggerDamageDealt(damage);
     }
 }
 ```
 
-## Common Mistakes
+## Полный список событий
 
-| Problem | Solution |
-|---|---|
-| Achievement doesn't unlock | Check that Achievement ID in condition matches the AchievementType ID exactly (case-sensitive) |
-| AchievementManager is null | Make sure an AchievementManager GameObject exists in the scene |
-| Progress not updating | Check Console for errors — the condition may not be detecting collisions |
-| Achievement unlocks too fast | Increase Required Progress in the AchievementType asset |
+| Метод | Описание | Где вызывать |
+|---|---|---|
+| `TriggerKill()` | Враг убит | EnemyHealth.Die() |
+| `TriggerCollect(Collectible)` | Предмет подобран | Player.TakeItem() |
+| `TriggerDamageDealt(float)` | Нанесен урон | PlayerCombat.DealDamage() |
+| `TriggerHealed(int)` | Игрок вылечен | PlayerHealthSystem.Heal() |
+| `TriggerDistanceTraveled(float)` | Пройдена дистанция | Player.Update() |
+| `TriggerDialogueFinished(string)` | Диалог завершен | DialogueSystem.FinishDialogue() |
+| `TriggerLevelComplete(string)` | Уровень пройден | LevelManager.CompleteLevel() |
+| `TriggerChestOpened(string)` | Сундук открыт | Chest.Open() |
 
-## Quick Reference
+## Программное управление ачивками
+
+```csharp
+using AchievementSystem;
+
+// Обновить прогресс ачивки
+AchievementManager.Instance.UpdateProgress("kill_10_enemies", 1);
+
+// Мгновенно разблокировать ачивку
+AchievementManager.Instance.UnlockAchievement("complete_level_1");
+
+// Проверить статус
+bool isUnlocked = AchievementManager.Instance.IsAchievementUnlocked("kill_10_enemies");
+
+// Получить текущий прогресс
+int progress = AchievementManager.Instance.GetAchievementProgress("kill_10_enemies");
+
+// Получить список всех ачивок
+var allAchievements = FindObjectOfType<AchievementSystem>().GetAllAchievements();
+```
+
+## Интеграция с существующими системами
+
+### С CollectibleSystem
+
+```csharp
+// В Player.cs или CollectibleManager.cs
+public void Collect(Collectible collectible)
+{
+    CollectibleManager.Instance.Collect(collectible);
+    
+    // Сообщаем о подборе предмета
+    AchievementEvents.TriggerCollect(collectible);
+}
+```
+
+### С GameEvents
+
+```csharp
+// Подписываемся на события GameEvents
+private void OnEnable()
+{
+    GameEvents.OnFightFinished += OnFightFinished;
+    GameEvents.OnWin += OnWin;
+}
+
+private void OnFightFinished()
+{
+    AchievementEvents.TriggerKill();
+}
+
+private void OnWin()
+{
+    AchievementManager.Instance.UnlockAchievement("defeat_angel");
+}
+```
+
+## Common Patterns
+
+### Паттерн 1: Множественные ачивки на одно событие
 
 ```
-// In Unity Editor:
-AchievementType asset → Set ID = "my_achievement"
-GameObject → Add CollectibleCondition → Set Achievement ID = "my_achievement"
+AchievementEventListener (на сцене)
+  └─ On Kill Triggers
+       ├─ Achievement ID: "kill_1_enemy" → Progress: 1
+       ├─ Achievement ID: "kill_50_enemies" → Progress: 1
+       └─ Achievement ID: "boss_slayer" → Progress: 1 (если враг — босс)
+```
 
-// In Code:
-AchievementManager.Instance.UpdateProgress("my_achievement", 1);  // Add progress
-AchievementManager.Instance.UnlockAchievement("my_achievement");  // Unlock now
-AchievementManager.Instance.IsAchievementUnlocked("my_achievement");  // Check status
+### Паттерн 2: Условные ачивки
+
+```csharp
+// Для сложных условий используйте код:
+public void OnBossKilled()
+{
+    AchievementEvents.TriggerKill(); // Обычные ачивки на убийство
+    
+    // Специальная ачивка только для босса
+    AchievementManager.Instance.UnlockAchievement("defeat_blue_angel");
+}
+```
+
+### Паттерн 3: Ачивки на дистанцию
+
+```csharp
+// В Player.cs Update()
+private void Update()
+{
+    float movement = Mathf.Abs(transform.position.x - prevPosition.x);
+    prevPosition = transform.position;
+    
+    if (movement > 0.1f)
+    {
+        AchievementEvents.TriggerDistanceTraveled(movement);
+    }
+}
+```
+
+## Удаленные компоненты
+
+Следующие компоненты были удалены и заменены на AchievementEventListener:
+- ~~CollectibleCondition~~
+- ~~KillCondition~~
+- ~~DistanceCondition~~
+- ~~TimeCondition~~
+- ~~DialogueCondition~~
+
+Если вы использовали эти компоненты в сценах, замените их на **AchievementEventListener**.
