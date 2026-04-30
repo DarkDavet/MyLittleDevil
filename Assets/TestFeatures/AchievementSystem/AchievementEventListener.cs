@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace AchievementSystem
@@ -6,45 +7,36 @@ namespace AchievementSystem
     /// Attach this component to any GameObject in the scene to automatically
     /// update achievement progress when specific events occur.
     /// 
-    /// Use the AchievementEvents static class from code to trigger events.
-    /// Or use the UnityEvents in the Inspector for visual setup.
+    /// Simply drag AchievementType assets into the appropriate event arrays
+    /// in the Inspector — no need to type IDs manually.
     /// </summary>
     public class AchievementEventListener : MonoBehaviour
     {
-        [System.Serializable]
-        public class AchievementTrigger
-        {
-            [SerializeField] private string achievementId;
-            [SerializeField] private int progressAmount = 1;
-
-            public string AchievementId => achievementId;
-            public int ProgressAmount => progressAmount;
-        }
-
-        [Header("Event Triggers")]
+        [Header("Event Triggers — Drag AchievementType assets here")]
+        
         [Tooltip("Achievements to update when an enemy is killed")]
-        [SerializeField] private AchievementTrigger[] onKillTriggers;
+        [SerializeField] private List<AchievementType> onKillAchievements = new List<AchievementType>();
 
         [Tooltip("Achievements to update when an item is collected")]
-        [SerializeField] private AchievementTrigger[] onCollectTriggers;
+        [SerializeField] private List<AchievementType> onCollectAchievements = new List<AchievementType>();
 
         [Tooltip("Achievements to update when damage is dealt")]
-        [SerializeField] private AchievementTrigger[] onDamageDealtTriggers;
+        [SerializeField] private List<AchievementType> onDamageDealtAchievements = new List<AchievementType>();
 
         [Tooltip("Achievements to update when player heals")]
-        [SerializeField] private AchievementTrigger[] onHealedTriggers;
+        [SerializeField] private List<AchievementType> onHealedAchievements = new List<AchievementType>();
 
         [Tooltip("Achievements to update when distance is traveled")]
-        [SerializeField] private AchievementTrigger[] onDistanceTraveledTriggers;
+        [SerializeField] private List<AchievementType> onDistanceTraveledAchievements = new List<AchievementType>();
 
         [Tooltip("Achievements to update when a dialogue finishes")]
-        [SerializeField] private AchievementTrigger[] onDialogueFinishedTriggers;
+        [SerializeField] private List<AchievementType> onDialogueFinishedAchievements = new List<AchievementType>();
 
         [Tooltip("Achievements to update when a level is completed")]
-        [SerializeField] private AchievementTrigger[] onLevelCompleteTriggers;
+        [SerializeField] private List<AchievementType> onLevelCompleteAchievements = new List<AchievementType>();
 
         [Tooltip("Achievements to update when a chest is opened")]
-        [SerializeField] private AchievementTrigger[] onChestOpenedTriggers;
+        [SerializeField] private List<AchievementType> onChestOpenedAchievements = new List<AchievementType>();
 
         private void OnEnable()
         {
@@ -72,112 +64,53 @@ namespace AchievementSystem
 
         private void OnKill()
         {
-            if (onKillTriggers != null)
-            {
-                foreach (var trigger in onKillTriggers)
-                {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
-                }
-            }
+            ProcessAchievements(onKillAchievements);
         }
 
         private void OnCollect(CollectibleSystem.Collectible collectible)
         {
-            if (onCollectTriggers != null)
-            {
-                foreach (var trigger in onCollectTriggers)
-                {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
-                }
-            }
+            ProcessAchievements(onCollectAchievements);
         }
 
         private void OnDamageDealt(float damage)
         {
-            if (onDamageDealtTriggers != null)
-            {
-                foreach (var trigger in onDamageDealtTriggers)
-                {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
-                }
-            }
+            ProcessAchievements(onDamageDealtAchievements);
         }
 
         private void OnHealed(int amount)
         {
-            if (onHealedTriggers != null)
-            {
-                foreach (var trigger in onHealedTriggers)
-                {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
-                }
-            }
+            ProcessAchievements(onHealedAchievements);
         }
 
         private void OnDistanceTraveled(float distance)
         {
-            if (onDistanceTraveledTriggers != null)
-            {
-                foreach (var trigger in onDistanceTraveledTriggers)
-                {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
-                }
-            }
+            ProcessAchievements(onDistanceTraveledAchievements);
         }
 
         private void OnDialogueFinished(string dialogueId)
         {
-            if (onDialogueFinishedTriggers != null)
-            {
-                foreach (var trigger in onDialogueFinishedTriggers)
-                {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
-                }
-            }
+            ProcessAchievements(onDialogueFinishedAchievements);
         }
 
         private void OnLevelComplete(string levelId)
         {
-            if (onLevelCompleteTriggers != null)
-            {
-                foreach (var trigger in onLevelCompleteTriggers)
-                {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
-                }
-            }
+            ProcessAchievements(onLevelCompleteAchievements);
         }
 
         private void OnChestOpened(string chestId)
         {
-            if (onChestOpenedTriggers != null)
+            ProcessAchievements(onChestOpenedAchievements);
+        }
+
+        private void ProcessAchievements(List<AchievementType> achievements)
+        {
+            if (achievements == null || achievements.Count == 0) return;
+
+            foreach (var achievement in achievements)
             {
-                foreach (var trigger in onChestOpenedTriggers)
+                if (achievement != null && !string.IsNullOrEmpty(achievement.Id))
                 {
-                    if (!string.IsNullOrEmpty(trigger.AchievementId))
-                    {
-                        AchievementManager.Instance?.UpdateProgress(trigger.AchievementId, trigger.ProgressAmount);
-                    }
+                    AchievementManager.Instance?.UpdateProgress(achievement.Id, 1);
                 }
             }
         }
