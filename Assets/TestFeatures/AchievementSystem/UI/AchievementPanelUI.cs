@@ -27,12 +27,13 @@ namespace AchievementSystem.UI
 
         private void Start()
         {
-            AchievementManager.Instance.AddListener(this);
+            // Use AchievementSystemCore.Instance as the single entry point
+            AchievementSystemCore.Instance?.AchievementManager?.AddListener(this);
         }
 
         private void OnDestroy()
         {
-            AchievementManager.Instance?.RemoveListener(this);
+            AchievementSystemCore.Instance?.AchievementManager?.RemoveListener(this);
         }
 
         public void Show(List<AchievementType> achievementTypes)
@@ -41,7 +42,7 @@ namespace AchievementSystem.UI
                 Destroy(slot.gameObject);
             slotUIs.Clear();
 
-            allData = AchievementManager.Instance.GetAllAchievementData();
+            allData = AchievementSystemCore.Instance?.AchievementManager?.GetAllAchievementData() ?? new List<AchievementData>();
 
             foreach (var type in achievementTypes)
             {
@@ -84,11 +85,14 @@ namespace AchievementSystem.UI
 
         public void UpdateCounts()
         {
+            var manager = AchievementSystemCore.Instance?.AchievementManager;
+            if (manager == null) return;
+
             if (totalCountText != null)
-                totalCountText.text = $"{AchievementManager.Instance.GetTotalAchievementCount()}";
+                totalCountText.text = $"{manager.GetTotalAchievementCount()}";
 
             if (unlockedCountText != null)
-                unlockedCountText.text = $"{AchievementManager.Instance.GetTotalUnlockedCount()}";
+                unlockedCountText.text = $"{manager.GetTotalUnlockedCount()}";
         }
 
         public void OnAchievementUnlocked(AchievementType achievementType)

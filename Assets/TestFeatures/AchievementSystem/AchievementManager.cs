@@ -4,10 +4,18 @@ using UnityEngine;
 
 namespace AchievementSystem
 {
+    /// <summary>
+    /// Manages achievement progress, registration, and persistence.
+    /// This class is NOT a singleton — access it through AchievementSystemCore.Instance.AchievementManager.
+    /// 
+    /// Responsibilities:
+    /// - Register AchievementType assets
+    /// - Track progress and unlock status
+    /// - Save/Load to PlayerPrefs
+    /// - Raise events when achievements are unlocked or progress changes
+    /// </summary>
     public class AchievementManager : MonoBehaviour
     {
-        public static AchievementManager Instance { get; private set; }
-
         public delegate void AchievementUnlockedHandler(AchievementType achievementType);
         public event AchievementUnlockedHandler OnAchievementUnlocked;
 
@@ -28,19 +36,13 @@ namespace AchievementSystem
 
         private void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-
+            // No singleton pattern here — AchievementSystemCore manages the instance
             LoadFromPlayerPrefs();
         }
 
+        /// <summary>
+        /// Register all achievement types. Call this once during initialization.
+        /// </summary>
         public void RegisterAchievementTypes(List<AchievementType> types)
         {
             achievementTypes = new Dictionary<string, AchievementType>();
@@ -51,6 +53,24 @@ namespace AchievementSystem
                 if (!string.IsNullOrEmpty(type.Id))
                 {
                     achievementTypes[type.Id] = type;
+                    achievementProgress[type.Id] = new AchievementData(type);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Register a single achievement type.
+        /// </summary>
+        public void RegisterAchievementType(AchievementType type)
+        {
+            if (achievementTypes == null) achievementTypes = new Dictionary<string, AchievementType>();
+            if (achievementProgress == null) achievementProgress = new Dictionary<string, AchievementData>();
+
+            if (type != null && !string.IsNullOrEmpty(type.Id))
+            {
+                achievementTypes[type.Id] = type;
+                if (!achievementProgress.ContainsKey(type.Id))
+                {
                     achievementProgress[type.Id] = new AchievementData(type);
                 }
             }
@@ -67,9 +87,12 @@ namespace AchievementSystem
             listeners.Remove(listener);
         }
 
+        /// <summary>
+        /// Update progress for an achievement. Automatically unlocks if required progress is reached.
+        /// </summary>
         public void UpdateProgress(string achievementId, int amount = 1)
         {
-            if (!achievementProgress.ContainsKey(achievementId))
+            if (achievementProgress == null || !achievementProgress.ContainsKey(achievementId))
                 return;
 
             AchievementData data = achievementProgress[achievementId];
@@ -88,9 +111,12 @@ namespace AchievementSystem
                 UnlockAchievement(achievementId);
         }
 
+        /// <summary>
+        /// Instantly unlock an achievement.
+        /// </summary>
         public void UnlockAchievement(string achievementId)
         {
-            if (!achievementProgress.ContainsKey(achievementId))
+            if (achievementProgress == null || !achievementProgress.ContainsKey(achievementId))
                 return;
 
             AchievementData data = achievementProgress[achievementId];
@@ -111,20 +137,21 @@ namespace AchievementSystem
 
         public bool IsAchievementUnlocked(string achievementId)
         {
-            if (achievementProgress.TryGetValue(achievementId, out var data))
-                return data.isUnlocked;
-            return false;
+            if (achievementProgress == null || !achievementProgress.TryGetValue(achievementId, out var data))
+                return false;
+            return data.isUnlocked;
         }
 
         public int GetAchievementProgress(string achievementId)
         {
-            if (achievementProgress.TryGetValue(achievementId, out var data))
-                return data.currentProgress;
-            return 0;
+            if (achievementProgress == null || !achievementProgress.TryGetValue(achievementId, out var data))
+                return 0;
+            return data.currentProgress;
         }
 
         public int GetTotalUnlockedCount()
         {
+            if (achievementProgress == null) return 0;
             int count = 0;
             foreach (var data in achievementProgress.Values)
             {
@@ -135,16 +162,28 @@ namespace AchievementSystem
 
         public int GetTotalAchievementCount()
         {
-            return achievementProgress.Count;
+            return achievementProgress == null ? 0 : achievementProgress.Count;
         }
 
         public List<AchievementData> GetAllAchievementData()
         {
-            return new List<AchievementData>(achievementProgress.Values);
+            return achievementProgress == null ? new List<AchievementData>() : new List<AchievementData>(achievementProgress.Values);
+        }
+
+        public Dictionary<string, AchievementType> GetAchievementTypes()
+        {
+            return achievementTypes;
+        }
+
+        public Dictionary<string, AchievementData> GetAchievementProgress()
+        {
+            return achievementProgress;
         }
 
         public void SaveToPlayerPrefs()
         {
+            if (achievementProgress == null || achievementProgress.Count == 0) return;
+
             var data = new SaveData
             {
                 ids = new List<string>(),
@@ -164,6 +203,8 @@ namespace AchievementSystem
 
         public void LoadFromPlayerPrefs()
         {
+            if (achievementProgress == null) return;
+
             if (PlayerPrefs.HasKey("Achievements"))
             {
                 string json = PlayerPrefs.GetString("Achievements");
@@ -186,6 +227,8 @@ namespace AchievementSystem
 
         public void ResetProgress()
         {
+            if (achievementProgress == null) return;
+
             foreach (var entry in achievementProgress)
             {
                 entry.Value.isUnlocked = false;

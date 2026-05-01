@@ -1,22 +1,66 @@
-# AchievementSystem — Usage Guide
+# AchievementSystem — Полное руководство по использованию
 
-## Новая событийно-ориентированная архитектура
+## Обзор системы
 
-Система использует **статический Event Bus** (`AchievementEvents`) для отправки событий и **AchievementEventListener** для автоматической обработки.
+AchievementSystem — это событийно-ориентированная система достижений для Unity 2D игры. Она позволяет легко добавлять достижения в игру, просто перетаскивая AchievementType ScriptableObject в Inspector.
 
-## Как это работает
+## Архитектура системы
 
 ```
-[Игровая логика]          [AchievementEvents]          [AchievementEventListener]
-       │                          │                              │
-       │  AchievementEvents      │    AchievementEvents       │  Подписывается на
-       │  .TriggerKill()        │──► OnKill event ──────────►│  события
-       │  .TriggerCollect()     │──► OnCollect event ───────►│
-       │  .TriggerDamageDealt() │──► OnDamageDealt event ───►│
-       │                          │                              │
-       │                          │                    AchievementManager
-       │                          │                    UpdateProgress()
+┌─────────────────────────────────────────────────────────────┐
+│ AchievementSystemCore (ЕДИНСТВЕННЫЙ Singleton)              │
+│ - DontDestroyOnLoad                                         │
+│ - Все AchievementType назначены в Inspector                 │
+│ - AchievementNotificationUI prefab (опционально)             │
+│ - Единственная точка входа для всей системы                 │
+│                                                             │
+│ Использование:                                              │
+│ AchievementSystemCore.Instance.UpdateProgress(...)          │
+│ AchievementSystemCore.Instance.UnlockAchievement(...)       │
+│ AchievementSystemCore.Instance.IsAchievementUnlocked(...)   │
+└─────────────────────────────────────────────────────────────┘
+                               │
+                               │ хранит ссылку на
+                               │
+┌─────────────────────────────────────────────────────────────┐
+│ AchievementManager (Plain MonoBehaviour, НЕ Singleton)      │
+│ - Доступ: AchievementSystemCore.Instance.AchievementManager │
+│ - RegisterAchievementTypes()                                │
+│ - UpdateProgress()                                          │
+│ - UnlockAchievement()                                       │
+│ - Save/Load PlayerPrefs                                     │
+│ - События: OnAchievementUnlocked, OnAchievementProgress     │
+└─────────────────────────────────────────────────────────────┘
+                               │
+                               │ AchievementEvents (static bus)
+                               │
+┌─────────────────────────────────────────────────────────────┐
+│ Сцены игры                                                   │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ AchievementEventListener (на каждой сцене)              │ │
+│ │ - onKillAchievements: [kill_10_enemies]                 │ │
+│ │ - onCollectAchievements: [collect_20_coins]             │ │
+│ └─────────────────────────────────────────────────────────┘ │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ AchievementPanelUI (только если нужен список)           │ │
+│ └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
 ```
+
+### Ключевые принципы архитектуры
+
+1. **Один синглтон**: Только `AchievementSystemCore` является синглтоном с `DontDestroyOnLoad`
+2. **Plain Component**: `AchievementManager` — обычный компонент, доступ к нему через `AchievementSystemCore.Instance.AchievementManager`
+3. **Удобные методы-псевдонимы**: `AchievementSystemCore` предоставляет прямые методы для большинства операций:
+   - `UpdateProgress(id, amount)` — обновить прогресс
+   - `UnlockAchievement(id)` — разблокировать ачивку
+   - `IsAchievementUnlocked(id)` — проверить статус
+   - `GetAchievementProgress(id)` — получить текущий прогресс
+   - `GetTotalUnlockedCount()` — получить количество разблокированных
+   - `GetTotalAchievementCount()` — получить общее количество
+   - `SaveProgress()` — сохранить прогресс
+   - `LoadProgress()` — загрузить прогресс
+   - `ResetProgress()` — сбросить прогресс
 
 ## Быстрый старт
 
@@ -33,11 +77,33 @@ Right-click в Project → **Create** → **Achievement System** → **Achieveme
 - **Category**: `Combat`
 - **Icon**: Sprite для иконки ачивки
 
-### Шаг 2: Добавьте AchievementEventListener на сцену
+### Шаг 2: Создайте AchievementSystemCore
 
-1. Создайте пустой GameObject → `AchievementListeners`
-2. Добавьте компонент **`AchievementEventListener`**
-3. В Inspector вы увидите 8 секций для каждого типа события:
+1. Создайте пустой GameObject → `AchievementSystemCore`
+2. Добавьте компонент **`AchievementSystemCore`**
+3. Перетащите ВСЕ AchievementType ScriptableObject из Project в поле **All Achievements**
+4. (Опционально) Назначьте AchievementNotificationUI prefab в поле **Notification Prefab**
+
+```
+┌─────────────────────────────────────────────────┐
+│ Achievement System Core                         │
+├─────────────────────────────────────────────────┤
+│ All Achievements:                               │
+│   [0] → kill_10_enemies (AchievementType)       │
+│   [1] → kill_50_enemies (AchievementType)       │
+│   [2] → collect_20_coins (AchievementType)      │
+│   ...                                           │
+│   Size: N                                       │
+├─────────────────────────────────────────────────┤
+│ Notification Prefab:                            │
+│   [None] (AchievementNotificationUI prefab)     │
+└─────────────────────────────────────────────────┘
+```
+
+### Шаг 3: Добавьте AchievementEventListener на сцену
+
+1. Добавьте **AchievementEventListener** на любой GameObject в сцене
+2. В Inspector перетащите AchievementType в соответствующие поля:
 
 | Section | Описание |
 |---|---|
@@ -49,12 +115,6 @@ Right-click в Project → **Create** → **Achievement System** → **Achieveme
 | **On Dialogue Finished Achievements** | Ачивки, которые обновляются после диалога |
 | **On Level Complete Achievements** | Ачивки, которые обновляются при завершении уровня |
 | **On Chest Opened Achievements** | Ачивки, которые обновляются при открытии сундука |
-
-**В каждой секции просто перетащите AchievementType ScriptableObject из Project в поле Size:**
-- Установите Size = 1 (или больше для нескольких ачивок)
-- Перетащите нужные AchievementType ассеты в ячейки [0], [1], и т.д.
-
-![Inspector Setup](#)
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -76,7 +136,7 @@ Right-click в Project → **Create** → **Achievement System** → **Achieveme
 └─────────────────────────────────────────────────┘
 ```
 
-### Шаг 3: Вызывайте события из игровой логики
+### Шаг 4: Вызывайте события из игровой логики
 
 ```csharp
 using AchievementSystem;
@@ -121,20 +181,43 @@ public class PlayerCombat : MonoBehaviour
 
 ## Программное управление ачивками
 
+> **ВАЖНО**: Все операции выполняются через `AchievementSystemCore.Instance` — единственный синглтон системы.
+
 ```csharp
 using AchievementSystem;
 
 // Обновить прогресс ачивки
-AchievementManager.Instance.UpdateProgress("kill_10_enemies", 1);
+AchievementSystemCore.Instance.UpdateProgress("kill_10_enemies", 1);
 
 // Мгновенно разблокировать ачивку
-AchievementManager.Instance.UnlockAchievement("complete_level_1");
+AchievementSystemCore.Instance.UnlockAchievement("complete_level_1");
 
 // Проверить статус
-bool isUnlocked = AchievementManager.Instance.IsAchievementUnlocked("kill_10_enemies");
+bool isUnlocked = AchievementSystemCore.Instance.IsAchievementUnlocked("kill_10_enemies");
 
 // Получить текущий прогресс
-int progress = AchievementManager.Instance.GetAchievementProgress("kill_10_enemies");
+int progress = AchievementSystemCore.Instance.GetAchievementProgress("kill_10_enemies");
+
+// Получить общее количество разблокированных
+int unlockedCount = AchievementSystemCore.Instance.GetTotalUnlockedCount();
+
+// Получить общее количество всех ачивок
+int totalCount = AchievementSystemCore.Instance.GetTotalAchievementCount();
+
+// Показать уведомление вручную
+AchievementSystemCore.Instance.ShowNotification(achievementType);
+
+// Сохранить/загрузить прогресс
+AchievementSystemCore.Instance.SaveProgress();
+AchievementSystemCore.Instance.LoadProgress();
+
+// Сбросить весь прогресс
+AchievementSystemCore.Instance.ResetProgress();
+
+// Прямой доступ к AchievementManager (для продвинутых сценариев)
+var manager = AchievementSystemCore.Instance.AchievementManager;
+manager.AddListener(someListener);
+manager.GetAllAchievementData();
 ```
 
 ## Интеграция с существующими системами
@@ -169,11 +252,12 @@ private void OnFightFinished()
 
 private void OnWin()
 {
-    AchievementManager.Instance.UnlockAchievement("defeat_angel");
+    // Используем AchievementSystemCore.Instance вместо AchievementManager.Instance
+    AchievementSystemCore.Instance.UnlockAchievement("defeat_angel");
 }
 ```
 
-## Common Patterns
+## Advanced Patterns
 
 ### Паттерн 1: Множественные ачивки на одно событие
 
@@ -194,7 +278,7 @@ public void OnBossKilled()
     AchievementEvents.TriggerKill(); // Обычные ачивки на убийство
     
     // Специальная ачивка только для босса
-    AchievementManager.Instance.UnlockAchievement("defeat_blue_angel");
+    AchievementSystemCore.Instance.UnlockAchievement("defeat_blue_angel");
 }
 ```
 
@@ -225,21 +309,68 @@ public void OnDamageDealt(float damage)
     // Кастомная ачивка: нанести 100 урона за бой
     if (damage >= 50f)
     {
-        AchievementManager.Instance.UpdateProgress("big_hit", 1);
+        AchievementSystemCore.Instance.UpdateProgress("big_hit", 1);
     }
 }
 ```
 
-## Удаленные компоненты
+## UI компоненты
 
-Следующие компоненты были удалены и заменены на AchievementEventListener:
-- ~~CollectibleCondition~~
-- ~~KillCondition~~
-- ~~DistanceCondition~~
-- ~~TimeCondition~~
-- ~~DialogueCondition~~
+### AchievementPanelUI
 
-Если вы использовали эти компоненты в сценах, замените их на **AchievementEventListener**.
+Отображает полный список достижений с прогрессом.
+
+**Настройка:**
+1. Создайте UI Canvas в сцене
+2. Добавьте GameObject и назовите его `AchievementPanel`
+3. Добавьте компонент `AchievementPanelUI`
+4. Назначьте:
+   - **Slot Prefab**: префаб AchievementSlotUI
+   - **Slots Container**: Transform для размещения слотов
+   - **Total Count Text**: TextMeshPro для отображения общего количества
+   - **Unlocked Count Text**: TextMeshPro для отображения разблокированных
+   - **Close Button**: Button для закрытия панели
+
+### AchievementSlotUI
+
+Отображает одну ачивку с иконкой, названием, описанием и прогрессом.
+
+**Состояния:**
+- **Hidden**: ачивка скрыта (isHidden = true), показывает "???"
+- **Locked**: ачивка не разблокирована, показывает прогресс
+- **Unlocked**: ачивка разблокирована, показывает "Completed!"
+
+### AchievementNotificationUI
+
+Показывает всплывающее уведомление при разблокировке ачивки.
+
+**Настройка:**
+1. Назначьте префаб `achiev_notification.prefab` в AchievementSystemCore
+2. Или используйте вручную:
+```csharp
+AchievementSystemCore.Instance.ShowNotification(achievementType);
+```
+
+## File Structure
+
+```
+Assets/TestFeatures/AchievementSystem/
+├── AchievementType.cs              # ScriptableObject для ачивок
+├── AchievementData.cs              # Данные прогресса ачивки
+├── IAchievementListener.cs         # Интерфейс для UI
+├── AchievementManager.cs           # Менеджер прогресса (НЕ Singleton)
+├── AchievementEvents.cs            # Статический Event Bus
+├── AchievementEventListener.cs     # Слушатель событий
+├── AchievementSystemCore.cs        # ЕДИНСТВЕННЫЙ Singleton (точка входа)
+├── UI/
+│   ├── AchievementSlotUI.cs        # Слот ачивки
+│   ├── AchievementPanelUI.cs       # Панель ачивок
+│   └── AchievementNotificationUI.cs # Уведомление
+├── kill_1_enemy.asset              # Пример ачивки
+├── finish_1_level.asset            # Пример ачивки
+├── achiev_notification.prefab      # Префаб уведомления
+└── README_AchievementCondition.md  # Эта документация
+```
 
 ## Troubleshooting
 
@@ -255,3 +386,34 @@ public void OnDamageDealt(float damage)
 1. Убедитесь, что ScriptableObject создан правильно (Right-click → Create → Achievement System → Achievement)
 2. Проверьте, что все поля заполнены (особенно ID)
 3. Нажмите `Ctrl+S` чтобы сохранить изменения в ScriptableObject
+
+### Система не инициализирована
+
+1. Убедитесь, что AchievementSystemCore создан и находится в первой сцене
+2. Проверьте, что все AchievementType назначены в поле All Achievements
+
+## Типичные ошибки
+
+### Ошибка: "AchievementSystemCore not found"
+
+**Причина:** AchievementSystemCore не был создан или не инициализировался.
+
+**Решение:** Создайте AchievementSystemCore в первой загружаемой сцене (MainMenu).
+
+### Ошибка: "No achievements assigned"
+
+**Причина:** В AchievementSystemCore не назначены AchievementType.
+
+**Решение:** Перетащите AchievementType ScriptableObject в поле All Achievements в Inspector.
+
+### Ошибка: "Notification prefab not assigned"
+
+**Причина:** Achievement разблокируется, но уведомление не показывается.
+
+**Решение:** Назначьте AchievementNotificationUI prefab в поле Notification Prefab AchievementSystemCore, или игнорируйте если уведомления не нужны.
+
+### Ошибка: Использование AchievementManager.Instance
+
+**Причина:** В новой архитектуре AchievementManager больше НЕ является синглтоном.
+
+**Решение:** Используйте `AchievementSystemCore.Instance.UpdateProgress()` вместо `AchievementManager.Instance.UpdateProgress()`. Для прямого доступа к AchievementManager используйте `AchievementSystemCore.Instance.AchievementManager`.

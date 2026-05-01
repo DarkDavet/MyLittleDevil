@@ -7902,7 +7902,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  achievements: []
+  achievements:
+  - {fileID: 11400000, guid: db77ea6ebd26f6347813a3bf477130cb, type: 2}
+  - {fileID: 11400000, guid: cd62e3ea7afbb5442bd281e6da3f0e13, type: 2}
   notificationPrefab: {fileID: 9146680006964701035, guid: 3aabd8bbb5220b74eb88a64825a1d121, type: 3}
   notificationContainer: {fileID: 648907275}
 --- !u!4 &1601869546
