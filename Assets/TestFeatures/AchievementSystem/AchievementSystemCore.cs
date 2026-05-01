@@ -1,27 +1,33 @@
 ﻿using AchievementSystem.UI;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AchievementSystem
 {
     /// <summary>
     /// Global singleton that manages the entire Achievement System across all scenes.
     /// This should be placed in a persistent scene (e.g., MainMenu) with DontDestroyOnLoad.
-    /// 
+    ///
     /// This is the ONLY singleton in the Achievement System — all access goes through here.
-    /// 
+    ///
     /// Responsibilities:
     /// - Initialize AchievementManager with all AchievementTypes
     /// - Provide convenient access to achievement methods
-    /// - Handle notification UI spawning
-    /// 
+    /// - Handle notification UI spawning with persistent Canvas
+    ///
     /// Setup:
     /// 1. Create empty GameObject named "AchievementSystemCore"
     /// 2. Add this component
     /// 3. Assign all AchievementType assets to the All Achievements array
     /// 4. (Optional) Assign AchievementNotificationUI prefab to Notification Prefab field
     /// 5. Place this GameObject in your first scene (MainMenu)
-    /// 
+    ///
+    /// Persistent Notification Canvas:
+    /// - Automatically creates a dedicated Canvas for notifications with DontDestroyOnLoad
+    /// - Notifications will ALWAYS appear on screen regardless of scene changes
+    /// - Configurable resolution and match mode in Canvas Settings
+    ///
     /// Usage:
     /// AchievementSystemCore.Instance.UpdateProgress("kill_10_enemies", 1);
     /// AchievementSystemCore.Instance.UnlockAchievement("complete_level_1");
@@ -37,14 +43,24 @@ namespace AchievementSystem
         [Tooltip("Prefab for AchievementNotificationUI (optional, can be null if UI is separate)")]
         [SerializeField] private GameObject notificationPrefab;
 
-        [Tooltip("Parent transform for notification UI elements (optional)")]
-        [SerializeField] private Transform notificationParent;
+        [Header("Canvas Settings")]
+        [Tooltip("Automatically create a persistent Canvas for notifications")]
+        [SerializeField] private bool autoCreatePersistentCanvas = true;
+
+        [Tooltip("Resolution for the notification Canvas")]
+        [SerializeField] private Vector2 canvasResolution = new Vector2(1920, 1080);
+
+        [Tooltip("Match width or height for Canvas scaling")]
+        [SerializeField] private bool canvasMatchWidthOrHeight = true;
 
         private static AchievementSystemCore _instance;
         public static AchievementSystemCore Instance => _instance;
 
         private AchievementManager _achievementManager;
         public AchievementManager AchievementManager => _achievementManager;
+
+        private Transform _persistentCanvasRoot;
+        private Canvas _notificationCanvas;
 
         private void Awake()
         {
@@ -53,6 +69,13 @@ namespace AchievementSystem
             {
                 _instance = this;
                 DontDestroyOnLoad(gameObject);
+                
+                // Create persistent notification canvas
+                if (autoCreatePersistentCanvas)
+                {
+                    CreatePersistentNotificationCanvas();
+                }
+                
                 InitializeSystem();
             }
             else
@@ -141,6 +164,7 @@ namespace AchievementSystem
 
         /// <summary>
         /// Show notification UI for an unlocked achievement.
+        /// Uses the persistent Canvas root as parent.
         /// </summary>
         public void ShowNotification(AchievementType achievementType)
         {
@@ -150,7 +174,15 @@ namespace AchievementSystem
                 return;
             }
 
-            GameObject notificationObj = Instantiate(notificationPrefab, notificationParent);
+            // Use persistent canvas root as parent
+            Transform parent = _persistentCanvasRoot;
+            if (parent == null)
+            {
+                Debug.LogWarning("[AchievementSystemCore] Persistent notification canvas root not available!");
+                return;
+            }
+
+            GameObject notificationObj = Instantiate(notificationPrefab, parent);
             AchievementNotificationUI notification = notificationObj.GetComponent<AchievementNotificationUI>();
             if (notification != null)
             {
@@ -161,6 +193,36 @@ namespace AchievementSystem
                 Debug.LogWarning("[AchievementSystemCore] Notification prefab missing AchievementNotificationUI component!");
                 Destroy(notificationObj);
             }
+        }
+
+        /// <summary>
+        /// Create a persistent Canvas for notification UI with DontDestroyOnLoad.
+        /// This ensures notifications always appear on screen regardless of scene changes.
+        /// </summary>
+        private void CreatePersistentNotificationCanvas()
+        {
+            GameObject canvasObj = new GameObject("AchievementNotificationCanvas");
+            canvasObj.transform.SetParent(null);
+            DontDestroyOnLoad(canvasObj);
+
+            _notificationCanvas = canvasObj.AddComponent<Canvas>();
+            _notificationCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+            _notificationCanvas.worldCamera = Camera.main;
+
+            CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = canvasResolution;
+            scaler.screenMatchMode = canvasMatchWidthOrHeight
+                ? CanvasScaler.ScreenMatchMode.MatchWidthOrHeight
+                : CanvasScaler.ScreenMatchMode.Expand;
+
+            canvasObj.AddComponent<GraphicRaycaster>();
+
+            GameObject rootObj = new GameObject("NotificationRoot");
+            rootObj.transform.SetParent(canvasObj.transform);
+            _persistentCanvasRoot = rootObj.transform;
+
+            Debug.Log("[AchievementSystemCore] Created persistent notification canvas.");
         }
 
         /// <summary>
