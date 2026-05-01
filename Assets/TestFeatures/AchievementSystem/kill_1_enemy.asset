@@ -15,8 +15,8 @@ MonoBehaviour:
   id: kill_1_enemy
   title: First blood
   description: Kill 1 enemy
-  icon: {fileID: 0}
-  unlockedIcon: {fileID: 0}
+  icon: {fileID: 21300000, guid: bfec2e5345c23204d8eafaade31aca37, type: 3}
+  unlockedIcon: {fileID: 21300000, guid: 0c13882e340d52447bf4242eaa0f1aba, type: 3}
   category: 0
   progressType: 0
   requiredProgress: 1

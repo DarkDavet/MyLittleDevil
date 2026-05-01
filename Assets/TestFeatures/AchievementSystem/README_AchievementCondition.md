@@ -12,6 +12,7 @@ AchievementSystem — это событийно-ориентированная �
 │ - DontDestroyOnLoad                                         │
 │ - Все AchievementType назначены в Inspector                 │
 │ - AchievementNotificationUI prefab (опционально)             │
+│ - Persistent Notification Canvas (авто-создаётся)           │
 │ - Единственная точка входа для всей системы                 │
 │                                                             │
 │ Использование:                                              │
@@ -33,6 +34,15 @@ AchievementSystem — это событийно-ориентированная �
 └─────────────────────────────────────────────────────────────┘
                                │
                                │ AchievementEvents (static bus)
+                               │
+┌─────────────────────────────────────────────────────────────┐
+│ Persistent Notification Canvas (DontDestroyOnLoad)          │
+│ - RenderMode: ScreenSpaceCamera                             │
+│ - CanvasScaler: ScaleWithScreenSize                         │
+│ - Уведомления создаются здесь (всегда на экране)            │
+└─────────────────────────────────────────────────────────────┘
+                               │
+                               │ Сцены игры (не зависят от Canvas)
                                │
 ┌─────────────────────────────────────────────────────────────┐
 │ Сцены игры                                                   │
@@ -83,6 +93,7 @@ Right-click в Project → **Create** → **Achievement System** → **Achieveme
 2. Добавьте компонент **`AchievementSystemCore`**
 3. Перетащите ВСЕ AchievementType ScriptableObject из Project в поле **All Achievements**
 4. (Опционально) Назначьте AchievementNotificationUI prefab в поле **Notification Prefab**
+5. Persistent Notification Canvas создаётся автоматически (настраивается в Canvas Settings)
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -97,8 +108,23 @@ Right-click в Project → **Create** → **Achievement System** → **Achieveme
 ├─────────────────────────────────────────────────┤
 │ Notification Prefab:                            │
 │   [None] (AchievementNotificationUI prefab)     │
+├─────────────────────────────────────────────────┤
+│ Canvas Settings:                                │
+│   Auto Create Persistent Canvas: true           │
+│   Canvas Resolution: (1920, 1080)               │
+│   Canvas Match Width/Height: true               │
 └─────────────────────────────────────────────────┘
 ```
+
+#### Persistent Notification Canvas
+
+При первом запуске система автоматически создаёт отдельный Canvas для уведомлений с `DontDestroyOnLoad`. Это гарантирует, что уведомления **всегда будут видны на экране**, независимо от того, в какой сцене находится игрок.
+
+**Преимущества:**
+- Уведомления не зависят от сцен — всегда поверх всего UI
+- Автоматическая адаптация к любому разрешению экрана
+- Не требует ручной настройки Canvas в каждой сцене
+- Нет проблемы "исчезающего" `notificationParent` при переходах между сценами
 
 ### Шаг 3: Добавьте AchievementEventListener на сцену
 
@@ -345,11 +371,53 @@ public void OnDamageDealt(float damage)
 Показывает всплывающее уведомление при разблокировке ачивки.
 
 **Настройка:**
-1. Назначьте префаб `achiev_notification.prefab` в AchievementSystemCore
+1. Назначьте префаб `achiev_notification.prefab` в поле **Notification Prefab** AchievementSystemCore
 2. Или используйте вручную:
 ```csharp
 AchievementSystemCore.Instance.ShowNotification(achievementType);
 ```
+
+**Настройка позиции уведомления:**
+
+Позиция уведомления на экране настраивается через `RectTransform` префаба `achiev_notification.prefab` в Unity Editor.
+
+**Рекомендуемые настройки для верхнего центра:**
+```
+1. Откройте префаб achiev_notification.prefab
+2. Выберите корневой объект (сам префаб)
+3. В Inspector найдите RectTransform
+4. Установите Anchor Preset: Upper Center (📎 зажать и перетащить)
+5. Настройки:
+   - Anchors: (0.5, 1) → (0.5, 1)
+   - Position X: 0
+   - Position Y: -50 (отступ сверху)
+   - Width: 400-600
+   - Height: 80-120
+```
+
+**Или для верхнего правого угла:**
+```
+1. Anchor Preset: Upper Right
+2. Anchors: (1, 1) → (1, 1)
+3. Position X: -50 (отступ справа)
+4. Position Y: -50 (отступ сверху)
+```
+
+### Persistent Notification Canvas
+
+Автоматически создаётся при инициализации AchievementSystemCore. Не требует ручной настройки.
+
+**Параметры (в AchievementSystemCore Inspector):**
+- **Auto Create Persistent Canvas**: `true` — автоматически создать Canvas
+- **Canvas Resolution**: `(1920, 1080)` — базовое разрешение для масштабирования
+- **Canvas Match Width/Height**: `true` — масштабирование по ширине или высоте
+
+**Как это работает:**
+1. При первом запуске создаётся GameObject `AchievementNotificationCanvas`
+2. Ему добавляется Canvas с `RenderMode.ScreenSpaceCamera`
+3. Добавляется CanvasScaler для адаптации к любому разрешению
+4. Создаётся пустой GameObject `NotificationRoot` как родитель для уведомлений
+5. Всё помечается с `DontDestroyOnLoad` — работает между сценами
 
 ## File Structure
 
@@ -411,6 +479,18 @@ Assets/TestFeatures/AchievementSystem/
 **Причина:** Achievement разблокируется, но уведомление не показывается.
 
 **Решение:** Назначьте AchievementNotificationUI prefab в поле Notification Prefab AchievementSystemCore, или игнорируйте если уведомления не нужны.
+
+### Ошибка: "Persistent notification canvas root not available"
+
+**Причина:** `autoCreatePersistentCanvas` выключен, но `notificationParent` не назначен.
+
+**Решение:** В AchievementSystemCore включите `Auto Create Persistent Canvas: true` или назначьте `notificationParent` (устаревший подход).
+
+### Проблема: Уведомления исчезают при смене сцены
+
+**Причина:** (Устаревшая) Раньше использовался `notificationParent`, который мог исчезать при смене сцены.
+
+**Решение:** Новая архитектура использует Persistent Canvas с `DontDestroyOnLoad`. Уведомления теперь всегда появляются на экране, независимо от текущей сцены.
 
 ### Ошибка: Использование AchievementManager.Instance
 

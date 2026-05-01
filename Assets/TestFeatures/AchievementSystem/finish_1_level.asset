@@ -15,8 +15,8 @@ MonoBehaviour:
   id: finish_1_lvl
   title: Pathfinder
   description: Finish the first level
-  icon: {fileID: 0}
-  unlockedIcon: {fileID: 0}
+  icon: {fileID: 21300000, guid: bc39a880ada83514eb8a98f3a4cf92a7, type: 3}
+  unlockedIcon: {fileID: 21300000, guid: 0c13882e340d52447bf4242eaa0f1aba, type: 3}
   category: 0
   progressType: 0
   requiredProgress: 1
