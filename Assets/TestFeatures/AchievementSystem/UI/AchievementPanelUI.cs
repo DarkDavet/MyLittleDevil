@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -15,136 +16,103 @@ namespace AchievementSystem.UI
         [SerializeField] private Button closeButton;
 
         private List<AchievementSlotUI> slotUIs = new List<AchievementSlotUI>();
-        private List<AchievementData> allData = new List<AchievementData>();
         private CanvasGroup _canvasGroup;
+        private bool _isInitialized = false;
 
         private void Awake()
         {
             _canvasGroup = GetComponent<CanvasGroup>();
             if (closeButton != null)
                 closeButton.onClick.AddListener(Close);
+
+            // Гарантируем, что панель невидима при старте сцены
+            if (_canvasGroup != null)
+            {
+                _canvasGroup.alpha = 0;
+                _canvasGroup.blocksRaycasts = false;
+            }
         }
 
         private void Start()
         {
-            // Use AchievementSystemCore.Instance as the single entry point
+            // Подписываемся на события менеджера
             AchievementSystemCore.Instance?.AchievementManager?.AddListener(this);
-            
-            // Auto-initialize slots from all registered achievements
-            InitializeSlots();
+
+            // Предварительно создаем слоты, если менеджер уже готов
+            if (!_isInitialized)
+            {
+                InitializeSlots();
+            }
         }
-        
-        /// <summary>
-        /// Auto-initialize all achievement slots from AchievementSystemCore.
-        /// Called automatically on Start.
-        /// </summary>
+
+        private void OnEnable()
+        {
+            // Каждый раз при активации объекта (Show) обновляем данные
+            UpdateCounts();
+            RefreshExistingSlots();
+        }
+
         private void InitializeSlots()
         {
-            if (AchievementSystemCore.Instance == null)
-            {
-                Debug.LogWarning("[AchievementPanelUI] AchievementSystemCore.Instance is null!");
+            if (AchievementSystemCore.Instance == null || AchievementSystemCore.Instance.AchievementManager == null)
                 return;
-            }
 
-            List<AchievementType> achievementTypes = AchievementSystemCore.Instance.GetAllAchievements();
-            if (achievementTypes == null || achievementTypes.Count == 0)
-            {
-                Debug.LogWarning("[AchievementPanelUI] No achievements registered in AchievementSystemCore!");
-                return;
-            }
+            var types = AchievementSystemCore.Instance.GetAllAchievements();
+            var progressDict = AchievementSystemCore.Instance.AchievementManager.GetAchievementProgress();
 
-            allData = AchievementSystemCore.Instance.AchievementManager.GetAllAchievementData();
-            
-            foreach (var type in achievementTypes)
+            // Очищаем контейнер от старых объектов (если есть)
+            foreach (Transform child in slotsContainer) Destroy(child.gameObject);
+            slotUIs.Clear();
+
+            foreach (var type in types)
             {
-                AchievementData data = null;
-                foreach (var d in allData)
+                if (progressDict.TryGetValue(type.Id, out var data))
                 {
-                    if (d.achievementId == type.Id)
+                    GameObject slotObj = Instantiate(slotPrefab, slotsContainer);
+                    AchievementSlotUI slotUI = slotObj.GetComponent<AchievementSlotUI>();
+                    if (slotUI != null)
                     {
-                        data = d;
-                        break;
+                        slotUI.Setup(type, data);
+                        slotUIs.Add(slotUI);
                     }
                 }
-
-                if (data == null) continue;
-
-                GameObject slotObj = Instantiate(slotPrefab, slotsContainer);
-                AchievementSlotUI slotUI = slotObj.GetComponent<AchievementSlotUI>();
-                if (slotUI != null)
-                {
-                    slotUI.Setup(type, data);
-                    slotUIs.Add(slotUI);
-                }
             }
-
-            UpdateCounts();
+            _isInitialized = true;
         }
 
-        private void OnDestroy()
+        private void RefreshExistingSlots()
         {
-            AchievementSystemCore.Instance?.AchievementManager?.RemoveListener(this);
+            if (AchievementSystemCore.Instance == null) return;
+
+            var manager = AchievementSystemCore.Instance.AchievementManager;
+            var progressDict = manager.GetAchievementProgress();
+            var typesDict = manager.GetAchievementTypes();
+
+            foreach (var slot in slotUIs)
+            {
+                if (progressDict.TryGetValue(slot.AchievementId, out var data))
+                {
+                    slot.Setup(typesDict[slot.AchievementId], data);
+                }
+            }
         }
 
         /// <summary>
-        /// Show panel with achievement slots.
-        /// If achievementTypes is null, uses all registered achievements from AchievementSystemCore.
+        /// Главный метод для вызова открытия окна
         /// </summary>
-        public void Show(List<AchievementType> achievementTypes = null)
+        public void Show()
         {
-            // Clear existing slots
-            foreach (var slot in slotUIs)
-                Destroy(slot.gameObject);
-            slotUIs.Clear();
+            gameObject.SetActive(true); // Это триггерит OnEnable и Refresh
 
-            // If no achievement types provided, use all from AchievementSystemCore
-            if (achievementTypes == null)
-            {
-                achievementTypes = AchievementSystemCore.Instance?.GetAllAchievements();
-            }
+            if (!_isInitialized) InitializeSlots();
 
-            if (achievementTypes == null || achievementTypes.Count == 0)
-            {
-                Debug.LogWarning("[AchievementPanelUI] No achievements to display!");
-                return;
-            }
-
-            allData = AchievementSystemCore.Instance?.AchievementManager?.GetAllAchievementData() ?? new List<AchievementData>();
-            
-            foreach (var type in achievementTypes)
-            {
-                AchievementData data = null;
-                foreach (var d in allData)
-                {
-                    if (d.achievementId == type.Id)
-                    {
-                        data = d;
-                        break;
-                    }
-                }
-
-                if (data == null) continue;
-
-                GameObject slotObj = Instantiate(slotPrefab, slotsContainer);
-                AchievementSlotUI slotUI = slotObj.GetComponent<AchievementSlotUI>();
-                if (slotUI != null)
-                {
-                    slotUI.Setup(type, data);
-                    slotUIs.Add(slotUI);
-                }
-            }
-
-            UpdateCounts();
-
-            // Show panel with fade-in
-            _canvasGroup.alpha = 0;
             _canvasGroup.blocksRaycasts = true;
-            _canvasGroup.DOFade(1, 0.25f);
+            _canvasGroup.DOFade(1, 0.25f).SetUpdate(true);
         }
 
         public void Close()
         {
-            _canvasGroup.DOFade(0, 0.25f).OnComplete(() =>
+            _canvasGroup.DOFade(0, 0.25f).SetUpdate(true).OnComplete(() =>
             {
                 _canvasGroup.blocksRaycasts = false;
                 gameObject.SetActive(false);
@@ -157,45 +125,41 @@ namespace AchievementSystem.UI
             if (manager == null) return;
 
             if (totalCountText != null)
-                totalCountText.text = $"{manager.GetTotalAchievementCount()}";
+                totalCountText.text = manager.GetTotalAchievementCount().ToString();
 
             if (unlockedCountText != null)
-                unlockedCountText.text = $"{manager.GetTotalUnlockedCount()}";
+                unlockedCountText.text = manager.GetTotalUnlockedCount().ToString();
         }
 
+        // Слушатели событий
         public void OnAchievementUnlocked(AchievementType achievementType)
         {
             UpdateCounts();
-
-            foreach (var slot in slotUIs)
-            {
-                if (slot.GetComponent<AchievementSlotUI>() != null)
-                {
-                    // Refresh the slot to show unlocked state
-                    foreach (var data in allData)
-                    {
-                        if (data.achievementId == achievementType.Id)
-                        {
-                            slot.Setup(achievementType, data);
-                            break;
-                        }
-                    }
-                }
-            }
+            UpdateSpecificSlot(achievementType.Id);
         }
 
         public void OnAchievementProgress(AchievementType achievementType, int currentProgress, int requiredProgress)
         {
             UpdateCounts();
+            UpdateSpecificSlot(achievementType.Id);
+        }
 
+        private void UpdateSpecificSlot(string id)
+        {
             foreach (var slot in slotUIs)
             {
-                AchievementSlotUI slotUI = slot.GetComponent<AchievementSlotUI>();
-                if (slotUI != null)
+                if (slot.AchievementId == id)
                 {
-                    slotUI.UpdateProgress(currentProgress, requiredProgress);
+                    var manager = AchievementSystemCore.Instance.AchievementManager;
+                    slot.Setup(manager.GetAchievementTypes()[id], manager.GetAchievementProgress()[id]);
+                    break;
                 }
             }
+        }
+
+        private void OnDestroy()
+        {
+            AchievementSystemCore.Instance?.AchievementManager?.RemoveListener(this);
         }
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,12 +34,6 @@ namespace AchievementSystem
             public List<int> progress;
         }
 
-        private void Awake()
-        {
-            // No singleton pattern here — AchievementSystemCore manages the instance
-            LoadFromPlayerPrefs();
-        }
-
         /// <summary>
         /// Register all achievement types. Call this once during initialization.
         /// </summary>
@@ -56,6 +50,7 @@ namespace AchievementSystem
                     achievementProgress[type.Id] = new AchievementData(type);
                 }
             }
+            LoadFromPlayerPrefs();
         }
 
         /// <summary>
@@ -108,7 +103,14 @@ namespace AchievementSystem
                 listener.OnAchievementProgress(type, data.currentProgress, type.RequiredProgress);
 
             if (data.currentProgress >= type.RequiredProgress)
+            {
                 UnlockAchievement(achievementId);
+            }
+            else
+            {
+                // Сохраняем промежуточный прогресс
+                SaveToPlayerPrefs();
+            }
         }
 
         /// <summary>
@@ -120,18 +122,21 @@ namespace AchievementSystem
                 return;
 
             AchievementData data = achievementProgress[achievementId];
-            if (data.isUnlocked)
-                return;
+            if (data.isUnlocked) return;
 
             AchievementType type = achievementTypes[achievementId];
             data.isUnlocked = true;
             data.currentProgress = type.RequiredProgress;
 
+            // 1. Оповещаем слушателей (включая панель)
             OnAchievementUnlocked?.Invoke(type);
-
             foreach (var listener in listeners)
                 listener.OnAchievementUnlocked(type);
 
+            // 2. ВАЖНО: Вызываем визуальное уведомление через Core
+            AchievementSystemCore.Instance.ShowNotification(type);
+
+            // 3. Сохраняем результат
             SaveToPlayerPrefs();
         }
 

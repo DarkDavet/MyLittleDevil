@@ -5,34 +5,6 @@ using UnityEngine.UI;
 
 namespace AchievementSystem
 {
-    /// <summary>
-    /// Global singleton that manages the entire Achievement System across all scenes.
-    /// This should be placed in a persistent scene (e.g., MainMenu) with DontDestroyOnLoad.
-    ///
-    /// This is the ONLY singleton in the Achievement System — all access goes through here.
-    ///
-    /// Responsibilities:
-    /// - Initialize AchievementManager with all AchievementTypes
-    /// - Provide convenient access to achievement methods
-    /// - Handle notification UI spawning with persistent Canvas
-    ///
-    /// Setup:
-    /// 1. Create empty GameObject named "AchievementSystemCore"
-    /// 2. Add this component
-    /// 3. Assign all AchievementType assets to the All Achievements array
-    /// 4. (Optional) Assign AchievementNotificationUI prefab to Notification Prefab field
-    /// 5. Place this GameObject in your first scene (MainMenu)
-    ///
-    /// Persistent Notification Canvas:
-    /// - Automatically creates a dedicated Canvas for notifications with DontDestroyOnLoad
-    /// - Notifications will ALWAYS appear on screen regardless of scene changes
-    /// - Configurable resolution and match mode in Canvas Settings
-    ///
-    /// Usage:
-    /// AchievementSystemCore.Instance.UpdateProgress("kill_10_enemies", 1);
-    /// AchievementSystemCore.Instance.UnlockAchievement("complete_level_1");
-    /// AchievementSystemCore.Instance.IsAchievementUnlocked("kill_10_enemies");
-    /// </summary>
     public class AchievementSystemCore : MonoBehaviour
     {
         [Header("Achievement Configuration")]
@@ -89,13 +61,11 @@ namespace AchievementSystem
 
         private void InitializeSystem()
         {
-            // Find existing AchievementManager or create one
-            _achievementManager = FindObjectOfType<AchievementManager>();
-            if (_achievementManager == null)
+            if (_achievementManager == null) // Если мы еще не создавали его в этом сеансе
             {
                 var managerObj = new GameObject("AchievementManager");
                 _achievementManager = managerObj.AddComponent<AchievementManager>();
-                DontDestroyOnLoad(managerObj);
+                managerObj.transform.SetParent(this.transform); // Привязываем к Core, чтобы они жили вместе
             }
 
             // Register all achievement types
@@ -170,59 +140,49 @@ namespace AchievementSystem
         {
             if (notificationPrefab == null)
             {
-                Debug.LogWarning("[AchievementSystemCore] No notification prefab assigned!");
+                Debug.LogError("Notification Prefab не назначен в AchievementSystemCore!");
                 return;
             }
 
-            // Use persistent canvas root as parent
-            Transform parent = _persistentCanvasRoot;
-            if (parent == null)
+            // Если корня нет, создаем его немедленно
+            if (_persistentCanvasRoot == null) CreatePersistentNotificationCanvas();
+
+            GameObject notificationObj = Instantiate(notificationPrefab, _persistentCanvasRoot);
+
+            // ПРИНУДИТЕЛЬНО настраиваем позицию в Overlay
+            RectTransform rt = notificationObj.GetComponent<RectTransform>();
+            if (rt != null)
             {
-                Debug.LogWarning("[AchievementSystemCore] Persistent notification canvas root not available!");
-                return;
+                rt.localScale = Vector3.one;
+                rt.anchoredPosition = new Vector2(0, 0); // Или укажи нужные координаты спавна
             }
 
-            GameObject notificationObj = Instantiate(notificationPrefab, parent);
-            AchievementNotificationUI notification = notificationObj.GetComponent<AchievementNotificationUI>();
-            if (notification != null)
-            {
-                notification.Show(achievementType);
-            }
-            else
-            {
-                Debug.LogWarning("[AchievementSystemCore] Notification prefab missing AchievementNotificationUI component!");
-                Destroy(notificationObj);
-            }
+            notificationObj.GetComponent<AchievementNotificationUI>()?.Show(achievementType);
         }
 
-        /// <summary>
-        /// Create a persistent Canvas for notification UI with DontDestroyOnLoad.
-        /// This ensures notifications always appear on screen regardless of scene changes.
-        /// </summary>
         private void CreatePersistentNotificationCanvas()
         {
             GameObject canvasObj = new GameObject("AchievementNotificationCanvas");
-            canvasObj.transform.SetParent(null);
             DontDestroyOnLoad(canvasObj);
 
             _notificationCanvas = canvasObj.AddComponent<Canvas>();
-            _notificationCanvas.renderMode = RenderMode.ScreenSpaceCamera;
-            _notificationCanvas.worldCamera = Camera.main;
+            _notificationCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            _notificationCanvas.sortingOrder = 999;
 
-            CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = canvasResolution;
-            scaler.screenMatchMode = canvasMatchWidthOrHeight
-                ? CanvasScaler.ScreenMatchMode.MatchWidthOrHeight
-                : CanvasScaler.ScreenMatchMode.Expand;
-
+            canvasObj.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasObj.AddComponent<GraphicRaycaster>();
 
             GameObject rootObj = new GameObject("NotificationRoot");
-            rootObj.transform.SetParent(canvasObj.transform);
-            _persistentCanvasRoot = rootObj.transform;
+            rootObj.transform.SetParent(canvasObj.transform, false);
 
-            Debug.Log("[AchievementSystemCore] Created persistent notification canvas.");
+            // Растягиваем корень на весь экран, чтобы уведомления было видно
+            RectTransform rt = rootObj.AddComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.sizeDelta = Vector2.zero;
+            rt.anchoredPosition = Vector2.zero;
+
+            _persistentCanvasRoot = rootObj.transform;
         }
 
         /// <summary>

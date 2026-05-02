@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,6 +6,8 @@ namespace AchievementSystem.UI
 {
     public class AchievementSlotUI : MonoBehaviour
     {
+        public string AchievementId => achievementType != null ? achievementType.Id : string.Empty;
+
         [SerializeField] private Image icon;
         [SerializeField] private Image iconBackground;
         [SerializeField] private TextMeshProUGUI title;
