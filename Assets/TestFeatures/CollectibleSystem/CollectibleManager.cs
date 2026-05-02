@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AchievementSystem;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -125,6 +126,7 @@ namespace CollectibleSystem
             };
             PlayerPrefs.SetString("GlobalCollectibles", JsonUtility.ToJson(data));
             OnBalanceChanged?.Invoke();
+            AchievementSystemCore.Instance.UnlockAchievement("find_1_treasure");
         }
 
         public void LoadFromPlayerPrefs()

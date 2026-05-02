@@ -1,3 +1,4 @@
+﻿using AchievementSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class BaseEnemyHealth : MonoBehaviour
         Destroy(explosionEffect, 3f);
         Destroy(gameObject);
         FindObjectOfType<AudioManager>().Play("EnemyDeath");
+        AchievementSystemCore.Instance.UnlockAchievement("kill_1_enemy");
        // TimeManager.Instance.TakeItSlow();
     }
 

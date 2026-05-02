@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6, type: 3}
-  m_Name: kill_1_enemy
+  m_Name: find_1_treasure
   m_EditorClassIdentifier: 
-  id: kill_1_enemy
+  id: find_1_treasure
   title: First blood
-  description: Kill 1 enemy
+  description: Find 1 treasure
   icon: {fileID: 21300000, guid: bfec2e5345c23204d8eafaade31aca37, type: 3}
   unlockedIcon: {fileID: 21300000, guid: 0c13882e340d52447bf4242eaa0f1aba, type: 3}
   category: 0
