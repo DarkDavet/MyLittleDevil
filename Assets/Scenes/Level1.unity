@@ -2843,6 +2843,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 6bef1a23a044500478a5ee40bac560a5, type: 2}
     - target: {fileID: 1601553692412475894, guid: d7f34a1174a56564381469da9bda9809, type: 3}
+      propertyPath: poolManager
+      value: 
+      objectReference: {fileID: 404917812554383226}
+    - target: {fileID: 1601553692412475894, guid: d7f34a1174a56564381469da9bda9809, type: 3}
       propertyPath: tutorialSystem
       value: 
       objectReference: {fileID: 1547849726}
@@ -3844,8 +3848,20 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2656095003582463155, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: pools.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2656095003582463155, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: pools.Array.data[0].tag
+      value: Fire
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656095003582463155, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: pools.Array.data[0].size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2656095003582463155, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: pools.Array.data[0].prefab
+      value: 
+      objectReference: {fileID: 2637118288374962673, guid: 8ba90f56dc7e0344885cfdefe53ab5ed, type: 3}
     - target: {fileID: 6214320805842962436, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -3875,6 +3891,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2093300711531099760}
     - target: {fileID: 6214320805842962439, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: fireShooting
+      value: 
+      objectReference: {fileID: 2093300711531099766}
+    - target: {fileID: 6214320805842962439, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: tutorialSystem
       value: 
       objectReference: {fileID: 1547849726}
@@ -3884,6 +3904,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+--- !u!114 &404917812554383226 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2656095003582463155, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+  m_PrefabInstance: {fileID: 404917812554383225}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fada477b31068b34c8616631b9907525, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2093300711531099757
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4011,6 +4042,11 @@ PrefabInstance:
     - {fileID: 2441509060603132281, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
     - {fileID: 6590513100892867961, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+--- !u!4 &2093300711531099758 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7553975972217863619, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+  m_PrefabInstance: {fileID: 2093300711531099757}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2093300711531099760 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2093300711819808492, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
@@ -4044,6 +4080,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef887edd963c224bb009ec157e1faf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2093300711531099766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787210733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a5a078e8e332e4f829a895aa191b7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 2093300711531099761}
+  _projectilePrefab: {fileID: 2637118288374962673, guid: 8ba90f56dc7e0344885cfdefe53ab5ed, type: 3}
+  _projectileSpawnPoint: {fileID: 2093300711531099758}
+  _fireRate: 1
 --- !u!1001 &3377377030200704702
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -672,6 +672,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: dde867d3aa6b3c546bcb5d1092c69b7e, type: 2}
   _heightOfFlyight: 5
+  _upwardRotation: -6
+  _downwardRotation: 8
+  _rotationSpeed: 5
 --- !u!114 &5928426369686578740
 MonoBehaviour:
   m_ObjectHideFlags: 0

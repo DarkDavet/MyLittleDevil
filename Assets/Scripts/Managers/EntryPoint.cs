@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EntryPoint : MonoBehaviour
 {
     [SerializeField] private GameStateContext gameStateManager;
+    [SerializeField] private PoolManager poolManager;
     [SerializeField] private SceneData sceneData;
 
     private void Start()
@@ -15,5 +16,6 @@ public class EntryPoint : MonoBehaviour
         }
         gameStateManager.Init();
         this.RequestState<TutorialGameState>();
+        poolManager.Init();
     }
 }

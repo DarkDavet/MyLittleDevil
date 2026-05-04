@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -22,7 +22,7 @@ public class PoolManager : MonoBehaviour
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
 
-    void Start()
+    public void Init()
     {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 

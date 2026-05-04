@@ -18,7 +18,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 9c4881b3d56fef54194fe1c10c45e215, type: 3}
   unlockedIcon: {fileID: 21300000, guid: bc39a880ada83514eb8a98f3a4cf92a7, type: 3}
   category: 0
-  progressType: 2
+  progressType: 1
   requiredProgress: 4
   rewardCoins: 0
   isHidden: 0
