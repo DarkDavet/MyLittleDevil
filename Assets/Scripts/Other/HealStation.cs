@@ -1,84 +1,66 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class HealStation: MonoBehaviour
 {
     [SerializeField] private Transform _projectileSpawnPoint;
     [SerializeField] private LayerMask targetLayer;
-    [SerializeField] private float detectionRadius;
+    [SerializeField] private float detectionRadius = 5f;
     [SerializeField] protected float _fireRate = 1f;
-    private PoolManager pool;
 
     private float nextTimeToShoot = 0f;
-    private List<GameObject> damagedObjects = new List<GameObject>();
-    private GameObject[] gameObjectInRange;
-    private Collider2D[] collidersInRange;
-
-    private void Start()
-    {
-        pool = PoolManager.Instance;
-        collidersInRange = Physics2D.OverlapCircleAll(transform.position, detectionRadius, targetLayer);
-        if (collidersInRange.Length > 0)
-        {
-            gameObjectInRange = ExtractTargetObjects(collidersInRange);
-        }
-    }
+    // Кэшируем массив, чтобы не пересоздавать его каждый раз
+    private Collider2D[] results = new Collider2D[10];
 
     private void Update()
     {
-        if (gameObjectInRange!= null)
+        if (Time.time >= nextTimeToShoot)
         {
-            CheckCurrentHealth(gameObjectInRange);
-            CheckRecoveredObjects();
-        }  
+            SearchAndHeal();
+        }
     }
 
-    public void HealShoot()
+    private void SearchAndHeal()
     {
-        Debug.Log("Heal");
-        pool.SpawnFromPool("EnemyHeal", _projectileSpawnPoint.position, Quaternion.identity);
-    }
+        int count = Physics2D.OverlapCircleNonAlloc(transform.position, detectionRadius, results, targetLayer);
 
-    public void CheckRecoveredObjects()
-    {
-        if (damagedObjects != null)
+        for (int i = 0; i < count; i++)
         {
-            damagedObjects.RemoveAll(obj => obj.GetComponent<EnemyHealth>().currentHealth == obj.GetComponent<EnemyHealth>().maxHealth);
-        }      
-    }
-
-    public void CheckCurrentHealth(GameObject[] gameObjectsInRange)
-    {
-        for (int i = 0; i < gameObjectsInRange.Length; i++)
-        {
-            if (gameObjectsInRange[i] != null)
+            // Используем TryGetComponent для оптимизации
+            if (results[i].TryGetComponent<EnemyHealth>(out var health))
             {
-                var enemyHealth = gameObjectsInRange[i].GetComponent<EnemyHealth>();
-                if (enemyHealth != null && enemyHealth.currentHealth < enemyHealth.maxHealth && enemyHealth.currentHealth > 0)
+                // Проверяем: ранен ли и жив ли
+                if (health.currentHealth < health.maxHealth && health.currentHealth > 0)
                 {
-                    if (Time.time >= nextTimeToShoot)
-                    {
-                        nextTimeToShoot = Time.time + 1f / _fireRate;
-                        HealShoot();
-                    }
-                    //if (!damagedObjects.Contains(gameObjectsInRange[i]))
-                    //{
-                    //    Debug.Log("Check");
-                    //    damagedObjects.Add(gameObjectsInRange[i]);
-                    //}
+                    // Передаем трансформ найденной цели в метод выстрела
+                    HealShoot(health.transform);
+
+                    // Устанавливаем кулдаун
+                    nextTimeToShoot = Time.time + 1f / _fireRate;
+                    break;
                 }
             }
         }
     }
 
-    public GameObject[] ExtractTargetObjects(Collider2D[] collidersInRange)
+    // Добавили параметр Transform target
+    public void HealShoot(Transform target)
     {
-        GameObject[] gameObjectsInRange = new GameObject[collidersInRange.Length];
-        for (int i = 0; i < collidersInRange.Length; i++)
+        var projectileGo = PoolManager.Instance.SpawnFromPool("EnemyHeal", _projectileSpawnPoint.position, Quaternion.identity);
+
+        // Передаем цель в скрипт снаряда
+        if (projectileGo.TryGetComponent<HealProjectile>(out var projectileScript))
         {
-            gameObjectsInRange[i] = collidersInRange[i].gameObject;
+            projectileScript.SetTarget(target);
         }
-        return gameObjectsInRange;
+    }
+
+    // Визуализация радиуса в редакторе для удобства настройки
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }
