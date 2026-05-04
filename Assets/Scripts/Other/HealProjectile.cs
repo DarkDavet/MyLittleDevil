@@ -5,9 +5,10 @@ using static UnityEngine.GraphicsBuffer;
 
 public class HealProjectile : BaseProjectile
 {
+    public float rotateSpeed = 500f;
+
     private Transform _target;
     private int _healAmount;
-    public float rotateSpeed = 500f;
 
     public void SetTarget(Transform target)
     {

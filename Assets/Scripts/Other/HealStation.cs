@@ -10,6 +10,7 @@ public class HealStation: MonoBehaviour
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] protected float _fireRate = 1f;
     [SerializeField] private int healAmount = 1; // Сколько лечит снаряд
+    [SerializeField] private float _spread = 10f;
 
     private float nextTimeToShoot = 0f;
     private Collider2D[] results = new Collider2D[10];
@@ -46,6 +47,10 @@ public class HealStation: MonoBehaviour
         if (projectileGo.TryGetComponent<HealProjectile>(out var proj))
         {
             proj.SetTarget(target);
+
+            float randomOffset = Random.Range(-_spread, _spread);
+            projectileGo.transform.Rotate(0, 0, randomOffset);
+
             proj.SetHealAmount(healAmount); // Передаем силу лечения снаряду
         }
     }
