@@ -10,15 +10,45 @@ public class Player: MonoBehaviour, ICollectibleCollector
     public InventoryObject inventory;
     [SerializeField] private float _heightOfFlyight;
     
+    // Rotation physics settings
+    [SerializeField] private float _upwardRotation = -15f;   // Tilt backward when rising
+    [SerializeField] private float _downwardRotation = 15f;  // Tilt forward when falling
+    [SerializeField] private float _rotationSpeed = 10f;     // Smooth interpolation speed
+    
     private Animator _animator;
     private Rigidbody2D _rb;
     private PlayerHealthSystem _health;
+    private float _currentRotation = 0f;
 
     private void Awake()
     {
         _animator = GetComponent<Animator>();
         _rb = GetComponent<Rigidbody2D>();
         _health = GetComponent<PlayerHealthSystem>();
+    }
+
+    private void FixedUpdate()
+    {
+        // Determine target rotation based on vertical velocity
+        float targetRotation = 0f;
+        float verticalVelocity = _rb.velocity.y;
+        
+        if (verticalVelocity > 0.1f)
+        {
+            // Rising — tilt backward
+            targetRotation = _upwardRotation;
+        }
+        else if (verticalVelocity < -0.1f)
+        {
+            // Falling — tilt forward
+            targetRotation = _downwardRotation;
+        }
+        
+        // Smoothly interpolate current rotation toward target
+        _currentRotation = Mathf.LerpAngle(_currentRotation, targetRotation, _rotationSpeed * Time.fixedDeltaTime);
+        
+        // Apply rotation to Rigidbody2D
+        _rb.rotation = _currentRotation;
     }
 
     public void Jump()
