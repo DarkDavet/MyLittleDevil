@@ -9,7 +9,18 @@ public class HealProjectile : BaseProjectile
     private int _healAmount;
     public float rotateSpeed = 500f;
 
-    public void SetTarget(Transform target) => _target = target;
+    public void SetTarget(Transform target)
+    {
+        _target = target;
+
+        if (_target != null)
+        {
+            Vector2 direction = (Vector2)_target.position - (Vector2)transform.position;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+            transform.rotation = Quaternion.Euler(0, 0, angle);
+        }
+    }
     public void SetHealAmount(int amount) => _healAmount = amount;
 
     public override void OnObjectSpawn()
