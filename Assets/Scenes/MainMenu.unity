@@ -10739,6 +10739,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: AchievementSystemCore
       objectReference: {fileID: 0}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: b18f17d077b654748ac1d1f29b71c841, type: 2}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: d7a175e74ea593e4483d304afb56eead, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
 --- !u!4 &9219135249337394849

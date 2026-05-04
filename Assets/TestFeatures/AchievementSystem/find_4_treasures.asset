@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6, type: 3}
-  m_Name: find_1_treasure
+  m_Name: find_4_treasures
   m_EditorClassIdentifier: 
-  id: find_1_treasure
-  title: First treasure
-  description: Find 1 treasure
-  icon: {fileID: 21300000, guid: bfec2e5345c23204d8eafaade31aca37, type: 3}
-  unlockedIcon: {fileID: 21300000, guid: 0c13882e340d52447bf4242eaa0f1aba, type: 3}
+  id: find_4_treasure
+  title: Collector
+  description: Find 4 treasure
+  icon: {fileID: 21300000, guid: 9c4881b3d56fef54194fe1c10c45e215, type: 3}
+  unlockedIcon: {fileID: 21300000, guid: bc39a880ada83514eb8a98f3a4cf92a7, type: 3}
   category: 0
-  progressType: 0
-  requiredProgress: 1
+  progressType: 2
+  requiredProgress: 4
   rewardCoins: 0
   isHidden: 0
-  unlockMessage: A good start
+  unlockMessage: You are Natan Drake!

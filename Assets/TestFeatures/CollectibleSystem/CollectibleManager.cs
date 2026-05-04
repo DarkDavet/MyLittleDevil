@@ -68,6 +68,7 @@ namespace CollectibleSystem
             {
                 UpdateItemCount(collectedItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) collectedUniqueIds.Add(uid);
+                AchievementSystemCore.Instance.UnlockAchievement("find_1_treasure");
 
                 SaveToPlayerPrefs();
                 // Сохраняем статистику уровня немедленно для этого типа
@@ -126,7 +127,6 @@ namespace CollectibleSystem
             };
             PlayerPrefs.SetString("GlobalCollectibles", JsonUtility.ToJson(data));
             OnBalanceChanged?.Invoke();
-            AchievementSystemCore.Instance.UnlockAchievement("find_1_treasure");
         }
 
         public void LoadFromPlayerPrefs()
