@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3657567283546913950}
   m_Layer: 0
   m_Name: HealBall
-  m_TagString: EnemyHeal
+  m_TagString: Health
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137,6 +137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 3657567283546913951}
-  timeLimit: 4
-  speed: 1
+  timeLimit: 60
+  speed: 1.5
   rotateSpeed: 100

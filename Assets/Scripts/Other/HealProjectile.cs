@@ -6,12 +6,11 @@ using static UnityEngine.GraphicsBuffer;
 public class HealProjectile : BaseProjectile
 {
     private Transform _target;
+    private int _healAmount;
     public float rotateSpeed = 500f;
 
-    public void SetTarget(Transform target)
-    {
-        _target = target;
-    }
+    public void SetTarget(Transform target) => _target = target;
+    public void SetHealAmount(int amount) => _healAmount = amount;
 
     public override void OnObjectSpawn()
     {
@@ -39,8 +38,9 @@ public class HealProjectile : BaseProjectile
 
     private void OnTriggerEnter2D(Collider2D collision) 
     {
-        if (collision.CompareTag("Enemy"))
+        if (collision.TryGetComponent<IHealable>(out var health))
         {
+            health.Heal(_healAmount);
             ReturnToPool();
         }
     }
@@ -50,7 +50,7 @@ public class HealProjectile : BaseProjectile
         if (timer != null)
         {
             StopCoroutine(timer);
-            timer = null; // Обнуляем ссылку
+            timer = null; 
         }
         pool.ReturnToPool("EnemyHeal", gameObject);
     }
@@ -58,6 +58,6 @@ public class HealProjectile : BaseProjectile
     protected IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(timeLimit);
-        ReturnToPool(); // Используем общий метод
+        ReturnToPool(); 
     }
 }

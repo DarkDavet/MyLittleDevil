@@ -6,12 +6,12 @@ using static UnityEngine.GraphicsBuffer;
 public class HealStation: MonoBehaviour
 {
     [SerializeField] private Transform _projectileSpawnPoint;
-    [SerializeField] private LayerMask targetLayer;
+    [SerializeField] private LayerMask targetLayer; // Выбираешь Player или Enemy в инспекторе
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] protected float _fireRate = 1f;
+    [SerializeField] private int healAmount = 1; // Сколько лечит снаряд
 
     private float nextTimeToShoot = 0f;
-    // Кэшируем массив, чтобы не пересоздавать его каждый раз
     private Collider2D[] results = new Collider2D[10];
 
     private void Update()
@@ -28,39 +28,25 @@ public class HealStation: MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            // Используем TryGetComponent для оптимизации
-            if (results[i].TryGetComponent<EnemyHealth>(out var health))
-            {
-                // Проверяем: ранен ли и жив ли
-                if (health.currentHealth < health.maxHealth && health.currentHealth > 0)
-                {
-                    // Передаем трансформ найденной цели в метод выстрела
-                    HealShoot(health.transform);
+            // Ищем любой компонент, реализующий IHealable
+            var health = results[i].GetComponent<IHealable>();
 
-                    // Устанавливаем кулдаун
-                    nextTimeToShoot = Time.time + 1f / _fireRate;
-                    break;
-                }
+            if (health != null && health.CurrentHealth < health.MaxHealth && health.CurrentHealth > 0)
+            {
+                HealShoot(results[i].transform);
+                nextTimeToShoot = Time.time + 1f / _fireRate;
+                break;
             }
         }
     }
 
-    // Добавили параметр Transform target
     public void HealShoot(Transform target)
     {
         var projectileGo = PoolManager.Instance.SpawnFromPool("EnemyHeal", _projectileSpawnPoint.position, Quaternion.identity);
-
-        // Передаем цель в скрипт снаряда
-        if (projectileGo.TryGetComponent<HealProjectile>(out var projectileScript))
+        if (projectileGo.TryGetComponent<HealProjectile>(out var proj))
         {
-            projectileScript.SetTarget(target);
+            proj.SetTarget(target);
+            proj.SetHealAmount(healAmount); // Передаем силу лечения снаряду
         }
-    }
-
-    // Визуализация радиуса в редакторе для удобства настройки
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }
