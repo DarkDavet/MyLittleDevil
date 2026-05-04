@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -9,7 +9,7 @@ public class EnemyHealth : BaseEnemyHealth
 
     void Start()
     {
-        currentHealth = maxHealth;
+        CurrentHealth = MaxHealth;
         _damageColorChange = GetComponent<DamageColorChange>();
     }
 
@@ -30,10 +30,10 @@ public class EnemyHealth : BaseEnemyHealth
 
     public override void Heal(int heal)
     {
-        currentHealth += heal;
-        if (currentHealth > maxHealth)
+        CurrentHealth += heal;
+        if (CurrentHealth > MaxHealth)
         {
-            currentHealth = maxHealth;
+            CurrentHealth = MaxHealth;
         }
         _damageColorChange.ChangeDamageColor();
     }

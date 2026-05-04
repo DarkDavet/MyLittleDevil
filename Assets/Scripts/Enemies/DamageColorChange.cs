@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -59,7 +59,7 @@ public class DamageColorChange : MonoBehaviour
             return;
         }
         Color newColor = originalColor; // Default color if no match
-        switch (health.currentHealth)
+        switch (health.CurrentHealth)
         {
             case 2: newColor = damageColors[0]; break;
             case 1: newColor = damageColors[1]; break;

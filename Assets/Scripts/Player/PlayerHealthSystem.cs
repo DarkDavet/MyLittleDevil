@@ -1,18 +1,21 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealthSystem : MonoBehaviour
+public class PlayerHealthSystem : MonoBehaviour, IHealable
 {
     /// <summary>
     /// Maximum health value for the player.
     /// </summary>
-    public int maxHealth;
+    [SerializeField] public int maxHealth;
     
     /// <summary>
     /// Current health value for the player.
     /// </summary>
-    public int currentHealth;
+    [SerializeField] public int currentHealth;
+
+    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
+    public int MaxHealth { get => maxHealth; set => maxHealth = value; }
 
     /// <summary>
     /// Initializes event listeners.

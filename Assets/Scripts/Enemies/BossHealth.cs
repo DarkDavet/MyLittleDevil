@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -19,17 +19,17 @@ public class BossHealth: BaseEnemyHealth
 
     private void Start()
     {
-        currentHealth = maxHealth;
+        CurrentHealth = MaxHealth;
         UIAnimator = _healthBarHeart.GetComponent<Animator>();
         nimbAnimator = _nimb.GetComponent<Animator>();
 
-        _healthBar.SetMaxHealth(maxHealth);
+        _healthBar.SetMaxHealth(MaxHealth);
     }
 
     public override void TakeDamage(int damage)
     {
         base.TakeDamage(damage);
-        _healthBar.SetHealth(currentHealth);
+        _healthBar.SetHealth(CurrentHealth);
     }
 
     public override void OnCollisionEnter2D(Collision2D collision)

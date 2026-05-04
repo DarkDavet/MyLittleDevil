@@ -3,12 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseEnemyHealth : MonoBehaviour
+public class BaseEnemyHealth : MonoBehaviour, IHealable
 {
-    public int maxHealth;
-    public int currentHealth;
+    [SerializeField] private int maxHealth;
+    [SerializeField] private int currentHealth;
     public int damage;  // WARNING!!!!!!!!!
     public GameObject explosionEffectPrefab;
+
+    public int CurrentHealth { get => currentHealth; set => currentHealth = value; }
+    public int MaxHealth { get => maxHealth; set => maxHealth = value; }
 
     private void Start()
     {
