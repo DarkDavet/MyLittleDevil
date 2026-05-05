@@ -1,8 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class CommandManager : MonoBehaviour
+public class CommandManager 
 {
     private LimitedStack<ICommand> _commandStack;
 

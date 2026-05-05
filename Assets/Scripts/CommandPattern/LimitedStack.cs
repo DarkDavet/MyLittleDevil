@@ -1,46 +1,37 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class LimitedStack<T>
 {
-    private readonly Stack<T> _stack = new Stack<T>();
-    private readonly Queue<T> _queue = new Queue<T>();
-    private readonly int _maxSize;
+    private readonly T[] _items;
+    private int _start;
+    private int _end;
+    private int _count;
+    private readonly int _capacity;
 
-    public LimitedStack(int maxSize)
+    public LimitedStack(int capacity)
     {
-        _maxSize = maxSize;
+        _capacity = capacity;
+        _items = new T[capacity];
     }
 
     public void Push(T item)
     {
-        if (_stack.Count >= _maxSize)
-        {
-            List<T> tempList = new List<T>(_stack);
-            tempList.Reverse();
-            tempList.RemoveAt(0);
-
-            _stack.Clear();
-            foreach (var element in tempList)
-            {
-                _stack.Push(element);
-            }
-        }
-        _stack.Push(item);
+        _items[_end] = item;
+        _end = (_end + 1) % _capacity;
+        if (_count < _capacity) _count++;
+        else _start = (_start + 1) % _capacity; 
     }
 
     public T Pop()
     {
-        return _stack.Pop();
+        if (_count == 0) return default;
+        _end = (_end - 1 + _capacity) % _capacity;
+        T item = _items[_end];
+        _count--;
+        return item;
     }
 
-    public T Peek()
-    {
-        return _stack.Peek();
-    }
-
-    public int Count => _stack.Count;
-
-    public bool Any() => _stack.Count > 0;
+    public int Count => _count;
 }
