@@ -7,9 +7,10 @@ public class TimeReverseController : MonoBehaviour
     [SerializeField] private CameraMoving _cameraMoving;
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Transform _cameraTransform;
-    [SerializeField] private int _reverseSpeed = 3;
     [SerializeField] private Rigidbody2D _playerRb;
     [SerializeField] private PlayerInputHandler _inputHandler;
+    [SerializeField] private PlayerHealthSystem _healthSystem;
+    [SerializeField] private int _reverseSpeed = 3;
 
     private CommandManager _commandManager;
     private bool _isReversing = false;
@@ -25,6 +26,8 @@ public class TimeReverseController : MonoBehaviour
 
             // Записываем мировую позицию камеры
             _commandManager.ExecuteCommand(new MoveCommand(_cameraTransform, _cameraTransform.position, _cameraTransform.rotation));
+
+            _commandManager.ExecuteCommand(new HealthCommand(_healthSystem, _healthSystem.CurrentHealth));
         }
     }
 
@@ -70,6 +73,7 @@ public class TimeReverseController : MonoBehaviour
             {
                 if (_commandManager.HasCommands())
                 {
+                    _commandManager.UndoLastCommand();
                     _commandManager.UndoLastCommand(); 
                     _commandManager.UndoLastCommand(); 
                 }
