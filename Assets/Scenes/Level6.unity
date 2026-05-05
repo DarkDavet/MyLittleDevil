@@ -3148,6 +3148,9 @@ MonoBehaviour:
   _cameraMoving: {fileID: 1311374224}
   _playerTransform: {fileID: 74010690}
   _cameraTransform: {fileID: 1287762368}
+  _reverseSpeed: 3
+  _playerRb: {fileID: 2027368408}
+  _inputHandler: {fileID: 1311374221}
 --- !u!4 &860928211
 Transform:
   m_ObjectHideFlags: 0
@@ -6621,6 +6624,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 546f35ade1e3499488cfc70449444355, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &2027368408 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 7573041031308539321, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+  m_PrefabInstance: {fileID: 1311374219}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2051706242
 PrefabInstance:
   m_ObjectHideFlags: 0

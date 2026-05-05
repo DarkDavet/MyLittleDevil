@@ -8,11 +8,13 @@ public class TimeReverseController : MonoBehaviour
     [SerializeField] private Transform _playerTransform;
     [SerializeField] private Transform _cameraTransform;
     [SerializeField] private int _reverseSpeed = 3;
+    [SerializeField] private Rigidbody2D _playerRb;
+    [SerializeField] private PlayerInputHandler _inputHandler;
 
     private CommandManager _commandManager;
     private bool _isReversing = false;
 
-    void Awake() => _commandManager = new CommandManager(500); // Для камеры и игрока нужно побольше места
+    void Awake() => _commandManager = new CommandManager(500); 
 
     void FixedUpdate()
     {
@@ -28,15 +30,35 @@ public class TimeReverseController : MonoBehaviour
 
     public void StartReverse()
     {
+        if (_isReversing) return;
         _isReversing = true;
-        _cameraMoving.SetActive(false); // Твой метод из CameraMoving (плавная остановка)
+
+        _cameraMoving.SetActive(false);
+        _inputHandler.DisablePlayerControls();
+
+        // Замораживаем физику, чтобы гравитация не копилась
+        _playerRb.simulated = false;
+
         StartCoroutine(SmoothUndo());
     }
 
     public void StopReverse()
     {
+        if (!_isReversing) return;
         _isReversing = false;
-        _cameraMoving.SetActive(true); // Запуск камеры после перемотки
+
+        // Включаем физику обратно
+        _playerRb.simulated = true;
+        // ОБНУЛЯЕМ скорость, чтобы не было резкого рывка вниз
+        _playerRb.velocity = Vector2.zero;
+
+        _cameraMoving.SetActive(true);
+        _inputHandler.EnablePlayerControls();
+
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.TakeItSlow();
+        }
     }
 
     private IEnumerator SmoothUndo()
