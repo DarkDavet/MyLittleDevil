@@ -4,9 +4,11 @@ using System.Collections.Generic;
 public class CommandManager 
 {
     private LimitedStack<ICommand> _commandStack;
+    private int _maxStackSize;
 
     public CommandManager(int maxStackSize)
     {
+        _maxStackSize = maxStackSize;
         _commandStack = new LimitedStack<ICommand>(maxStackSize);
     }
 
@@ -25,12 +27,10 @@ public class CommandManager
         }
     }
 
-    public void UndoAllCommands()
+
+    public void ClearHistory()
     {
-        while (_commandStack.Count > 0)
-        {
-            UndoLastCommand();
-        }
+        _commandStack = new LimitedStack<ICommand>(_maxStackSize);
     }
 
     public bool HasCommands()
