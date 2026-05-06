@@ -18,7 +18,11 @@ public class TimeReverseController : MonoBehaviour
    
     private Vector3 _lastCameraPos;
 
-    void Awake() => _commandManager = new CommandManager(_maxStackSize); 
+    void Awake()
+    {
+        GameEvents.OnTimeReverseActivated += StartReverse;
+        _commandManager = new CommandManager(_maxStackSize);
+    }
 
     void FixedUpdate()
     {
@@ -90,5 +94,10 @@ public class TimeReverseController : MonoBehaviour
     {
         _commandManager.ClearHistory();
         _lastCameraPos = _cameraTransform.position;
+    }
+
+    private void OnDestroy()
+    {
+        GameEvents.OnTimeReverseActivated -= StartReverse;
     }
 }

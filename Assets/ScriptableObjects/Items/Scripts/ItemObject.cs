@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemType
 {
     Time,
+    TimeReverse,
     Health,
     Default
 }
