@@ -35,15 +35,18 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 4459775df2f1e2f4b9e72d8599e4023a, type: 3}
     - {fileID: 2800000, guid: 35776ade5894653449a5d0b1af268b7e, type: 3}
     - {fileID: 2800000, guid: 1cf6ee98d160f514380c680fcbc10119, type: 3}
+    - {fileID: 2800000, guid: 91e12957d372c2f4abe7cb64a30d0831, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: 91e12957d372c2f4abe7cb64a30d0831, type: 3}
   - {fileID: 21300000, guid: 1cf6ee98d160f514380c680fcbc10119, type: 3}
   - {fileID: 21300000, guid: 4459775df2f1e2f4b9e72d8599e4023a, type: 3}
   - {fileID: 21300000, guid: 35776ade5894653449a5d0b1af268b7e, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Fire_crystal_Icon
   - ExtractIcon
   - DevilFruitIconHealVer
   - DevilFruitIconUpdated

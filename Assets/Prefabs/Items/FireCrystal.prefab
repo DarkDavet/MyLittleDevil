@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3300663495380300769}
   - component: {fileID: 3300663495380300775}
+  - component: {fileID: 5025784289505214409}
   m_Layer: 0
   m_Name: FireCrystal
   m_TagString: Item
@@ -49,6 +50,19 @@ CapsuleCollider2D:
   m_Offset: {x: -0.019042253, y: 0.09997177}
   m_Size: {x: 0.8618026, y: 1.1999435}
   m_Direction: 0
+--- !u!114 &5025784289505214409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3300663495380300770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18c6ab3e87451ef4caf39e839a2aa683, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: d6c5157ae4b919c4398a33c566a7323d, type: 2}
 --- !u!1 &3300663495913616516
 GameObject:
   m_ObjectHideFlags: 0
