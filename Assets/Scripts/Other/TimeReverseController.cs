@@ -11,20 +11,21 @@ public class TimeReverseController : MonoBehaviour
     [SerializeField] private PlayerInputHandler _inputHandler;
     [SerializeField] private PlayerHealthSystem _healthSystem;
     [SerializeField] private int _reverseSpeed = 3;
+    [SerializeField] private int _maxStackSize = 1000;
 
+    public static bool IsReversing { get; private set; }
     private CommandManager _commandManager;
-    private bool _isReversing = false;
+   
+    private Vector3 _lastCameraPos;
 
-    void Awake() => _commandManager = new CommandManager(500); 
+    void Awake() => _commandManager = new CommandManager(_maxStackSize); 
 
     void FixedUpdate()
     {
-        if (!_isReversing)
+        if (!IsReversing)
         {
-            // Записываем локальную позицию игрока (относительно камеры)
             _commandManager.ExecuteCommand(new MoveCommand(_playerTransform, _playerTransform.localPosition, _playerTransform.localRotation));
 
-            // Записываем мировую позицию камеры
             _commandManager.ExecuteCommand(new MoveCommand(_cameraTransform, _cameraTransform.position, _cameraTransform.rotation));
 
             _commandManager.ExecuteCommand(new HealthCommand(_healthSystem, _healthSystem.CurrentHealth));
@@ -33,10 +34,10 @@ public class TimeReverseController : MonoBehaviour
 
     public void StartReverse()
     {
-        if (_isReversing) return;
-        _isReversing = true;
+        if (IsReversing) return;
+        IsReversing = true;
 
-        _cameraMoving.SetActive(false);
+        //_cameraMoving.SetActive(false);
         _inputHandler.DisablePlayerControls();
 
         // Замораживаем физику, чтобы гравитация не копилась
@@ -47,15 +48,14 @@ public class TimeReverseController : MonoBehaviour
 
     public void StopReverse()
     {
-        if (!_isReversing) return;
-        _isReversing = false;
+        if (!IsReversing) return;
+        IsReversing = false;
 
         // Включаем физику обратно
         _playerRb.simulated = true;
         // ОБНУЛЯЕМ скорость, чтобы не было резкого рывка вниз
         _playerRb.velocity = Vector2.zero;
 
-        _cameraMoving.SetActive(true);
         _inputHandler.EnablePlayerControls();
 
         if (TimeManager.Instance != null)
@@ -66,21 +66,27 @@ public class TimeReverseController : MonoBehaviour
 
     private IEnumerator SmoothUndo()
     {
-        while (_isReversing && _commandManager.HasCommands())
+        yield return null;
+
+        while (IsReversing && _commandManager.HasCommands())
         {
-            // Цикл для ускорения: выполняем Undo несколько раз за один yield
-            for (int i = 0; i < _reverseSpeed; i++)
+            int commandsToUndo = 3 * _reverseSpeed;
+
+            for (int i = 0; i < commandsToUndo; i++)
             {
                 if (_commandManager.HasCommands())
                 {
                     _commandManager.UndoLastCommand();
-                    _commandManager.UndoLastCommand(); 
-                    _commandManager.UndoLastCommand(); 
                 }
             }
-
             yield return new WaitForFixedUpdate();
         }
         StopReverse();
+    }
+
+    public void ResetHistory()
+    {
+        _commandManager.ClearHistory();
+        _lastCameraPos = _cameraTransform.position;
     }
 }
