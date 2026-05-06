@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,6 +13,7 @@ public class GameStateContext : MonoBehaviour
     [SerializeField] private UIManager uiManager;
     [SerializeField] private SceneLoader sceneLoader;
     [SerializeField] private TutorialSystem tutorialSystem;
+    [SerializeField] private TimeReverseController timeReverseController;
 
     private GameStateController _stateController;
     public void Init()
@@ -28,6 +29,7 @@ public class GameStateContext : MonoBehaviour
         _stateController.UIManager = uiManager;
         _stateController.SceneLoader = sceneLoader;
         _stateController.TutorialSystem = tutorialSystem;
+        _stateController.TimeReverseController = timeReverseController;
 
         _stateController.AddState(new RunGameState(_stateController));
         _stateController.AddState(new FightGameState(_stateController));

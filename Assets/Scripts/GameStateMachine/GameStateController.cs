@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +21,7 @@ public class GameStateController
     public UIManager UIManager { get; set; }
     public SceneLoader SceneLoader { get; set; }
     public TutorialSystem TutorialSystem { get; set; }
+    public TimeReverseController TimeReverseController { get; set; }
 
     public GameStateController()
     {

@@ -1,3 +1,4 @@
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,12 +13,16 @@ public class FightGameState : GameState
     }
     public override void Enter()
     {
-        GameStateController.CameraMoving.SetActive(false, 0.8f);
         Debug.Log($"FS activated");
+        GameStateController.CameraMoving.SetActive(false, 0.8f);
+        DOVirtual.DelayedCall(0.8f, () => {
+            GameStateController.TimeReverseController.ResetHistory();
+        });
     }
 
     public override void Update()
     {
+        if (TimeReverseController.IsReversing) return;
         _stateController.CameraMoving.MoveCamera();
     }
 

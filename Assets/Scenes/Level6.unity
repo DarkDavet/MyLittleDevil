@@ -2931,6 +2931,10 @@ PrefabInstance:
       propertyPath: tutorialSystem
       value: 
       objectReference: {fileID: 14749934}
+    - target: {fileID: 6214320805842962439, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: timeReverseController
+      value: 
+      objectReference: {fileID: 860928210}
     - target: {fileID: 8177988373182938028, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: m_Name
       value: GameManagers
@@ -3152,6 +3156,7 @@ MonoBehaviour:
   _inputHandler: {fileID: 1311374221}
   _healthSystem: {fileID: 2027368405}
   _reverseSpeed: 3
+  _maxStackSize: 500
 --- !u!4 &860928211
 Transform:
   m_ObjectHideFlags: 0
