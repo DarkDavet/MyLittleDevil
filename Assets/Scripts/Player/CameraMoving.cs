@@ -1,14 +1,16 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraMoving : MonoBehaviour
 {
+    public bool IsTransitioning { get; private set; }
     [SerializeField] private float _speedOfCamera;
 
     private float _currentThrottle = 1f; 
     private Tween _stopTween;
+
 
     public void MoveCamera()
     {
@@ -23,10 +25,12 @@ public class CameraMoving : MonoBehaviour
             _stopTween.Kill();
         }
 
+        IsTransitioning = true;
         float targetThrottle = isActive ? 1f : 0f;
 
         _stopTween = DOTween.To(() => _currentThrottle, x => _currentThrottle = x, targetThrottle, duration)
             .SetEase(Ease.OutQuad) 
-            .SetUpdate(true);      
+            .SetUpdate(true)
+            .OnComplete(() => IsTransitioning = false);
     }
 }

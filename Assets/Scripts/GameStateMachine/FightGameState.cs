@@ -14,6 +14,7 @@ public class FightGameState : GameState
     public override void Enter()
     {
         Debug.Log($"FS activated");
+        GameStateController.TimeReverseController.ResetHistory();
         GameStateController.CameraMoving.SetActive(false, 0.8f);
         DOVirtual.DelayedCall(0.8f, () => {
             GameStateController.TimeReverseController.ResetHistory();

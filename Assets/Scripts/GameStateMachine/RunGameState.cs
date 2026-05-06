@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,8 +13,11 @@ public class RunGameState : GameState
     public override void Enter()
     {
         Debug.Log($"RS activated");
-        GameStateController.CameraMoving.SetActive(true, 0.5f);
         GameStateController.TimeReverseController.ResetHistory();
+        GameStateController.CameraMoving.SetActive(true, 0.5f);
+        DOVirtual.DelayedCall(0.5f, () => {
+            GameStateController.TimeReverseController.ResetHistory();
+        });
         TimeManager.Instance.TakeItSlow(1.5f);
     }
 

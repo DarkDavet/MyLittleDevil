@@ -25,10 +25,12 @@ public class TimeReverseController : MonoBehaviour
         if (!IsReversing)
         {
             _commandManager.ExecuteCommand(new MoveCommand(_playerTransform, _playerTransform.localPosition, _playerTransform.localRotation));
-
-            _commandManager.ExecuteCommand(new MoveCommand(_cameraTransform, _cameraTransform.position, _cameraTransform.rotation));
-
             _commandManager.ExecuteCommand(new HealthCommand(_healthSystem, _healthSystem.CurrentHealth));
+
+            if (!_cameraMoving.IsTransitioning)
+            {
+                _commandManager.ExecuteCommand(new MoveCommand(_cameraTransform, _cameraTransform.position, _cameraTransform.rotation));
+            }
         }
     }
 
