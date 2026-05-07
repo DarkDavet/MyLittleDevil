@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class EnemyArrow: BaseProjectile
@@ -6,6 +6,7 @@ public class EnemyArrow: BaseProjectile
     private Transform _player;
     public override void OnObjectSpawn()
     {
+        base.OnObjectSpawn();
         _player = GameObject.FindGameObjectWithTag("Player").transform;
         if (rb != null)
         {
@@ -25,11 +26,11 @@ public class EnemyArrow: BaseProjectile
             StopCoroutine(timer);
             timer = null;
         }
-        pool.ReturnToPool("Arrow", gameObject);
+        PoolManager.Instance.ReturnToPool("Arrow", gameObject);
     }
     protected IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(timeLimit);
-        pool.ReturnToPool("Arrow", gameObject);
+        PoolManager.Instance.ReturnToPool("Arrow", gameObject);
     }
 }

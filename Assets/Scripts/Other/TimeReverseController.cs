@@ -66,7 +66,7 @@ public class TimeReverseController : MonoBehaviour
 
         if (TimeManager.Instance != null)
         {
-            TimeManager.Instance.TakeItSlow();
+            TimeManager.Instance.TakeItSlow(1.5f);
         }
     }
 

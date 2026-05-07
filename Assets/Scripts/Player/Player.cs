@@ -38,7 +38,8 @@ public class Player: MonoBehaviour, ICollectibleCollector
         if (TimeManager.Instance.IgnoreTimeScale && TimeManager.Instance.IsSlowedDown)
         {
             float multiplier = 1f / Time.timeScale;
-            float gravityComp = multiplier - 1f;
+            float gravityComp = (multiplier * multiplier) - 1f;
+
             _rb.AddForce(Physics2D.gravity * _rb.gravityScale * gravityComp, ForceMode2D.Force);
         }
     }

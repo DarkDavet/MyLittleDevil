@@ -7,24 +7,25 @@ using UnityEngine;
 /// </summary>
 public class FireShooting : Shooting
 {
-    private float _nextShootTime;
-    /// <summary>
-    /// Shoots a fire projectile from the player's position.
-    /// </summary>
     public override void Shoot()
     {
-        float currentTime = TimeManager.Instance.IgnoreTimeScale ? Time.unscaledTime : Time.time;
 
-        if (currentTime >= _nextShootTime)
+        float currentUnscaledTime = Time.unscaledTime;
+
+        if (currentUnscaledTime >= nextTimeToShoot)
         {
-            // Рассчитываем время следующего выстрела
-            _nextShootTime = currentTime + 1f / _fireRate;
+            float cooldownMultiplier = 1f;
 
-            animator.SetTrigger("IceShoot");
+            if (TimeManager.Instance.IsSlowedDown && !TimeManager.Instance.IgnoreTimeScale)
+            {
+                cooldownMultiplier = 1f / Time.timeScale;
+            }
 
-            // Спавним снаряд (логика скорости уже внутри самого снаряда через multiplier)
-            pool.SpawnFromPool("Fire", _projectileSpawnPoint.position, Quaternion.identity);
+            // Устанавливаем время следующего выстрела на основе unscaledTime
+            nextTimeToShoot = currentUnscaledTime + (1f / _fireRate) * cooldownMultiplier;
 
+            animator.SetTrigger("Shoot");
+            PoolManager.Instance.SpawnFromPool("Fire", _projectileSpawnPoint.position, Quaternion.identity);
             FindObjectOfType<AudioManager>().Play("FireAttack");
         }
     }

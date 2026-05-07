@@ -7,24 +7,24 @@ using UnityEngine;
 /// </summary>
 public class IceShooting : Shooting
 {
-    private float _nextShootTime;
-    /// <summary>
-    /// Shoots an ice projectile from the player's position.
-    /// </summary>
     public override void Shoot()
     {
-        float currentTime = TimeManager.Instance.IgnoreTimeScale ? Time.unscaledTime : Time.time;
+        float currentUnscaledTime = Time.unscaledTime;
 
-        if (currentTime >= _nextShootTime)
+        if (currentUnscaledTime >= nextTimeToShoot)
         {
-            // Рассчитываем время следующего выстрела
-            _nextShootTime = currentTime + 1f / _fireRate;
+            float cooldownMultiplier = 1f;
+
+            if (TimeManager.Instance.IsSlowedDown && !TimeManager.Instance.IgnoreTimeScale)
+            {
+                cooldownMultiplier = 1f / Time.timeScale;
+            }
+
+            // Устанавливаем время следующего выстрела на основе unscaledTime
+            nextTimeToShoot = currentUnscaledTime + (1f / _fireRate) * cooldownMultiplier;
 
             animator.SetTrigger("IceShoot");
-
-            // Спавним снаряд (логика скорости уже внутри самого снаряда через multiplier)
-            pool.SpawnFromPool("Ice", _projectileSpawnPoint.position, Quaternion.identity);
-
+            PoolManager.Instance.SpawnFromPool("Ice", _projectileSpawnPoint.position, Quaternion.identity);
             FindObjectOfType<AudioManager>().Play("IceAttack");
         }
     }
