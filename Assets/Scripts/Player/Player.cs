@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,31 +29,37 @@ public class Player: MonoBehaviour, ICollectibleCollector
 
     private void FixedUpdate()
     {
-        // Determine target rotation based on vertical velocity
-        float targetRotation = 0f;
-        float verticalVelocity = _rb.velocity.y;
-        
-        if (verticalVelocity > 0.1f)
-        {
-            // Rising — tilt backward
-            targetRotation = _upwardRotation;
-        }
-        else if (verticalVelocity < -0.1f)
-        {
-            // Falling — tilt forward
-            targetRotation = _downwardRotation;
-        }
-        
-        // Smoothly interpolate current rotation toward target
-        _currentRotation = Mathf.LerpAngle(_currentRotation, targetRotation, _rotationSpeed * Time.fixedDeltaTime);
-        
-        // Apply rotation to Rigidbody2D
+        // Вращение: используем unscaledDeltaTime только если игрок "вне времени"
+        float dt = TimeManager.Instance.IgnoreTimeScale ? Time.fixedUnscaledDeltaTime : Time.fixedDeltaTime;
+        _currentRotation = Mathf.LerpAngle(_currentRotation, GetTargetRotation(), _rotationSpeed * dt);
         _rb.rotation = _currentRotation;
+
+        // Компенсация физики ТОЛЬКО для режима "ExceptPlayer"
+        if (TimeManager.Instance.IgnoreTimeScale && TimeManager.Instance.IsSlowedDown)
+        {
+            float multiplier = 1f / Time.timeScale;
+            float gravityComp = multiplier - 1f;
+            _rb.AddForce(Physics2D.gravity * _rb.gravityScale * gravityComp, ForceMode2D.Force);
+        }
     }
 
     public void Jump()
     {
-        _rb.velocity = Vector2.up * _heightOfFlyight;
+
+        float boost = 1f;
+        // Прыжок быстрый ТОЛЬКО в режиме исключения игрока
+        if (TimeManager.Instance.IgnoreTimeScale && TimeManager.Instance.IsSlowedDown)
+        {
+            boost = 1f / Time.timeScale;
+        }
+        _rb.velocity = Vector2.up * _heightOfFlyight * boost;
+    }
+
+    private float GetTargetRotation()
+    {
+        if (_rb.velocity.y > 0.1f) return _upwardRotation;
+        if (_rb.velocity.y < -0.1f) return _downwardRotation;
+        return 0f;
     }
 
     public void OnCollisionEnter2D(Collision2D collision)
@@ -107,6 +113,6 @@ public class Player: MonoBehaviour, ICollectibleCollector
     /// </summary>
     public float GetMovementDelta()
     {
-        return Mathf.Abs(_rb.velocity.x * Time.deltaTime);
+        return Mathf.Abs(_rb.velocity.x * TimeManager.Instance.PlayerDeltaTime);
     }
 }

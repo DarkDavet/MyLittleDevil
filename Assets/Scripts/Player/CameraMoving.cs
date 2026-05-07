@@ -14,7 +14,7 @@ public class CameraMoving : MonoBehaviour
 
     public void MoveCamera()
     {
-        float step = _speedOfCamera * _currentThrottle * Time.deltaTime;
+        float step = _speedOfCamera * _currentThrottle * TimeManager.Instance.PlayerDeltaTime;
         transform.position += new Vector3(step, 0, 0);
     }
 

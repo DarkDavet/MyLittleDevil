@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +6,10 @@ using UnityEngine;
 /// </summary>
 public class PlayerIceProjectile : BaseProjectile
 {
+    private void FixedUpdate()
+    {
+        ApplyVelocity();
+    }
     /// <summary>
     /// Handles collision and returns the projectile to the pool.
     /// </summary>
@@ -17,7 +21,7 @@ public class PlayerIceProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null;
         }
-        pool.ReturnToPool("Ice", gameObject);
+        PoolManager.Instance.ReturnToPool("Ice", gameObject);
     }
 
     /// <summary>
@@ -25,7 +29,10 @@ public class PlayerIceProjectile : BaseProjectile
     /// </summary>
     public override void OnObjectSpawn()
     {
-        rb.velocity = transform.right * speed;
+
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        ApplyVelocity();
+        if (timer != null) StopCoroutine(timer);
         timer = StartCoroutine(ReturnToPoolAfterTime());
     }
     /// <summary>
@@ -34,7 +41,19 @@ public class PlayerIceProjectile : BaseProjectile
     /// <returns>Coroutine enumerator.</returns>
     protected IEnumerator ReturnToPoolAfterTime()
     {
-        yield return new WaitForSeconds(timeLimit);
-        pool.ReturnToPool("Ice", gameObject);
+        yield return new WaitForSecondsRealtime(timeLimit);
+        PoolManager.Instance.ReturnToPool("Ice", gameObject);
+    }
+
+    private void ApplyVelocity()
+    {
+        float boost = 1f;
+        // Снаряд летит быстро только если игрок активировал исключение из замедления
+        if (TimeManager.Instance.IgnoreTimeScale && TimeManager.Instance.IsSlowedDown)
+        {
+            boost = 1f / Time.timeScale;
+        }
+
+        rb.velocity = transform.right * speed * boost;
     }
 }

@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -6,6 +6,10 @@ using UnityEngine;
 /// </summary>
 public class PlayerFireProjectile : BaseProjectile
 {
+    private void FixedUpdate()
+    {
+        ApplyVelocity();
+    }
     /// <summary>
     /// Handles collision and returns the projectile to the pool.
     /// </summary>
@@ -17,7 +21,7 @@ public class PlayerFireProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null;
         }
-        pool.ReturnToPool("Fire", gameObject);
+        PoolManager.Instance.ReturnToPool("Fire", gameObject);
     }
 
     /// <summary>
@@ -25,7 +29,9 @@ public class PlayerFireProjectile : BaseProjectile
     /// </summary>
     public override void OnObjectSpawn()
     {
-        rb.velocity = transform.right * speed;
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        ApplyVelocity();
+        if (timer != null) StopCoroutine(timer);
         timer = StartCoroutine(ReturnToPoolAfterTime());
     }
     /// <summary>
@@ -34,7 +40,21 @@ public class PlayerFireProjectile : BaseProjectile
     /// <returns>Coroutine enumerator.</returns>
     protected IEnumerator ReturnToPoolAfterTime()
     {
-        yield return new WaitForSeconds(timeLimit);
-        pool.ReturnToPool("Fire", gameObject);
+        yield return new WaitForSecondsRealtime(timeLimit);
+        PoolManager.Instance.ReturnToPool("Fire", gameObject);
     }
+
+    private void ApplyVelocity()
+    {
+        float boost = 1f;
+        // Снаряд летит быстро только если игрок активировал исключение из замедления
+        if (TimeManager.Instance.IgnoreTimeScale && TimeManager.Instance.IsSlowedDown)
+        {
+            boost = 1f / Time.timeScale;
+        }
+
+        rb.velocity = transform.right * speed * boost;
+    }
+
+
 }
