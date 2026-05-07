@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
@@ -13,23 +13,6 @@ public class TimeObject : ItemObject
 
     public override void Use()
     {
-        if (TimeManager.Instance != null)
-        {
-            CoroutineHelper.Instance.StartHelperCoroutine(StoneEffect());
-            Debug.Log("Slowing is working");
-        }
-        else
-        {
-            Debug.LogWarning("TimeManager not found!");
-        }
-    }
-
-    private IEnumerator StoneEffect()
-    {
-        float originalSlowdownLength = TimeManager.Instance.slowdownLength;
-        TimeManager.Instance.slowdownLength *= 2;
-        TimeManager.Instance.TakeItSlow();
-        yield return new WaitForSeconds(originalSlowdownLength * 2);
-        TimeManager.Instance.slowdownLength = originalSlowdownLength;
+        TimeManager.Instance.TakeItSlowExceptPlayer(10f);
     }
 }

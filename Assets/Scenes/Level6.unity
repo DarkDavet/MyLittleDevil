@@ -1423,7 +1423,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5364701933741212102, guid: 18f9e4bc100867a4bbc39a69458525a6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -203.66
+      value: -278.4
       objectReference: {fileID: 0}
     - target: {fileID: 5364701933741212102, guid: 18f9e4bc100867a4bbc39a69458525a6, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3009,6 +3009,10 @@ PrefabInstance:
       propertyPath: pools.Array.data[3].prefab
       value: 
       objectReference: {fileID: 3657567283546913949, guid: c9cfd73a3728d2e4a91004208bbaa928, type: 3}
+    - target: {fileID: 3420350279515151520, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1311374220}
     - target: {fileID: 6214320805842962439, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: player
       value: 
@@ -6968,11 +6972,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5364701933741212102, guid: 18f9e4bc100867a4bbc39a69458525a6, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -149.54
+      value: -283.8
       objectReference: {fileID: 0}
     - target: {fileID: 5364701933741212102, guid: 18f9e4bc100867a4bbc39a69458525a6, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -26.78
+      value: -32.7
       objectReference: {fileID: 0}
     - target: {fileID: 5364701933741212102, guid: 18f9e4bc100867a4bbc39a69458525a6, type: 3}
       propertyPath: m_LocalPosition.z
