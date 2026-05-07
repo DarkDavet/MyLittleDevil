@@ -64,7 +64,7 @@ public class HealProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null; 
         }
-        pool.ReturnToPool("EnemyHeal", gameObject);
+        PoolManager.Instance.ReturnToPool("EnemyHeal", gameObject);
     }
 
     protected IEnumerator ReturnToPoolAfterTime()

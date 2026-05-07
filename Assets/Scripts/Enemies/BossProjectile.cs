@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class BossProjectile : BaseProjectile
@@ -10,7 +10,7 @@ public class BossProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null;
         }
-        pool.ReturnToPool("Lightning", gameObject);
+        PoolManager.Instance.ReturnToPool("Lightning", gameObject);
     }
 
     public override void OnObjectSpawn()
@@ -22,6 +22,6 @@ public class BossProjectile : BaseProjectile
     protected IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(timeLimit);
-        pool.ReturnToPool("Lightning", gameObject);
+        PoolManager.Instance.ReturnToPool("Lightning", gameObject);
     }
 }

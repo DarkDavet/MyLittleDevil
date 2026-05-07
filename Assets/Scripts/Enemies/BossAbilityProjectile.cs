@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class BossAbilityProjectile : BaseProjectile
@@ -10,7 +10,7 @@ public class BossAbilityProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null;
         }
-        pool.ReturnToPool("Bless", gameObject);
+        PoolManager.Instance.ReturnToPool("Bless", gameObject);
     }
 
     public override void OnObjectSpawn()
@@ -22,6 +22,6 @@ public class BossAbilityProjectile : BaseProjectile
     protected IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(timeLimit);
-        pool.ReturnToPool("Bless", gameObject);
+        PoolManager.Instance.ReturnToPool("Bless", gameObject);
     }
 }

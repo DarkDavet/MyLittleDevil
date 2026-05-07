@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -47,7 +47,7 @@ public class AllyFireProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null;
         }
-        pool.ReturnToPool("AllyFire", gameObject);
+        PoolManager.Instance.ReturnToPool("AllyFire", gameObject);
     }
     /// <summary>
     /// Returns the projectile to the pool after a specified time.
@@ -56,6 +56,6 @@ public class AllyFireProjectile : BaseProjectile
     protected IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(timeLimit);
-        pool.ReturnToPool("AllyFire", gameObject);
+        PoolManager.Instance.ReturnToPool("AllyFire", gameObject);
     }
 }

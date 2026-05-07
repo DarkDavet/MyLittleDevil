@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 /// <summary>
@@ -47,7 +47,7 @@ public class AllyIceProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null;
         }
-        pool.ReturnToPool("AllyIce", gameObject);
+        PoolManager.Instance.ReturnToPool("AllyIce", gameObject);
     }
 
     /// <summary>
@@ -57,6 +57,6 @@ public class AllyIceProjectile : BaseProjectile
     protected IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(timeLimit);
-        pool.ReturnToPool("AllyIce", gameObject);
+        PoolManager.Instance.ReturnToPool("AllyIce", gameObject);
     }
 }
