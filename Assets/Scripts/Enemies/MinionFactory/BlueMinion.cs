@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,6 +18,6 @@ public class BlueMinion : Minion, IShooting
 
     public void Shoot()
     {
-        pool.SpawnFromPool(projectileName, _projectileSpawnPoint.position, Quaternion.identity);
+        PoolManager.Instance.SpawnFromPool(projectileName, _projectileSpawnPoint.position, Quaternion.identity);
     }
 }

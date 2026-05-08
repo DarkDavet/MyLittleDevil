@@ -18,6 +18,9 @@ public class GameEvents
 
     public static event Action OnTimeReverseActivated;
 
+    public static event Action OnIceMinionSpawned;
+    public static event Action OnFireMinionSpawned;
+
 
     public static void TriggerLoose() => OnLoose?.Invoke();
     public static void TriggerWin() => OnWin?.Invoke();
@@ -28,4 +31,7 @@ public class GameEvents
     public static void TriggerUpdatedPlayerHealth(int health) => OnUpdatePlayerHealth?.Invoke(health);
     public static void TriggerHealthHealed(int health) => OnHealthHealed?.Invoke(health);
     public static void TriggerTimeReverseActivated() => OnTimeReverseActivated?.Invoke();
+
+    public static void TriggerIceMinionSpawned() => OnIceMinionSpawned?.Invoke();
+    public static void TriggerFireMinionSpawned() => OnFireMinionSpawned?.Invoke();
 }

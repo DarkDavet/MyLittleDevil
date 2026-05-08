@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,11 +6,11 @@ public abstract class Minion: BaseAIBehaviour
 {
     [SerializeField] protected LayerMask enemyLayer;
     [SerializeField] protected Transform _projectileSpawnPoint;
+    [SerializeField] protected float lifeTime = 10f;
     protected Transform player;
     protected Transform minBorder;
     protected Transform maxBorder;
     protected Transform attackBorder;
-    protected PoolManager pool;
 
     protected float detectionRadius = 10f;
     protected float minX = 0f;
@@ -20,9 +20,12 @@ public abstract class Minion: BaseAIBehaviour
 
     protected void Awake()
     {
-        pool = PoolManager.Instance;
         AttachObjects();
         player = GameObject.FindWithTag("Player").transform;
+    }
+    private void Start()
+    {
+        Destroy(gameObject, lifeTime);
     }
 
     protected void Update()
