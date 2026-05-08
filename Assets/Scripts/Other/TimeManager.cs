@@ -74,11 +74,22 @@ public class TimeManager : MonoBehaviour
     {
         _prePauseTimeScale = Time.timeScale;
         Time.timeScale = 0;
+
+        SetPlayerAnimatorsSpeed(0);
     }
 
     public void Resume()
     {
         Time.timeScale = _prePauseTimeScale;
         Time.fixedDeltaTime = Time.timeScale * 0.02f;
+
+        SetPlayerAnimatorsSpeed(1);
+    }
+
+    private void SetPlayerAnimatorsSpeed(float speed)
+    {
+        if (player == null) return;
+        var animators = player.GetComponentsInChildren<Animator>();
+        foreach (var anim in animators) anim.speed = speed;
     }
 }
