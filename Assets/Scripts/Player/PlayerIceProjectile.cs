@@ -41,7 +41,19 @@ public class PlayerIceProjectile : BaseProjectile
     /// <returns>Coroutine enumerator.</returns>
     protected IEnumerator ReturnToPoolAfterTime()
     {
-        yield return new WaitForSecondsRealtime(timeLimit);
+        float elapsed = 0;
+        while (elapsed < timeLimit)
+        {
+            // Если игра на паузе, мы просто ждем и не увеличиваем счетчик
+            if (Time.timeScale > 0)
+            {
+                // Если игрок в режиме "способности", снаряд должен жить в реальном времени
+                // Если в обычном слоумо — его жизнь тоже должна замедляться
+                float dt = TimeManager.Instance.IgnoreTimeScale ? Time.unscaledDeltaTime : Time.deltaTime;
+                elapsed += dt;
+            }
+            yield return null;
+        }
         PoolManager.Instance.ReturnToPool("Ice", gameObject);
     }
 
