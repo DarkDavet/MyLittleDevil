@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b71aa008af97ccf408257c8458682e92, type: 3}
+  m_Name: FireAllySpell
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 848575194259798198, guid: 25f690f3234b39a41963fa6191dcd6c0, type: 3}
+  id: 3
+  type: 2
+  description: 

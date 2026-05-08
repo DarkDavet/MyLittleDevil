@@ -5,8 +5,8 @@ using UnityEngine;
 public enum ItemType
 {
     Time,
-    TimeReverse,
     Health,
+    Ally,
     Default
 }
 

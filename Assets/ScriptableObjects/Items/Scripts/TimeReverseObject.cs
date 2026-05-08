@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Time Reverse Object", menuName = "Inventory System/Items/TimeReverse")]
+[CreateAssetMenu(fileName = "New Time Object", menuName = "Inventory System/Items/TimeReverse")]
 public class TimeReverseObject : ItemObject
 {
     public void Awake()
