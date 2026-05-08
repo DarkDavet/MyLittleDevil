@@ -16,22 +16,30 @@ public class AllyIceProjectile : BaseProjectile
     /// </summary>
     public override void OnObjectSpawn()
     {
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+
         var enemyObj = GameObject.FindGameObjectWithTag("Enemy");
         if (enemyObj != null)
         {
             enemy = enemyObj.transform;
         }
-        
+
         if (rb != null)
         {
+            if (timer != null) StopCoroutine(timer);
             timer = StartCoroutine(ReturnToPoolAfterTime());
+
             if (enemy != null)
             {
                 Vector2 direction = (enemy.position - transform.position).normalized;
                 rb.velocity = direction * speed;
 
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-                gameObject.transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            }
+            else
+            {
+                rb.velocity = transform.right * speed;
             }
         }
     }
