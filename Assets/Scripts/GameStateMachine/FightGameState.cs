@@ -17,6 +17,7 @@ public class FightGameState : GameState
         GameStateController.CameraMoving.SetActive(false, 0.8f);
         if (_stateController.StatePrevious is PauseGameState)
         {
+            TimeManager.Instance.TakeItSlow(1.5f);
             return;
         }
         GameStateController.TimeReverseController.ResetHistory();
