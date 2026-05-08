@@ -13,10 +13,11 @@ public class TimeManager : MonoBehaviour
     public bool IgnoreTimeScale { get; private set; }
     public bool IsSlowedDown => Time.timeScale < 0.99f;
 
-    // ВОЗВРАЩАЕМ ЭТИ СВОЙСТВА:
-    // Они автоматически выбирают нужное время для камеры, кулдаунов и вращения игрока
+    public float PlayerActiveTime { get; private set; }
     public float PlayerDeltaTime => IgnoreTimeScale ? Time.unscaledDeltaTime : Time.deltaTime;
     public float PlayerFixedDeltaTime => IgnoreTimeScale ? Time.fixedUnscaledDeltaTime : Time.fixedDeltaTime;
+
+    private float _prePauseTimeScale = 1f;
 
     private void Awake()
     {
@@ -26,6 +27,10 @@ public class TimeManager : MonoBehaviour
 
     private void Update()
     {
+        if (Time.timeScale > 0)
+        {
+            PlayerActiveTime += PlayerDeltaTime;
+        }
         // Постепенно возвращаем время к 1.0
         if (Time.timeScale >= 1f || Time.timeScale <= 0) return;
 
@@ -63,5 +68,17 @@ public class TimeManager : MonoBehaviour
         if (player == null) return;
         var animators = player.GetComponentsInChildren<Animator>();
         foreach (var anim in animators) anim.updateMode = mode;
+    }
+
+    public void Pause()
+    {
+        _prePauseTimeScale = Time.timeScale;
+        Time.timeScale = 0;
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = _prePauseTimeScale;
+        Time.fixedDeltaTime = Time.timeScale * 0.02f;
     }
 }

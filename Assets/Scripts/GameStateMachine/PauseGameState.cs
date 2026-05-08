@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,7 +13,7 @@ public class PauseGameState : GameState
     {
         _stateController.UIManager.pauseMenu.SetActive(true);
         _stateController.UIManager.pauseButton.gameObject.SetActive(false);
-        Time.timeScale = 0;
+        TimeManager.Instance.Pause();
     }
 
     public override void Update()
@@ -28,6 +28,6 @@ public class PauseGameState : GameState
     {
         _stateController.UIManager.pauseMenu.SetActive(false);
         _stateController.UIManager.pauseButton.gameObject.SetActive(true);
-        Time.timeScale = 1;
+        TimeManager.Instance.Resume();
     }
 }

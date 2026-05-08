@@ -13,12 +13,16 @@ public class RunGameState : GameState
     public override void Enter()
     {
         Debug.Log($"RS activated");
+        TimeManager.Instance.TakeItSlow(1.5f);
+        if (_stateController.StatePrevious is PauseGameState)
+        {
+            return;
+        }
         GameStateController.TimeReverseController.ResetHistory();
         GameStateController.CameraMoving.SetActive(true, 0.5f);
         DOVirtual.DelayedCall(0.5f, () => {
             GameStateController.TimeReverseController.ResetHistory();
         });
-        TimeManager.Instance.TakeItSlow(1.5f);
     }
 
     public override void Update()

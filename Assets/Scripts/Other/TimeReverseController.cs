@@ -76,6 +76,13 @@ public class TimeReverseController : MonoBehaviour
 
         while (IsReversing && _commandManager.HasCommands())
         {
+            // Если игра на паузе — просто ждем и ничего не делаем
+            if (Time.timeScale <= 0)
+            {
+                yield return null;
+                continue;
+            }
+
             int commandsToUndo = 3 * _reverseSpeed;
 
             for (int i = 0; i < commandsToUndo; i++)
@@ -85,9 +92,12 @@ public class TimeReverseController : MonoBehaviour
                     _commandManager.UndoLastCommand();
                 }
             }
-            yield return new WaitForFixedUpdate();
+
+            // Вместо WaitForFixedUpdate используем это, чтобы корутина не застревала в паузе
+            yield return new WaitForEndOfFrame();
         }
-        StopReverse();
+
+        if (Time.timeScale > 0) StopReverse();
     }
 
     public void ResetHistory()

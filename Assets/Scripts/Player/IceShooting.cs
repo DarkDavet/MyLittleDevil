@@ -9,19 +9,20 @@ public class IceShooting : Shooting
 {
     public override void Shoot()
     {
-        float currentUnscaledTime = Time.unscaledTime;
+        float currentTime = TimeManager.Instance.PlayerActiveTime;
 
-        if (currentUnscaledTime >= nextTimeToShoot)
+        if (currentTime >= nextTimeToShoot)
         {
             float cooldownMultiplier = 1f;
 
+            // Если замедлены ВСЕ (включая игрока), увеличиваем КД
             if (TimeManager.Instance.IsSlowedDown && !TimeManager.Instance.IgnoreTimeScale)
             {
                 cooldownMultiplier = 1f / Time.timeScale;
             }
 
-            // Устанавливаем время следующего выстрела на основе unscaledTime
-            nextTimeToShoot = currentUnscaledTime + (1f / _fireRate) * cooldownMultiplier;
+            // Рассчитываем время следующего выстрела
+            nextTimeToShoot = currentTime + (1f / _fireRate) * cooldownMultiplier;
 
             animator.SetTrigger("IceShoot");
             PoolManager.Instance.SpawnFromPool("Ice", _projectileSpawnPoint.position, Quaternion.identity);
