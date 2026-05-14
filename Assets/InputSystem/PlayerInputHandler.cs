@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,6 +11,9 @@ public class PlayerInputHandler : MonoBehaviour
     private IceShooting _iceShooting;
 
     private PlayerControls _controls;
+
+    private bool _isShootingBlocked = false;
+    private Coroutine _silenceCoroutine;
 
     private void Awake()
     {
@@ -70,6 +73,34 @@ public class PlayerInputHandler : MonoBehaviour
     }
 
     private void OnJump(InputAction.CallbackContext context) => _player.Jump();
-    private void OnFireShoot(InputAction.CallbackContext context) => _fireShooting?.Shoot();
-    private void OnIceShoot(InputAction.CallbackContext context) => _iceShooting?.Shoot();
+    private void OnFireShoot(InputAction.CallbackContext context)
+    {
+        if (_isShootingBlocked) return;
+        _fireShooting?.Shoot();
+    }
+    private void OnIceShoot(InputAction.CallbackContext context)
+    {
+        if (_isShootingBlocked) return;
+        _iceShooting?.Shoot();
+    }
+
+    public void DisableShootingForTime(float duration)
+    {
+        if (_silenceCoroutine != null)
+        {
+            StopCoroutine(_silenceCoroutine); // Сбрасываем таймер, если снаряд попал повторно
+        }
+        _silenceCoroutine = StartCoroutine(SilenceRoutine(duration));
+    }
+
+    private IEnumerator SilenceRoutine(float duration)
+    {
+        _isShootingBlocked = true;
+        Debug.Log("Стрельба заблокирована проклятием!");
+
+        yield return new WaitForSeconds(duration);
+
+        _isShootingBlocked = false;
+        Debug.Log("Действие проклятия закончилось. Стрельба доступна.");
+    }
 }

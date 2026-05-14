@@ -1,10 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour, IShooting
 {
-    [SerializeField] private Transform _arrowSpawnPoint;
+    [SerializeField] private Transform _projectileSpawnPoint;
+    [SerializeField] private string projectileName;
     private PoolManager pool;
 
     private void Start()
@@ -14,6 +15,6 @@ public class EnemyShooting : MonoBehaviour, IShooting
 
     public void Shoot()
     {
-        pool.SpawnFromPool("Arrow", _arrowSpawnPoint.position, Quaternion.identity);
+        pool.SpawnFromPool(projectileName, _projectileSpawnPoint.position, Quaternion.identity);
     }
 }
