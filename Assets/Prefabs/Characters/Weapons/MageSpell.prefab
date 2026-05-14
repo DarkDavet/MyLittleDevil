@@ -242,7 +242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeLimit: 10
-  speed: 2.5
-  rotateSpeed: 25
-  noiseMagnitude: 5
+  speed: 2
+  noiseMagnitude: 3
   noiseFrequency: 3

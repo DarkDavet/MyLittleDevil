@@ -4,15 +4,14 @@ using UnityEngine;
 
 public class MageCurseProjectile : BaseProjectile
 {
-    [Header("Настройки непредсказуемости")]
-    [SerializeField] private float rotateSpeed = 50f;
-    [SerializeField] private float noiseMagnitude = 5f;
-    [SerializeField] private float noiseFrequency = 3f;
+    [Header("Настройки траектории \"Змейка\"")]
+    [SerializeField] private float noiseMagnitude = 2f; // Ширина змейки (амплитуда)
+    [SerializeField] private float noiseFrequency = 5f; // Частота/скорость виляния
 
     [Header("Длительность накладываемой немоты")]
     [SerializeField] private float silenceDuration = 3f;
 
-    private Transform _player;
+    private Vector2 _fixedDirection; // Зафиксированное направление полета
     private float _noiseSeed;
 
     public override void OnObjectSpawn()
@@ -20,7 +19,15 @@ public class MageCurseProjectile : BaseProjectile
         if (rb == null) rb = GetComponent<Rigidbody2D>();
 
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null) _player = playerObj.transform;
+        if (playerObj != null)
+        {
+            Vector2 targetPosition = playerObj.transform.position;
+            _fixedDirection = (targetPosition - (Vector2)transform.position).normalized;
+        }
+        else
+        {
+            _fixedDirection = -transform.right;
+        }
 
         timer = StartCoroutine(ReturnToPoolAfterTime());
         _noiseSeed = Random.Range(0f, 1000f);
@@ -28,21 +35,14 @@ public class MageCurseProjectile : BaseProjectile
 
     private void FixedUpdate()
     {
-        if (_player == null || rb == null) return;
+        if (rb == null) return;
 
-        Vector2 targetDirection = (_player.position - transform.position).normalized;
+        Vector2 perpendicular = new Vector2(-_fixedDirection.y, _fixedDirection.x);
 
         float noiseTime = Time.time * noiseFrequency + _noiseSeed;
-        float noise = (Mathf.PerlinNoise(noiseTime, 0f) - 0.5f) * 2f;
+        float wave = Mathf.Sin(noiseTime) * noiseMagnitude;
 
-        Vector2 noisyDirection = Quaternion.Euler(0, 0, noise * noiseMagnitude) * targetDirection;
-
-        float angleDiff = Vector2.SignedAngle(transform.right, noisyDirection);
-        float rotationStep = Mathf.Sign(angleDiff) * Mathf.Min(Mathf.Abs(angleDiff), rotateSpeed * Time.fixedDeltaTime);
-
-        rb.MoveRotation(rb.rotation + rotationStep);
-
-        rb.velocity = -transform.right * speed;
+        rb.velocity = (_fixedDirection * speed) + (perpendicular * wave);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

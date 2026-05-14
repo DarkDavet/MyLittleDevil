@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5318781126377478030}
   m_Layer: 7
   m_Name: MageCurse
-  m_TagString: Enemy
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -137,10 +137,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1ed7bea2d787f74195848c6822d88fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeLimit: 2
-  speed: 10
-  rotateSpeed: 50
-  noiseMagnitude: 5
+  timeLimit: 10
+  speed: 3
+  noiseMagnitude: 3
   noiseFrequency: 3
   silenceDuration: 3
 --- !u!60 &5318781126377478030
