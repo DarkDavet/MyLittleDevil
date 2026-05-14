@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,10 +44,14 @@ public class EnemyBehaviour : BaseAIBehaviour
 
     public void FireCalculate()
     {
+        if (_attack == null) return;
+
         if (Time.time >= nextTimeToFire)
         {
-            _fireRate = Random.Range(_minfireRate, _maxfireRate);
-            nextTimeToFire = Time.time + 1f / _fireRate;
+            float currentCooldown = Random.Range(_minfireRate, _maxfireRate);
+
+            nextTimeToFire = Time.time + currentCooldown;
+
             _attack.Shoot();
         }
     }

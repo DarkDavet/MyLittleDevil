@@ -4,17 +4,52 @@ using UnityEngine;
 
 public class EnemyShooting : MonoBehaviour, IShooting
 {
+    [System.Serializable]
+    public struct AlternativeProjectile
+    {
+        public string projectileName; 
+        [Range(0, 100)] public float spawnChance; 
+    }
+
     [SerializeField] private Transform _projectileSpawnPoint;
-    [SerializeField] private string projectileName;
+    [Header("Основной снаряд (по умолчанию)")]
+    [SerializeField] private string defaultProjectileName;
+
+    [Header("Редкие/Альтернативные снаряды")]
+    [SerializeField] private AlternativeProjectile[] alternativeProjectiles;
+
     private PoolManager pool;
 
     private void Start()
     {
-        pool = PoolManager.Instance;    
+        pool = PoolManager.Instance;
     }
 
     public void Shoot()
     {
-        pool.SpawnFromPool(projectileName, _projectileSpawnPoint.position, Quaternion.identity);
+        string finalProjectile = SelectProjectile();
+        pool.SpawnFromPool(finalProjectile, _projectileSpawnPoint.position, Quaternion.identity);
+    }
+
+    private string SelectProjectile()
+    {
+        if (alternativeProjectiles == null || alternativeProjectiles.Length == 0)
+        {
+            return defaultProjectileName;
+        }
+
+        float roll = Random.Range(0f, 100f);
+        float currentWeight = 0f;
+
+        foreach (var alt in alternativeProjectiles)
+        {
+            currentWeight += alt.spawnChance;
+            if (roll <= currentWeight)
+            {
+                return alt.projectileName; 
+            }
+        }
+
+        return defaultProjectileName;
     }
 }

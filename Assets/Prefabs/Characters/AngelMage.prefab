@@ -349,8 +349,8 @@ MonoBehaviour:
   minY: -4
   maxY: 4
   speed: 2
-  _maxfireRate: 0.8
-  _minfireRate: 0.3
+  _maxfireRate: 4
+  _minfireRate: 2
   player: {fileID: 0}
   minBorder: {fileID: 0}
   maxBorder: {fileID: 0}
@@ -371,7 +371,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _projectileSpawnPoint: {fileID: 169123746}
-  projectileName: Curse
+  defaultProjectileName: MageSpell
+  alternativeProjectiles:
+  - projectileName: MageCurse
+    spawnChance: 30
 --- !u!114 &5656968431395301183
 MonoBehaviour:
   m_ObjectHideFlags: 0
