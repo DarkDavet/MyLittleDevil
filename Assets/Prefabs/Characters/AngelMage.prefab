@@ -370,7 +370,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c51ab849f4ead447b47ea3bebad6432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _arrowSpawnPoint: {fileID: 169123746}
+  _projectileSpawnPoint: {fileID: 169123746}
+  projectileName: Curse
 --- !u!114 &5656968431395301183
 MonoBehaviour:
   m_ObjectHideFlags: 0

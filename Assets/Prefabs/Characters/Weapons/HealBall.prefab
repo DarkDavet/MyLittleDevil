@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3657567283546913944}
   - component: {fileID: 3657567283546913951}
   - component: {fileID: 3657567283546913950}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: HealBall
   m_TagString: Health
   m_Icon: {fileID: 0}
@@ -136,7 +136,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cdd05cac20a987c47b0bccd7533e3b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 3657567283546913951}
   timeLimit: 60
   speed: 1.5
   rotateSpeed: 100
