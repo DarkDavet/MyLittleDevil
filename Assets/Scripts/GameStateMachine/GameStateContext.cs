@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum InitialStateType
+{
+    Run,
+    Fight,
+    Pause,
+    Lose,
+    Win,
+    Tutorial
+}
 public class GameStateContext : MonoBehaviour
 {
     [SerializeField] private Player player;
@@ -16,7 +25,7 @@ public class GameStateContext : MonoBehaviour
     [SerializeField] private TimeReverseController timeReverseController;
 
     private GameStateController _stateController;
-    public void Init()
+    public void Init(InitialStateType startState)
     {
         _stateController = new GameStateController();
 
@@ -38,7 +47,15 @@ public class GameStateContext : MonoBehaviour
         _stateController.AddState(new WinGameState(_stateController));
         _stateController.AddState(new TutorialGameState(_stateController));
 
-        _stateController.SetState<RunGameState>();
+        switch (startState)
+        {
+            case InitialStateType.Run: _stateController.SetState<RunGameState>(); break;
+            case InitialStateType.Fight: _stateController.SetState<FightGameState>(); break;
+            case InitialStateType.Pause: _stateController.SetState<PauseGameState>(); break;
+            case InitialStateType.Lose: _stateController.SetState<LoseGameState>(); break;
+            case InitialStateType.Win: _stateController.SetState<WinGameState>(); break;
+            case InitialStateType.Tutorial: _stateController.SetState<TutorialGameState>(); break;
+        }
     }
 
     private void Update() => _stateController?.Update();

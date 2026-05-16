@@ -7,6 +7,7 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private GameStateContext gameStateManager;
     [SerializeField] private PoolManager poolManager;
     [SerializeField] private SceneData sceneData;
+    [SerializeField] private InitialStateType initialStateType;
 
     private void Start()
     {
@@ -14,7 +15,7 @@ public class EntryPoint : MonoBehaviour
         {
             CollectibleSystem.LevelStatsManager.Instance.InitializeStatsForLevel(sceneData);
         }
-        gameStateManager.Init();
+        gameStateManager.Init(initialStateType);
         this.RequestState<TutorialGameState>();
         poolManager.Init();
     }
