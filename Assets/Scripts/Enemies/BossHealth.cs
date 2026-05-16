@@ -47,5 +47,6 @@ public class BossHealth: BaseEnemyHealth
     {
         base.Die();
         Destroy(_bossHud);
+        this.RequestState<WinGameState>();
     }
 }
