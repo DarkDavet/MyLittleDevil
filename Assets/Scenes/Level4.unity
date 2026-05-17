@@ -1575,6 +1575,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: BlueAngel
       objectReference: {fileID: 0}
+    - target: {fileID: 4183782144548332944, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+      propertyPath: _arrowPrefab
+      value: 
+      objectReference: {fileID: 5318781126377478132, guid: 84a3ea0f6dabc8446a2356a6a1b7b0d5, type: 3}
+    - target: {fileID: 4183782144548332944, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+      propertyPath: _projectileSpawnPoint
+      value: 
+      objectReference: {fileID: 2020436113}
+    - target: {fileID: 4183782144548332944, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+      propertyPath: defaultProjectileName
+      value: Lightning
+      objectReference: {fileID: 0}
+    - target: {fileID: 7284822539162551370, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+      propertyPath: _attack
+      value: 
+      objectReference: {fileID: 2020436112}
     - target: {fileID: 9077025663677867156, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
       propertyPath: m_RootOrder
       value: 5
@@ -1621,6 +1637,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+--- !u!114 &2020436112 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4183782144548332944, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+  m_PrefabInstance: {fileID: 2020436111}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2109891315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ece6e28c822f39346958bceae89dc5d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &2020436113 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7421061297934013105, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+  m_PrefabInstance: {fileID: 2020436111}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2109891315 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 173374422232565346, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
