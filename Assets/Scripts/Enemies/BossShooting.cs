@@ -1,8 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossShooting: MonoBehaviour, IShooting
+public class BossShooting: EnemyShooting
 {
     [SerializeField] private GameObject _arrowPrefab;
     [SerializeField] private Transform _arrowSpawnPoint;
@@ -26,10 +26,5 @@ public class BossShooting: MonoBehaviour, IShooting
             nextTimeToFire = Time.time + 1f / _fireRate;
             Shoot();
         }
-    }
-
-    public void Shoot()
-    {
-        pool.SpawnFromPool("Lightning", _arrowSpawnPoint.position, Quaternion.identity);
     }
 }

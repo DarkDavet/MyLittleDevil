@@ -21,8 +21,7 @@ public class BossHealth: BaseEnemyHealth
     {
         CurrentHealth = MaxHealth;
         UIAnimator = _healthBarHeart.GetComponent<Animator>();
-        nimbAnimator = _nimb.GetComponent<Animator>();
-
+        if (_nimb != null) nimbAnimator = _nimb.GetComponent<Animator>();
         _healthBar.SetMaxHealth(MaxHealth);
     }
 
@@ -39,7 +38,7 @@ public class BossHealth: BaseEnemyHealth
             Debug.Log("Projectile hit detected. Applying damage.");
             TakeDamage(damage);
             UIAnimator.SetTrigger("Hit");
-            nimbAnimator.SetTrigger("Hit");
+            if (nimbAnimator != null)  nimbAnimator.SetTrigger("Hit");
         }
     }
     
