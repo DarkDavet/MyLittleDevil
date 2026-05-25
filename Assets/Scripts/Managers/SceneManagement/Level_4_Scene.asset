@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Level_4_Scene
   m_EditorClassIdentifier: 
   sceneID: 4
-  sceneName: Level4
+  sceneName: Level_4
   isUnlockedByDefault: 0
-  isDialogueScene: 0
+  collectibleStats: {fileID: 0}

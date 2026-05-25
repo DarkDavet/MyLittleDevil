@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b5c6847b5ac6e4c84e83784a35d5d7, type: 3}
   m_Name: DLG_5_Scene
   m_EditorClassIdentifier: 
-  sceneID: DLG_5
-  sceneName: Intermission 4
+  sceneID: dlg_5
+  sceneName: DLG_5
   isUnlockedByDefault: 0
-  isDialogueScene: 1
+  collectibleStats: {fileID: 0}

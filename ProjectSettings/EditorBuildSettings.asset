@@ -9,28 +9,28 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 3b7e9bda97613224eaae1918a4d53218
   - enabled: 1
-    path: Assets/Scenes/DLG_Scene_1.unity
+    path: Assets/Scenes/DLG_0.unity
     guid: 43429357dd590a242997f978a5689841
   - enabled: 1
-    path: Assets/Scenes/Level1.unity
+    path: Assets/Scenes/Level_1.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
-    path: Assets/Scenes/Level2.unity
+    path: Assets/Scenes/Level_2.unity
     guid: c1c1f3b2481264e4f84a55c424a384a3
   - enabled: 1
-    path: Assets/Scenes/Level3.unity
+    path: Assets/Scenes/Level_3.unity
     guid: 646234e8db84c924580583987975df3b
   - enabled: 1
-    path: Assets/Scenes/Level4.unity
+    path: Assets/Scenes/Level_7.unity
     guid: e00f35a11fda3824d8c8dc735c5f7cba
   - enabled: 1
-    path: Assets/Scenes/Level5.unity
+    path: Assets/Scenes/Level_5.unity
     guid: a5a363439a56b804595a0f87707a6841
   - enabled: 1
-    path: Assets/Scenes/Level6.unity
+    path: Assets/Scenes/Level_6.unity
     guid: c5b88fcc0850b6044aa7639ea9ee057a
   - enabled: 1
-    path: Assets/Scenes/Level7.unity
+    path: Assets/Scenes/Level_12.unity
     guid: 4dfeadbe62bf6d74aa6c0ecfb313076a
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d1949d6da72f1884a81b88d81d7bd25d, type: 2}

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Level_7_Scene
   m_EditorClassIdentifier: 
   sceneID: 7
-  sceneName: Level7
+  sceneName: Level_7
   isUnlockedByDefault: 0
   collectibleStats: {fileID: 0}
