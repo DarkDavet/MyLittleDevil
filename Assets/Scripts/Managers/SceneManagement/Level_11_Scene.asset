@@ -15,4 +15,4 @@ MonoBehaviour:
   sceneID: 11
   sceneName: Level_11
   isUnlockedByDefault: 0
-  collectibleStats: {fileID: 0}
+  collectibleStats: {fileID: 11400000, guid: 1166e66c41f13b7428daa51a364a92ca, type: 2}
