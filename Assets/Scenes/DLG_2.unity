@@ -443,7 +443,7 @@ MonoBehaviour:
   dlgStorage: {fileID: 11400000, guid: d960fea3765a25045890cd8c21cf0160, type: 2}
   dlgSystem: {fileID: 6969983455469118126}
   dlgUI: {fileID: 3649160278687835950}
-  dlg_Id: dlg_1
+  dlg_Id: dlg_2
 --- !u!4 &1073117225
 Transform:
   m_ObjectHideFlags: 0
@@ -517,7 +517,7 @@ PrefabInstance:
     - target: {fileID: 2964600792661750547, guid: 408ad86853def984db89ca886792778a, type: 3}
       propertyPath: nextScene
       value: 
-      objectReference: {fileID: 11400000, guid: 6bef1a23a044500478a5ee40bac560a5, type: 2}
+      objectReference: {fileID: 11400000, guid: 95d0cdd672d5c2e4c9b16d301fad3131, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 408ad86853def984db89ca886792778a, type: 3}
 --- !u!114 &1830521440 stripped

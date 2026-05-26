@@ -607,6 +607,10 @@ PrefabInstance:
       propertyPath: aspect
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2770841550032848421, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+      propertyPath: _inventory
+      value: 
+      objectReference: {fileID: 11400000, guid: dde867d3aa6b3c546bcb5d1092c69b7e, type: 2}
     - target: {fileID: 6470685934748047834, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -627,7 +631,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2770841550032848421, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_PrefabInstance: {fileID: 596828826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 596828832}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ef887edd963c224bb009ec157e1faf2, type: 3}
@@ -638,7 +642,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6590513100892867961, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_PrefabInstance: {fileID: 596828826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 596828832}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35f297f738076bc43b36d786b5098b4f, type: 3}
@@ -649,7 +653,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2441509060603132281, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_PrefabInstance: {fileID: 596828826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 596828832}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 49a5a078e8e332e4f829a895aa191b7e, type: 3}
@@ -660,12 +664,27 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2093300711819808492, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_PrefabInstance: {fileID: 596828826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 596828833}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af5b9981a09009c4eae83f599ea62607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &596828831 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 733254879, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+  m_PrefabInstance: {fileID: 596828826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &596828832 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4524428493160234038, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+  m_PrefabInstance: {fileID: 596828826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &596828833 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2093300711819808273, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+  m_PrefabInstance: {fileID: 596828826}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &778479006
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -751,6 +770,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 860928210, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 596828833}
+    - target: {fileID: 860928210, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: _player
+      value: 
+      objectReference: {fileID: 596828832}
+    - target: {fileID: 860928210, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: _playerRb
       value: 
       objectReference: {fileID: 1740384174}
@@ -777,7 +804,7 @@ PrefabInstance:
     - target: {fileID: 404917810882162991, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: nextScene
       value: 
-      objectReference: {fileID: 11400000, guid: 52373f20d97b9414580f44fd768f243f, type: 2}
+      objectReference: {fileID: 11400000, guid: 99c5a2126d540af43a2ab3b6f41e391b, type: 2}
     - target: {fileID: 404917811524474093, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: victoryScreen
       value: 
@@ -817,7 +844,7 @@ PrefabInstance:
     - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: sceneData
       value: 
-      objectReference: {fileID: 11400000, guid: 95d0cdd672d5c2e4c9b16d301fad3131, type: 2}
+      objectReference: {fileID: 11400000, guid: 8460f3cb49e37da489509eded9b21bf6, type: 2}
     - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: initialStateType
       value: 1
@@ -918,6 +945,18 @@ PrefabInstance:
       propertyPath: pools.Array.data[3].prefab
       value: 
       objectReference: {fileID: 4777900962963508877, guid: dd9e22c736123d54c9176aedb875b536, type: 3}
+    - target: {fileID: 3260352572397732220, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: parentObject
+      value: 
+      objectReference: {fileID: 1151189059}
+    - target: {fileID: 3260352572397732220, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: _minionSpawnPosition
+      value: 
+      objectReference: {fileID: 596828831}
+    - target: {fileID: 3420350279515151520, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 596828832}
     - target: {fileID: 6214320805842962439, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: player
       value: 
@@ -1027,7 +1066,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1069763127759906381, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_PrefabInstance: {fileID: 596828826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 596828832}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 546f35ade1e3499488cfc70449444355, type: 3}
@@ -1355,7 +1394,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 794394696, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_PrefabInstance: {fileID: 596828826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 596828832}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 20d557e09f060c84193f635d87b54192, type: 3}

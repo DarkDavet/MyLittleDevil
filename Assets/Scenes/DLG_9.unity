@@ -443,7 +443,7 @@ MonoBehaviour:
   dlgStorage: {fileID: 11400000, guid: d960fea3765a25045890cd8c21cf0160, type: 2}
   dlgSystem: {fileID: 6969983455469118126}
   dlgUI: {fileID: 3649160278687835950}
-  dlg_Id: dlg_1
+  dlg_Id: dlg_9
 --- !u!4 &1073117225
 Transform:
   m_ObjectHideFlags: 0

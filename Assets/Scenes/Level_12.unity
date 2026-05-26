@@ -492,6 +492,11 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!1 &536845392 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2093300711819808273, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
+  m_PrefabInstance: {fileID: 596828826}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &564097063 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8840844576514966716, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
@@ -672,7 +677,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2093300711819808492, guid: 0fa4f24963f133c4e870b047abfbd39d, type: 3}
   m_PrefabInstance: {fileID: 596828826}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 536845392}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af5b9981a09009c4eae83f599ea62607, type: 3}
@@ -768,6 +773,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 860928210, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: _camera
+      value: 
+      objectReference: {fileID: 536845392}
+    - target: {fileID: 860928210, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: _player
+      value: 
+      objectReference: {fileID: 596828831}
+    - target: {fileID: 860928210, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: _playerRb
       value: 
       objectReference: {fileID: 1740384174}
@@ -794,7 +807,7 @@ PrefabInstance:
     - target: {fileID: 404917810882162991, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: nextScene
       value: 
-      objectReference: {fileID: 11400000, guid: 6bef1a23a044500478a5ee40bac560a5, type: 2}
+      objectReference: {fileID: 11400000, guid: bd8e0208a2a15354d8cd5f49b92f0722, type: 2}
     - target: {fileID: 404917811524474093, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: victoryScreen
       value: 
@@ -834,7 +847,7 @@ PrefabInstance:
     - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: sceneData
       value: 
-      objectReference: {fileID: 11400000, guid: 8460f3cb49e37da489509eded9b21bf6, type: 2}
+      objectReference: {fileID: 11400000, guid: b4c332a82da719a4a9f26bb6cd3b469e, type: 2}
     - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: initialStateType
       value: 1
