@@ -14,3 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dialogueStorage:
   - {fileID: 11400000, guid: 65e6d7eb473359141bb52f0ebd73bebc, type: 2}
+  - {fileID: 11400000, guid: 2a62ea87d4f7dc6448fa92262db3453c, type: 2}
+  - {fileID: 11400000, guid: e59959ec81818c048b73433d9e9a5716, type: 2}
+  - {fileID: 11400000, guid: 67eb44c60e1142844ae2436175c58056, type: 2}
+  - {fileID: 11400000, guid: f980e427b7d34a3458bf675e8eed7d5a, type: 2}
+  - {fileID: 11400000, guid: eead8a3689be1ad4880aa9240e1fb9c4, type: 2}
+  - {fileID: 11400000, guid: d78fceda7788505438c89f51a79b7ae0, type: 2}
+  - {fileID: 11400000, guid: fe84247448abf1f48a830d246cb16044, type: 2}
+  - {fileID: 11400000, guid: 566b51f87b3267b40b9410fd875abae2, type: 2}
+  - {fileID: 11400000, guid: aa1827bcd0e330044a06c45c524374c5, type: 2}
