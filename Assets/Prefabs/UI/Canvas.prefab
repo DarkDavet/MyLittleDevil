@@ -472,6 +472,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: VictoryScreen
       objectReference: {fileID: 0}
+    - target: {fileID: 1196163368909341280, guid: 225ad2f2ff7e41041b7323034c2adb7b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1196163368909341281, guid: 225ad2f2ff7e41041b7323034c2adb7b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
