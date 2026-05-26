@@ -1,17 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TimeReverseController : MonoBehaviour
 {
-    [SerializeField] private CameraMoving _cameraMoving;
-    [SerializeField] private Transform _playerTransform;
-    [SerializeField] private Transform _cameraTransform;
-    [SerializeField] private Rigidbody2D _playerRb;
-    [SerializeField] private PlayerInputHandler _inputHandler;
-    [SerializeField] private PlayerHealthSystem _healthSystem;
+    [SerializeField] private GameObject _player;
+    [SerializeField] private GameObject _camera;
+    
     [SerializeField] private int _reverseSpeed = 3;
     [SerializeField] private int _maxStackSize = 1000;
+
+    private Transform _playerTransform;
+    private Rigidbody2D _playerRb;
+    private PlayerInputHandler _inputHandler;
+    private PlayerHealthSystem _healthSystem;
+
+    private CameraMoving _cameraMoving;
+    private Transform _cameraTransform;
 
     public static bool IsReversing { get; private set; }
     private CommandManager _commandManager;
@@ -22,6 +28,14 @@ public class TimeReverseController : MonoBehaviour
     {
         GameEvents.OnTimeReverseActivated += StartReverse;
         _commandManager = new CommandManager(_maxStackSize);
+
+        _playerTransform = _player.GetComponent<Transform>();
+        _playerRb = _player.GetComponent<Rigidbody2D>();
+        _inputHandler = _player.GetComponent<PlayerInputHandler>();
+        _healthSystem = _player.GetComponent<PlayerHealthSystem>();
+
+        _cameraMoving = _camera.GetComponent<CameraMoving>();
+        _cameraTransform = _camera.GetComponent<Transform>();
     }
 
     void FixedUpdate()
