@@ -1437,6 +1437,10 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 5257154906056860368, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
+      propertyPath: _tutorialSetup
+      value: 
+      objectReference: {fileID: 11400000, guid: 63b86fadc057f59429a597299d2a3169, type: 2}
     - target: {fileID: 5628930509226279013, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
       propertyPath: m_RootOrder
       value: 8

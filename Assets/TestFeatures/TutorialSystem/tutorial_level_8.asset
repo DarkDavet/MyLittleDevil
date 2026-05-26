@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0805fe0e49b028342a28b4f63f48849e, type: 3}
-  m_Name: tutorial_level_1
+  m_Name: tutorial_level_8
   m_EditorClassIdentifier: 
-  id: tut_1
+  id: tut_8
   tutorialSlots:
-  - title: Flying
-    content: Press space button to keep your hero in the air.
+  - title: Ice
+    content: Use ice attack to slowdown obstacles
     backgroundImage: {fileID: 21300000, guid: 83536ad5a42e41d459b007aefdb4fb17, type: 3}
     showNextButton: 1
-  - title: Flying
-    content: Gravity is one of your enemy in the game
+  - title: Ice
+    content: Or slowdown some types of enemies
     backgroundImage: {fileID: 21300000, guid: 2bdcab4c3b0877041875fc14b872af5f, type: 3}
     showNextButton: 0
-  _isViewed: 1
+  _isViewed: 0

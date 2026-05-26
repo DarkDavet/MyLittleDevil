@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tutorialStorage:
   - {fileID: 11400000, guid: 1a44984174caf2f49a58fe4aec0e02ac, type: 2}
+  - {fileID: 11400000, guid: 63b86fadc057f59429a597299d2a3169, type: 2}
+  - {fileID: 11400000, guid: 63df1ab1f90b0f045b5da9c5bc4c8685, type: 2}
+  - {fileID: 11400000, guid: 09dc476fb5872094c9dd27ab3a732d8a, type: 2}

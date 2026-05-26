@@ -554,6 +554,10 @@ PrefabInstance:
       propertyPath: spriteAtlas
       value: 
       objectReference: {fileID: 4343727234628468602, guid: 025a5a31d293fee4285d85a4c21e5ee5, type: 2}
+    - target: {fileID: 5257154906056860368, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
+      propertyPath: _tutorialSetup
+      value: 
+      objectReference: {fileID: 11400000, guid: 63df1ab1f90b0f045b5da9c5bc4c8685, type: 2}
     - target: {fileID: 5628930509226279014, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1
