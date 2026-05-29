@@ -190,6 +190,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: CloseInventory
       objectReference: {fileID: 0}
+    - target: {fileID: 5257154906056860368, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
+      propertyPath: _tutorialSetup
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5539802901103596605, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
