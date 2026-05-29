@@ -454,7 +454,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6678669072763612069, guid: 5a06eb5bb73570f44ac70cc1a265957d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 149.18
+      value: 18.6
       objectReference: {fileID: 0}
     - target: {fileID: 6678669072763612069, guid: 5a06eb5bb73570f44ac70cc1a265957d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -558,6 +558,18 @@ PrefabInstance:
       propertyPath: _tutorialSetup
       value: 
       objectReference: {fileID: 11400000, guid: 63df1ab1f90b0f045b5da9c5bc4c8685, type: 2}
+    - target: {fileID: 5539802901103596605, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1612754978}
+    - target: {fileID: 5539802901103596605, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Restart
+      objectReference: {fileID: 0}
+    - target: {fileID: 5539802901103596605, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SceneLoader, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 5628930509226279014, guid: 9d6260ba153665541af2497d6d4d7555, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 1

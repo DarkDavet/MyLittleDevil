@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7b5c6847b5ac6e4c84e83784a35d5d7, type: 3}
   m_Name: DLG_8_Scene
   m_EditorClassIdentifier: 
-  sceneID: dlg_7
-  sceneName: DLG_7
+  sceneID: dlg_8
+  sceneName: DLG_8
   isUnlockedByDefault: 0
   collectibleStats: {fileID: 0}

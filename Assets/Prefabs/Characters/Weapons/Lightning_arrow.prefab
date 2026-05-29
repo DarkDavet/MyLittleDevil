@@ -178,6 +178,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dc5faa9514202e41acb57d6146ea06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 2559347761634259206}
   timeLimit: 2
   speed: 8
+  proj_name: Lightning

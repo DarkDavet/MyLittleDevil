@@ -18,17 +18,11 @@ public class EnemyShooting : MonoBehaviour, IShooting
     [Header("Редкие/Альтернативные снаряды")]
     [SerializeField] private AlternativeProjectile[] alternativeProjectiles;
 
-    private PoolManager pool;
-
-    private void Start()
-    {
-        pool = PoolManager.Instance;
-    }
 
     public void Shoot()
     {
         string finalProjectile = SelectProjectile();
-        pool.SpawnFromPool(finalProjectile, _projectileSpawnPoint.position, Quaternion.identity);
+        PoolManager.Instance.SpawnFromPool(finalProjectile, _projectileSpawnPoint.position, Quaternion.identity);
     }
 
     private string SelectProjectile()
