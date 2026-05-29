@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,7 +47,7 @@ public class LevelMenu : MonoBehaviour
             SceneManager.LoadScene(firstScene.sceneName);
         }
 
-        Debug.LogError("There is not this scene: " + lastID);
+        Debug.LogWarning("There is not this scene: " + lastID);
     }
 
     [ContextMenu("Reset Progress")]

@@ -41,7 +41,7 @@ public class BaseEnemyHealth : MonoBehaviour, IHealable
     public virtual void Die()
     {
         GameObject explosionEffect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
-        Destroy(explosionEffect, 3f);
+        if (explosionEffect != null) Destroy(explosionEffect, 3f);
         Destroy(gameObject);
         FindObjectOfType<AudioManager>().Play("EnemyDeath");
         //AchievementSystemCore.Instance.UnlockAchievement("kill_1_enemy");

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 public class TutorialSystem : MonoBehaviour
@@ -20,7 +20,7 @@ public class TutorialSystem : MonoBehaviour
         // Check if tutorial has already been viewed
         if (_tutorialSetup == null)
         {
-            Debug.LogError("TutorialSetup not initialized!");
+            Debug.LogWarning("TutorialSetup not initialized!");
             this.RequestPreviousState();
             return;
         }
