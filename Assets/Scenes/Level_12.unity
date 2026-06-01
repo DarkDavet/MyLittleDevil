@@ -856,6 +856,10 @@ PrefabInstance:
       propertyPath: initialStateType
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: playerInputHandler
+      value: 
+      objectReference: {fileID: 596828827}
     - target: {fileID: 2285638499013953370, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: m_RootOrder
       value: 3

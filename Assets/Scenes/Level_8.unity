@@ -3122,6 +3122,10 @@ PrefabInstance:
       propertyPath: sceneData
       value: 
       objectReference: {fileID: 11400000, guid: c24cb3c012bd1bb4fa3d6368e657f19a, type: 2}
+    - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: playerInputHandler
+      value: 
+      objectReference: {fileID: 1311374221}
     - target: {fileID: 2285638499013953370, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: m_RootOrder
       value: 5

@@ -21,7 +21,7 @@ public class TutorialSystem : MonoBehaviour
         if (_tutorialSetup == null)
         {
             Debug.LogWarning("TutorialSetup not initialized!");
-            this.RequestPreviousState();
+            GameEvents.TriggerTutorialFinished();
             return;
         }
         
@@ -30,7 +30,7 @@ public class TutorialSystem : MonoBehaviour
         if (_tutorialSetup.IsViewed)
         {
             Debug.Log("Tutorial already viewed, skipping");
-            this.RequestPreviousState();
+            GameEvents.TriggerTutorialFinished();
             return;
         }
         
@@ -50,7 +50,7 @@ public class TutorialSystem : MonoBehaviour
         if (_tutorialSetup == null)
         {
             Debug.LogError("No tutorial setup found!");
-            this.RequestPreviousState();
+            GameEvents.TriggerTutorialFinished();
         }
         
         if (_pageCurNum < _pageMaxNum && _pageCurNum >= 0)

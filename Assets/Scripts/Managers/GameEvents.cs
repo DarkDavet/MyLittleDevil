@@ -16,6 +16,8 @@ public class GameEvents
     public static event Action<string> OnDialogueStarted;
     public static event Action OnDialogueFinished;
 
+    public static event Action OnTutorialFinished;
+
     public static event Action OnTimeReverseActivated;
 
     public static event Action OnIceMinionSpawned;
@@ -28,6 +30,7 @@ public class GameEvents
     public static void TriggerFightFinished() => OnFightFinished?.Invoke();
     public static void TriggerDialogueStarted(string id) => OnDialogueStarted?.Invoke(id);
     public static void TriggerDialogueFinished() => OnDialogueFinished?.Invoke();
+    public static void TriggerTutorialFinished() => OnTutorialFinished?.Invoke();
     public static void TriggerUpdatedPlayerHealth(int health) => OnUpdatePlayerHealth?.Invoke(health);
     public static void TriggerHealthHealed(int health) => OnHealthHealed?.Invoke(health);
     public static void TriggerTimeReverseActivated() => OnTimeReverseActivated?.Invoke();

@@ -25,7 +25,7 @@ public class GameStateContext : MonoBehaviour
     [SerializeField] private TimeReverseController timeReverseController;
 
     private GameStateController _stateController;
-    public void Init(InitialStateType startState)
+    public void Init()
     {
         _stateController = new GameStateController();
 
@@ -45,8 +45,11 @@ public class GameStateContext : MonoBehaviour
         _stateController.AddState(new PauseGameState(_stateController));
         _stateController.AddState(new LoseGameState(_stateController));
         _stateController.AddState(new WinGameState(_stateController));
-        _stateController.AddState(new TutorialGameState(_stateController));
+        _stateController.AddState(new TutorialGameState(_stateController)); 
+    }
 
+    public void SetInitState(InitialStateType startState)
+    {
         switch (startState)
         {
             case InitialStateType.Run: _stateController.SetState<RunGameState>(); break;

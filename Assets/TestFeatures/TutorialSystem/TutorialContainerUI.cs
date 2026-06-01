@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -54,7 +54,7 @@ public class TutorialContainerUI : MonoBehaviour
         _canvasGroup.DOFade(0, _animDuration).SetUpdate(true).OnComplete(() =>
         {
             CleanListeners();
-            this.RequestPreviousState();
+            GameEvents.TriggerTutorialFinished();
         });
     }
 
