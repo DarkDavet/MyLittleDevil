@@ -77,5 +77,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DLG_9.unity
     guid: 823fa10eab9f660438b89baf5c1fcb4d
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: da680f7212fe1b247b323ec5a684eeca
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: d1949d6da72f1884a81b88d81d7bd25d, type: 2}
