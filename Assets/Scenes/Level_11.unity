@@ -3118,6 +3118,10 @@ PrefabInstance:
       propertyPath: nextScene
       value: 
       objectReference: {fileID: 11400000, guid: 36c5513b0105ecf488daac8932335049, type: 2}
+    - target: {fileID: 404917810882162991, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: currentScene
+      value: 
+      objectReference: {fileID: 11400000, guid: 5a6b5b578f6ae064c8c0d9f0957ecf0a, type: 2}
     - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: sceneData
       value: 

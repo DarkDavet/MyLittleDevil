@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +7,16 @@ using UnityEngine.UI;
 public class SceneLoader : MonoBehaviour
 {
     [SerializeField] private SceneData nextScene;
+    [SerializeField] private SceneData currentScene;
+
+    private void Start()
+    {
+        if (currentScene != null)
+        {
+            PlayerPrefs.SetString("LastPlayedLevel", currentScene.sceneID);
+            PlayerPrefs.Save();
+        }
+    }
     public void OpenNextScene()
     {
         if (nextScene == null) return;
@@ -20,6 +30,7 @@ public class SceneLoader : MonoBehaviour
     {
         if (nextScene == null) return;
 
+        PlayerPrefs.SetString("LastPlayedLevel", nextScene.sceneID); 
         PlayerPrefs.SetInt("Unlocked_" + nextScene.sceneID, 1);
         PlayerPrefs.Save();
     }

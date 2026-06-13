@@ -812,6 +812,10 @@ PrefabInstance:
       propertyPath: nextScene
       value: 
       objectReference: {fileID: 11400000, guid: bd8e0208a2a15354d8cd5f49b92f0722, type: 2}
+    - target: {fileID: 404917810882162991, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: currentScene
+      value: 
+      objectReference: {fileID: 11400000, guid: b4c332a82da719a4a9f26bb6cd3b469e, type: 2}
     - target: {fileID: 404917811524474093, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: victoryScreen
       value: 
