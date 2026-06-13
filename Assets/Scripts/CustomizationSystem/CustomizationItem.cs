@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CustomizationCategory { Hat, Glasses, Effect }
+public enum CustomizationCategory { Hat, Glasses, Jewelry }
 
 [CreateAssetMenu(fileName = "NewItem", menuName = "Customization/Item")]
 public class CustomizationItem : ScriptableObject

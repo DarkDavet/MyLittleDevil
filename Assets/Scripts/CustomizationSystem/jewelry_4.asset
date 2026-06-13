@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e58648b2ad544fc449d78c2de84864f5, type: 3}
-  m_Name: glasses_3
+  m_Name: jewelry_4
   m_EditorClassIdentifier: 
-  id: glasses_3
-  category: 1
-  displayName: Fancy gogles
-  description: Fancy you
-  visualSprite: {fileID: 21300000, guid: ee7282c5564250b479cba5fb97ca5c3b, type: 3}
-  icon: {fileID: 21300000, guid: f9dba8074c5906c41af621ade403a4db, type: 3}
-  currencyType: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
-  price: 3
+  id: jewelry_4
+  category: 2
+  displayName: Strange stick
+  description: WTF?
+  visualSprite: {fileID: 21300000, guid: 10f41bdf49ab939439ecb9954719ae49, type: 3}
+  icon: {fileID: 21300000, guid: 52a081f6490fa924dac1903891ad9305, type: 3}
+  currencyType: {fileID: 11400000, guid: 3b3cb13bba75683448bd4bf39737f506, type: 2}
+  price: 1
