@@ -1,3 +1,4 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace AchievementSystem
@@ -7,20 +8,23 @@ namespace AchievementSystem
     {
         public string achievementId;
         public bool isUnlocked;
-        public int currentProgress;
+
+        public List<string> earnedUniqueIds;
+
+        public int currentProgress => earnedUniqueIds?.Count ?? 0;
 
         public AchievementData(AchievementType achievementType)
         {
             achievementId = achievementType.Id;
             isUnlocked = false;
-            currentProgress = 0;
+            earnedUniqueIds = new List<string>();
         }
 
         public AchievementData()
         {
             achievementId = string.Empty;
             isUnlocked = false;
-            currentProgress = 0;
+            earnedUniqueIds = new List<string>();
         }
     }
 }

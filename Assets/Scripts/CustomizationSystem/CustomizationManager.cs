@@ -44,7 +44,7 @@ public class CustomizationManager : MonoBehaviour
 
         if (CollectibleManager.Instance.SpendItem(currencyId, price))
         {
-            AchievementSystemCore.Instance.UpdateProgress("unlock_3_custimized_items");
+            AchievementSystemCore.Instance.UpdateStandartProgress("unlock_3_custimized_items");
             currentSelectedItem.Unlock();
             currentSelectedItem.Equip(); // Логически надеваем
 

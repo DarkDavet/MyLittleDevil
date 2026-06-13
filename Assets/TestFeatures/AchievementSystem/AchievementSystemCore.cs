@@ -85,11 +85,19 @@ namespace AchievementSystem
         // ==========================================
 
         /// <summary>
+        /// Update unique progress for an achievement. Automatically unlocks if required progress is reached.
+        /// </summary>
+        public void UpdateUniqueProgress(string achievementId, string uniqueId)
+        {
+            _achievementManager?.AddUniqueProgress(achievementId, uniqueId);
+        }
+
+        /// <summary>
         /// Update progress for an achievement. Automatically unlocks if required progress is reached.
         /// </summary>
-        public void UpdateProgress(string achievementId, int amount = 1)
+        public void UpdateStandartProgress(string achievementId, int amount = 1)
         {
-            _achievementManager?.UpdateProgress(achievementId, amount);
+            _achievementManager?.AddProgress(achievementId, amount);
         }
 
         /// <summary>

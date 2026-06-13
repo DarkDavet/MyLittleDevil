@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 namespace AchievementSystem
@@ -31,7 +32,7 @@ namespace AchievementSystem
         {
             public List<string> ids;
             public List<bool> unlocked;
-            public List<int> progress;
+            public List<string> serializedIds;
         }
 
         /// <summary>
@@ -83,9 +84,9 @@ namespace AchievementSystem
         }
 
         /// <summary>
-        /// Update progress for an achievement. Automatically unlocks if required progress is reached.
+        /// Увеличивает прогресс на определенное количество (для монет, обычных врагов и т.д.)
         /// </summary>
-        public void UpdateProgress(string achievementId, int amount = 1)
+        public void AddProgress(string achievementId, int amount = 1)
         {
             if (achievementProgress == null || !achievementProgress.ContainsKey(achievementId))
                 return;
@@ -94,9 +95,22 @@ namespace AchievementSystem
             if (data.isUnlocked)
                 return;
 
-            AchievementType type = achievementTypes[achievementId];
-            data.currentProgress = Mathf.Clamp(data.currentProgress + amount, 0, type.RequiredProgress);
+            if (data.earnedUniqueIds == null)
+                data.earnedUniqueIds = new List<string>();
 
+            AchievementType type = achievementTypes[achievementId];
+
+            // Вычисляем, сколько еще осталось до максимума, чтобы не выйти за лимит
+            int spaceLeft = type.RequiredProgress - data.currentProgress;
+            int itemsToAdd = Mathf.Clamp(amount, 0, spaceLeft);
+
+            // Просто добавляем нужное количество случайных ID, чтобы увеличить count
+            for (int i = 0; i < itemsToAdd; i++)
+            {
+                data.earnedUniqueIds.Add(System.Guid.NewGuid().ToString());
+            }
+
+            // Оповещаем шкалу и слушателей
             OnAchievementProgress?.Invoke(type, data.currentProgress, type.RequiredProgress);
 
             foreach (var listener in listeners)
@@ -108,7 +122,46 @@ namespace AchievementSystem
             }
             else
             {
-                // Сохраняем промежуточный прогресс
+                SaveToPlayerPrefs();
+            }
+        }
+
+        /// <summary>
+        /// Добавляет прогресс только если переданный ID объекта уникален и еще не засчитывался.
+        /// </summary>
+        public void AddUniqueProgress(string achievementId, string uniqueId)
+        {
+            if (achievementProgress == null || !achievementProgress.ContainsKey(achievementId))
+                return;
+
+            AchievementData data = achievementProgress[achievementId];
+            if (data.isUnlocked)
+                return;
+
+            if (data.earnedUniqueIds == null)
+                data.earnedUniqueIds = new List<string>();
+
+            // ГЛАВНАЯ ЗАЩИТА: Если этот ID уровня/босса уже есть, ничего не делаем
+            if (data.earnedUniqueIds.Contains(uniqueId))
+                return;
+
+            // Добавляем уникальный идентификатор
+            data.earnedUniqueIds.Add(uniqueId);
+
+            AchievementType type = achievementTypes[achievementId];
+
+            // Оповещаем шкалу и слушателей (data.currentProgress автоматически вернет размер списка)
+            OnAchievementProgress?.Invoke(type, data.currentProgress, type.RequiredProgress);
+
+            foreach (var listener in listeners)
+                listener.OnAchievementProgress(type, data.currentProgress, type.RequiredProgress);
+
+            if (data.currentProgress >= type.RequiredProgress)
+            {
+                UnlockAchievement(achievementId);
+            }
+            else
+            {
                 SaveToPlayerPrefs();
             }
         }
@@ -126,7 +179,6 @@ namespace AchievementSystem
 
             AchievementType type = achievementTypes[achievementId];
             data.isUnlocked = true;
-            data.currentProgress = type.RequiredProgress;
 
             // 1. Оповещаем слушателей (включая панель)
             OnAchievementUnlocked?.Invoke(type);
@@ -193,17 +245,24 @@ namespace AchievementSystem
             {
                 ids = new List<string>(),
                 unlocked = new List<bool>(),
-                progress = new List<int>()
+                serializedIds = new List<string>()
             };
 
             foreach (var entry in achievementProgress)
             {
                 data.ids.Add(entry.Key);
                 data.unlocked.Add(entry.Value.isUnlocked);
-                data.progress.Add(entry.Value.currentProgress);
+
+                // Превращаем список ["Level_1", "Level_2"] в строку "Level_1;Level_2"
+                string joinedIds = entry.Value.earnedUniqueIds != null
+                    ? string.Join(";", entry.Value.earnedUniqueIds)
+                    : string.Empty;
+
+                data.serializedIds.Add(joinedIds);
             }
 
             PlayerPrefs.SetString("Achievements", JsonUtility.ToJson(data));
+            PlayerPrefs.Save();
         }
 
         public void LoadFromPlayerPrefs()
@@ -223,7 +282,15 @@ namespace AchievementSystem
                         {
                             AchievementData entry = achievementProgress[data.ids[i]];
                             entry.isUnlocked = data.unlocked[i];
-                            entry.currentProgress = data.progress[i];
+                            entry.earnedUniqueIds = new List<string>();
+
+                            // Проверяем, были ли сохранены ID
+                            if (data.serializedIds != null && i < data.serializedIds.Count && !string.IsNullOrEmpty(data.serializedIds[i]))
+                            {
+                                // Разрезаем строку "Level_1;Level_2" обратно в список элементов
+                                string[] splitIds = data.serializedIds[i].Split(';');
+                                entry.earnedUniqueIds.AddRange(splitIds);
+                            }
                         }
                     }
                 }
@@ -237,7 +304,10 @@ namespace AchievementSystem
             foreach (var entry in achievementProgress)
             {
                 entry.Value.isUnlocked = false;
-                entry.Value.currentProgress = 0;
+                if (entry.Value.earnedUniqueIds != null)
+                    entry.Value.earnedUniqueIds.Clear();
+                else
+                    entry.Value.earnedUniqueIds = new List<string>();
             }
             SaveToPlayerPrefs();
         }

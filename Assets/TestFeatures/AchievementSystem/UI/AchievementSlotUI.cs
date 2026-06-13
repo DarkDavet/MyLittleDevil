@@ -89,7 +89,6 @@ namespace AchievementSystem.UI
             if (achievementData == null || achievementType == null) return;
             if (achievementData.isUnlocked) return;
 
-            achievementData.currentProgress = currentProgress;
 
             if (progressFill != null)
             {
