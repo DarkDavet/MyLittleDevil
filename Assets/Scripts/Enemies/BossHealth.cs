@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using AchievementSystem;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -12,6 +13,8 @@ public class BossHealth: BaseEnemyHealth
 
     [SerializeField] GameObject _healthBarHeart;
     [SerializeField] GameObject _nimb;
+
+    [SerializeField] private string achiev_id;
 
     private Animator UIAnimator;
     private Animator nimbAnimator;
@@ -44,6 +47,10 @@ public class BossHealth: BaseEnemyHealth
     
     public override void Die()
     {
+        if (achiev_id != null)
+        {
+            AchievementSystemCore.Instance.UnlockAchievement(achiev_id);
+        }
         base.Die();
         Destroy(_bossHud);
         this.RequestState<WinGameState>();

@@ -44,8 +44,7 @@ public class BaseEnemyHealth : MonoBehaviour, IHealable
         if (explosionEffect != null) Destroy(explosionEffect, 3f);
         Destroy(gameObject);
         FindObjectOfType<AudioManager>().Play("EnemyDeath");
-        //AchievementSystemCore.Instance.UnlockAchievement("kill_1_enemy");
-       // TimeManager.Instance.TakeItSlow();
+        AchievementSystemCore.Instance.UpdateStandartProgress("defeat_2_angels");
     }
 
     public virtual void Heal(int heal)

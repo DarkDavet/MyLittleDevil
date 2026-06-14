@@ -100,6 +100,16 @@ namespace AchievementSystem
             _achievementManager?.AddProgress(achievementId, amount);
         }
 
+        public void ResetAchievementProgress(string achievementId)
+        {
+            _achievementManager?.ResetAchievementProgress(achievementId);
+        }
+
+        public void DecreaseAchievementProgress(string achievementId, int amount = 1)
+        {
+            _achievementManager?.DecreaseProgress(achievementId, amount);
+        }
+
         /// <summary>
         /// Instantly unlock an achievement.
         /// </summary>

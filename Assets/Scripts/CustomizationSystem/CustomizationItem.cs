@@ -1,4 +1,5 @@
-﻿using CollectibleSystem;
+﻿using AchievementSystem;
+using CollectibleSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,7 @@ public class CustomizationItem : ScriptableObject
 
     public void Equip()
     {
+        AchievementSystemCore.Instance.UpdateStandartProgress("fashion_guy");
         // Используем category.ToString(), чтобы сохранить предмет в нужный слот (Hat, Glasses и т.д.)
         PlayerPrefs.SetString("Equipped_" + this.category.ToString(), id);
         PlayerPrefs.Save();
@@ -33,6 +35,7 @@ public class CustomizationItem : ScriptableObject
 
     public void Unequip()
     {
+        AchievementSystemCore.Instance.DecreaseAchievementProgress("fashion_guy");
         // Очищаем по категории
         PlayerPrefs.DeleteKey("Equipped_" + this.category.ToString());
         PlayerPrefs.Save();

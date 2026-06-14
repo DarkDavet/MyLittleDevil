@@ -69,6 +69,7 @@ namespace CollectibleSystem
                 UpdateItemCount(collectedItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) collectedUniqueIds.Add(uid);
                 AchievementSystemCore.Instance.UnlockAchievement("find_1_treasure");
+                AchievementSystemCore.Instance.UpdateStandartProgress("find_2_treasure");
 
                 SaveToPlayerPrefs();
                 // Сохраняем статистику уровня немедленно для этого типа
@@ -95,6 +96,14 @@ namespace CollectibleSystem
         {
             Debug.Log("Saving temporary items (OnLevelComplete items)");
 
+            string coinId = "coin"; 
+            int coinsEarnedThisLevel = 0;
+
+            if (temporaryItems.ContainsKey(coinId))
+            {
+                coinsEarnedThisLevel = temporaryItems[coinId];
+            }
+
             // Переносим количества
             foreach (var item in temporaryItems)
             {
@@ -104,6 +113,11 @@ namespace CollectibleSystem
 
             // Переносим уникальные ID
             collectedUniqueIds.UnionWith(tmp_collectedUniqueIds);
+
+            if (coinsEarnedThisLevel > 0)
+            {
+                AchievementSystemCore.Instance?.UpdateStandartProgress("earn_5_coins", coinsEarnedThisLevel);
+            }
 
             // ВАЖНО: Очищаем оба временных списка
             temporaryItems.Clear();
