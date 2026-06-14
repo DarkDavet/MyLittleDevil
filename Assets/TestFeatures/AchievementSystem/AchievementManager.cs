@@ -192,6 +192,75 @@ namespace AchievementSystem
             SaveToPlayerPrefs();
         }
 
+        /// <summary>
+        /// Сбрасывает прогресс конкретной ачивки по её ID.
+        /// </summary>
+        public void ResetAchievementProgress(string achievementId)
+        {
+            if (achievementProgress == null || !achievementProgress.ContainsKey(achievementId))
+                return;
+
+            AchievementData data = achievementProgress[achievementId];
+
+            // Если ачивка уже получена, сбрасывать её прогресс нельзя
+            if (data.isUnlocked)
+                return;
+
+            AchievementType type = achievementTypes[achievementId];
+
+            // Очищаем накопленные ID
+            if (data.earnedUniqueIds != null)
+                data.earnedUniqueIds.Clear();
+            else
+                data.earnedUniqueIds = new List<string>();
+
+            // Оповещаем UI и слушателей, что прогресс теперь обнулился
+            OnAchievementProgress?.Invoke(type, 0, type.RequiredProgress);
+
+            foreach (var listener in listeners)
+                listener.OnAchievementProgress(type, 0, type.RequiredProgress);
+
+            SaveToPlayerPrefs();
+        }
+
+        /// <summary>
+        /// Уменьшает прогресс конкретной ачивки на указанное количество, если она еще не разблокирована.
+        /// </summary>
+        public void DecreaseProgress(string achievementId, int amount = 1)
+        {
+            if (achievementProgress == null || !achievementProgress.ContainsKey(achievementId))
+                return;
+
+            AchievementData data = achievementProgress[achievementId];
+
+            // Защита: если ачивка уже получена, уменьшать прогресс нельзя
+            if (data.isUnlocked)
+                return;
+
+            // Если уменьшать нечего, просто выходим
+            if (data.earnedUniqueIds == null || data.earnedUniqueIds.Count == 0 || amount <= 0)
+                return;
+
+            // Вычисляем, сколько элементов реально нужно удалить (не больше, чем есть в списке)
+            int itemsToRemove = Mathf.Min(amount, data.earnedUniqueIds.Count);
+
+            // Удаляем элементы с конца списка
+            for (int i = 0; i < itemsToRemove; i++)
+            {
+                data.earnedUniqueIds.RemoveAt(data.earnedUniqueIds.Count - 1);
+            }
+
+            AchievementType type = achievementTypes[achievementId];
+
+            // Оповещаем UI и слушателей о новом уменьшенном прогрессе
+            OnAchievementProgress?.Invoke(type, data.currentProgress, type.RequiredProgress);
+
+            foreach (var listener in listeners)
+                listener.OnAchievementProgress(type, data.currentProgress, type.RequiredProgress);
+
+            SaveToPlayerPrefs();
+        }
+
         public bool IsAchievementUnlocked(string achievementId)
         {
             if (achievementProgress == null || !achievementProgress.TryGetValue(achievementId, out var data))
