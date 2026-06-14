@@ -1615,6 +1615,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1336806403}
     - target: {fileID: 955584499, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
+      propertyPath: achiev_id
+      value: defeat_blue_angel
+      objectReference: {fileID: 0}
+    - target: {fileID: 955584499, guid: 17bd77d736a7edb4f8767845cbe397da, type: 3}
       propertyPath: _healthBar
       value: 
       objectReference: {fileID: 1525247353}

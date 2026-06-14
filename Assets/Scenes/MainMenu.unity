@@ -3394,7 +3394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3878728176093874248, guid: ce34f2d7d85d9db4187b783b935ab1c9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -48.42157
+      value: -48.42163
       objectReference: {fileID: 0}
     - target: {fileID: 3878728176093874248, guid: ce34f2d7d85d9db4187b783b935ab1c9, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -14683,7 +14683,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
       propertyPath: allAchievements.Array.size
-      value: 4
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
       propertyPath: allAchievements.Array.data[2]
@@ -14693,6 +14693,26 @@ PrefabInstance:
       propertyPath: allAchievements.Array.data[3]
       value: 
       objectReference: {fileID: 11400000, guid: d7a175e74ea593e4483d304afb56eead, type: 2}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 69b13485140247c4b827845ec57ea4e0, type: 2}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.data[5]
+      value: 
+      objectReference: {fileID: 11400000, guid: 94e3948d4bcde114799bfa9d50b18a05, type: 2}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: d0beb107f671bad45b8ed6e14e66a695, type: 2}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.data[7]
+      value: 
+      objectReference: {fileID: 11400000, guid: bf9ac8277ee51984590f56c9cdd65c18, type: 2}
+    - target: {fileID: 8656219707304102495, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
+      propertyPath: allAchievements.Array.data[8]
+      value: 
+      objectReference: {fileID: 11400000, guid: daad2d41641b4d44a92ec8ff5019006d, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7517785bfc93506478db2f92b3439e7c, type: 3}
 --- !u!4 &9219135249337394849

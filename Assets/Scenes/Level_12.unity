@@ -1591,6 +1591,7 @@ MonoBehaviour:
   _healthBar: {fileID: 1525247353}
   _healthBarHeart: {fileID: 489977970}
   _nimb: {fileID: 0}
+  achiev_id: defeat_devil_dad
 --- !u!4 &1939531314 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8468727066129151365, guid: d298dc9c5f4217c4d938767ad95b1a56, type: 3}
