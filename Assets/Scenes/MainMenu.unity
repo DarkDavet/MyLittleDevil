@@ -14003,6 +14003,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1652049287}
     - target: {fileID: 3429281407739660387, guid: d6ed266488d040244947e895836c3864, type: 3}
+      propertyPath: itemDatabase
+      value: 
+      objectReference: {fileID: 11400000, guid: f4de38b6a2db0b64db9bc495cc501a71, type: 2}
+    - target: {fileID: 3429281407739660387, guid: d6ed266488d040244947e895836c3864, type: 3}
       propertyPath: noFundsPanel
       value: 
       objectReference: {fileID: 1579475798}

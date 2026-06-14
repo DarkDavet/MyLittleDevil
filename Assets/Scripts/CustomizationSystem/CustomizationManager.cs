@@ -14,6 +14,8 @@ public class CustomizationManager : MonoBehaviour
     [SerializeField] private GameObject confirmPanel;
     [SerializeField] private GameObject noFundsPanel;
 
+    [SerializeField] private ItemDatabase itemDatabase;
+
     private CustomizationItem currentSelectedItem;
 
     public void SelectItem(CustomizationItem item)
@@ -46,6 +48,8 @@ public class CustomizationManager : MonoBehaviour
         {
             AchievementSystemCore.Instance.UpdateStandartProgress("unlock_2_custimized_items");
             currentSelectedItem.Unlock();
+
+            ProcessPreviousItemUnequip(currentSelectedItem.category);
             currentSelectedItem.Equip(); // Логически надеваем
 
             // Визуально надеваем (чтобы предмет остался на герое после покупки)
@@ -70,6 +74,23 @@ public class CustomizationManager : MonoBehaviour
         }
     }
 
+    private void ProcessPreviousItemUnequip(CustomizationCategory category)
+    {
+        // Смотрим в PlayerPrefs, одет ли какой-то ID в этой категории прямо сейчас
+        string oldItemId = PlayerPrefs.GetString("Equipped_" + category.ToString(), "");
+
+        if (!string.IsNullOrEmpty(oldItemId))
+        {
+            // Ищем этот предмет в нашем списке, чтобы вызвать его родной метод Unequip
+            CustomizationItem oldItem = itemDatabase.allItems.Find(item => item.id == oldItemId);
+
+            if (oldItem != null)
+            {
+                oldItem.Unequip(); 
+            }
+        }
+    }
+
     public void ToggleEquipSelectedItem()
     {
         if (currentSelectedItem == null || !currentSelectedItem.IsUnlocked) return;
@@ -81,14 +102,31 @@ public class CustomizationManager : MonoBehaviour
         }
         else
         {
-            currentSelectedItem.Equip();
-            previewer.ApplyItem(currentSelectedItem);
+            OnEquipAction();
         }
 
         // Обновляем UI после переключения
         if (shopUI != null)
         {
             shopUI.RefreshShop();
+        }
+    }
+
+    public void OnEquipAction()
+    {
+        if (currentSelectedItem == null || !currentSelectedItem.IsUnlocked) return;
+
+        if (currentSelectedItem.IsEquipped) return;
+
+        // снимаем предыдущий предмет этой же категории
+        ProcessPreviousItemUnequip(currentSelectedItem.category);
+
+        currentSelectedItem.Equip();
+        previewer.ApplyItem(currentSelectedItem);
+
+        if (shopUI != null)
+        {
+            shopUI.RefreshShop(); 
         }
     }
 
