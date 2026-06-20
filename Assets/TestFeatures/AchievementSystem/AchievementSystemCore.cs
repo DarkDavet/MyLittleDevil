@@ -161,20 +161,21 @@ namespace AchievementSystem
                 return;
             }
 
-            // Если корня нет, создаем его немедленно
             if (_persistentCanvasRoot == null) CreatePersistentNotificationCanvas();
 
+            // Спавним в корень со столбиком
             GameObject notificationObj = Instantiate(notificationPrefab, _persistentCanvasRoot);
 
-            // ПРИНУДИТЕЛЬНО настраиваем позицию в Overlay
             RectTransform rt = notificationObj.GetComponent<RectTransform>();
             if (rt != null)
             {
                 rt.localScale = Vector3.one;
-                rt.anchoredPosition = new Vector2(0, 0); // Или укажи нужные координаты спавна
+                rt.anchoredPosition = Vector2.zero;
             }
 
             notificationObj.GetComponent<AchievementNotificationUI>()?.Show(achievementType);
+
+            Destroy(notificationObj, 5f);
         }
 
         private void CreatePersistentNotificationCanvas()
@@ -186,18 +187,33 @@ namespace AchievementSystem
             _notificationCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
             _notificationCanvas.sortingOrder = 999;
 
-            canvasObj.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            CanvasScaler scaler = canvasObj.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = canvasResolution;
+            scaler.matchWidthOrHeight = canvasMatchWidthOrHeight ? 1f : 0f;
+
             canvasObj.AddComponent<GraphicRaycaster>();
 
             GameObject rootObj = new GameObject("NotificationRoot");
             rootObj.transform.SetParent(canvasObj.transform, false);
 
-            // Растягиваем корень на весь экран, чтобы уведомления было видно
             RectTransform rt = rootObj.AddComponent<RectTransform>();
-            rt.anchorMin = Vector2.zero;
-            rt.anchorMax = Vector2.one;
-            rt.sizeDelta = Vector2.zero;
-            rt.anchoredPosition = Vector2.zero;
+            rt.anchorMin = new Vector2(1, 1); 
+            rt.anchorMax = new Vector2(1, 1);
+            rt.pivot = new Vector2(1, 1);
+            rt.anchoredPosition = new Vector2(-20, -20); 
+            rt.sizeDelta = new Vector2(400, 0); 
+
+            ContentSizeFitter fitter = rootObj.AddComponent<ContentSizeFitter>();
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            VerticalLayoutGroup layout = rootObj.AddComponent<VerticalLayoutGroup>();
+            layout.spacing = 10; 
+            layout.childAlignment = TextAnchor.UpperRight; 
+            layout.childControlHeight = false; 
+            layout.childControlWidth = false; 
+            layout.childForceExpandHeight = false;
+            layout.childForceExpandWidth = false;
 
             _persistentCanvasRoot = rootObj.transform;
         }
