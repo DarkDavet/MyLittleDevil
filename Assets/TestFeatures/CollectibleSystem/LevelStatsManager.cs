@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AchievementSystem;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace CollectibleSystem
@@ -11,7 +12,6 @@ namespace CollectibleSystem
         public event StatsUpdatedHandler OnStatsUpdated;
 
         private LevelCollectibleStats currentLevelStats;
-
         private Dictionary<string, int> statsAtStartOfSession = new Dictionary<string, int>();
 
         private void Awake()
@@ -29,35 +29,34 @@ namespace CollectibleSystem
 
         public void InitializeStatsForLevel(SceneData sceneData)
         {
+            if (currentLevelStats != null)
+            {
+                RollbackStatsOnDefeat();
+            }
+
             if (sceneData != null && sceneData.collectibleStats != null)
             {
-                // 1. Привязываем SO статистики к менеджеру
                 currentLevelStats = sceneData.collectibleStats;
-                // Используем sceneID для ключа сохранения
                 string saveKey = "LevelStats_" + sceneData.sceneID;
 
-                // 2. Пытаемся загрузить сохраненный прогресс именно этого уровня
                 currentLevelStats.LoadLevelStats(saveKey);
-
-                // 3. Если уровень запущен впервые (runtimeStats пустые после загрузки)
-                if (currentLevelStats.runtimeStats.Count == 0)
-                {
-                    // Просто инициализируем пустые значения на основе списка collectibleStats в SO
-                    currentLevelStats.CalculateRemainingCounts();
-                }
 
                 OnStatsUpdated?.Invoke(currentLevelStats);
             }
 
             statsAtStartOfSession.Clear();
-            foreach (var stat in currentLevelStats.runtimeStats)
+            if (currentLevelStats != null && currentLevelStats.runtimeStats != null)
             {
-                statsAtStartOfSession[stat.collectibleTypeId] = stat.collectedCount;
+                foreach (var stat in currentLevelStats.runtimeStats)
+                {
+                    statsAtStartOfSession[stat.collectibleTypeId] = stat.collectedCount;
+                }
             }
         }
 
         public int GetAddedThisSession(string typeId)
         {
+            if (currentLevelStats == null) return 0;
             int current = currentLevelStats.GetCollectedCount(typeId);
             int start = statsAtStartOfSession.ContainsKey(typeId) ? statsAtStartOfSession[typeId] : 0;
             return current - start;
@@ -67,7 +66,7 @@ namespace CollectibleSystem
         {
             if (currentLevelStats == null) return;
 
-            // Используем внутренний метод SO для обновления — это централизует логику
+            // Централизованно обновляем рантайм-счетчики в SO
             currentLevelStats.IncrementCollectedCount(collectibleTypeId, amount);
 
             OnStatsUpdated?.Invoke(currentLevelStats);
@@ -75,7 +74,6 @@ namespace CollectibleSystem
 
         public void SaveCurrentLevelStats()
         {
-            // Используем ID уровня из самого SO, чтобы не зависеть от внешних ссылок при сохранении
             if (currentLevelStats != null && !string.IsNullOrEmpty(currentLevelStats.levelId))
             {
                 string saveKey = "LevelStats_" + currentLevelStats.levelId;
@@ -94,7 +92,34 @@ namespace CollectibleSystem
             {
                 string saveKey = "LevelStats_" + currentLevelStats.levelId;
                 currentLevelStats.ClearLevelStats(saveKey);
-                currentLevelStats.runtimeStats.Clear(); // Обнуляем в рантайме
+                currentLevelStats.runtimeStats.Clear();
+            }
+        }
+
+        public void CheckLevelClearAchievements()
+        {
+            if (currentLevelStats == null) return;
+
+            if (currentLevelStats.IsLevelFullyCleared())
+            {
+                string lvlId = currentLevelStats.levelId;
+                Debug.Log($"[Achievement SUCCESS] Уровень {lvlId} полностью зачищен на 100%!");
+
+                AchievementSystemCore.Instance?.UnlockAchievement("clear_1_level");
+
+                AchievementSystemCore.Instance?.UpdateUniqueProgress("clear_all_levels", lvlId);
+            }
+        }
+
+        public void RollbackStatsOnDefeat()
+        {
+            if (currentLevelStats != null && !string.IsNullOrEmpty(currentLevelStats.levelId))
+            {
+                string saveKey = "LevelStats_" + currentLevelStats.levelId;
+
+                currentLevelStats.LoadLevelStats(saveKey);
+                OnStatsUpdated?.Invoke(currentLevelStats);
+                Debug.Log($"[Stats] Статистика уровня {currentLevelStats.levelId} успешно откатана назад.");
             }
         }
     }

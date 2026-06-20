@@ -546,7 +546,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectibleType: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
   quantity: 1
-  uniqueId: 8
+  uniqueId: 4
   OnCollected:
     m_PersistentCalls:
       m_Calls: []
@@ -1366,7 +1366,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectibleType: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
   quantity: 1
-  uniqueId: 7
+  uniqueId: 3
   OnCollected:
     m_PersistentCalls:
       m_Calls: []
@@ -1486,7 +1486,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectibleType: {fileID: 11400000, guid: 05fb8d6c60cdc2548be48056a7ec58ac, type: 2}
   quantity: 1
-  uniqueId: 5
+  uniqueId: 1
   OnCollected:
     m_PersistentCalls:
       m_Calls: []
@@ -1708,7 +1708,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collectibleType: {fileID: 11400000, guid: 3b3cb13bba75683448bd4bf39737f506, type: 2}
   quantity: 1
-  uniqueId: 6
+  uniqueId: 2
   OnCollected:
     m_PersistentCalls:
       m_Calls: []

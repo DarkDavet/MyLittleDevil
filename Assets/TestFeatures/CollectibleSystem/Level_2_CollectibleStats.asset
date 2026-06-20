@@ -15,6 +15,6 @@ MonoBehaviour:
   levelId: 2
   collectibleStats:
   - collectibleTypeId: coin
-    totalCount: 3
+    totalCount: 2
   - collectibleTypeId: artifact
-    totalCount: 1
+    totalCount: 2

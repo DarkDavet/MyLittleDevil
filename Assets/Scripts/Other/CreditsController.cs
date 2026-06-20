@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using AchievementSystem;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,6 +30,12 @@ public class CreditsController : MonoBehaviour
 
         yield return new WaitForSeconds(endDelay);
 
+        UnlockFinishAchiev();
         sceneLoader.ReturnToMainMenu();
+    }
+
+    public void UnlockFinishAchiev()
+    {
+        AchievementSystemCore.Instance.UnlockAchievement("finish_the_game");
     }
 }

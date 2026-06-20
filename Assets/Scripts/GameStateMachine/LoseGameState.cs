@@ -1,3 +1,5 @@
+﻿using AchievementSystem;
+using CollectibleSystem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,10 +14,14 @@ public class LoseGameState : GameState
     }
     public override void Enter()
     {
+        LevelStatsManager.Instance?.RollbackStatsOnDefeat();
+        CollectibleManager.Instance?.ClearTemporaryItems();
+
         GameStateController.CameraMoving.SetActive(false, 0.8f);
         _stateController.PlayerInput.DisablePlayerControls();
         _stateController.UIManager.LooseScreen.SetActive(true);
         _stateController.Inventory.Clear();
+        AchievementSystemCore.Instance.UpdateStandartProgress("die_5_times");
     }
 
     public override void Update()

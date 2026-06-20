@@ -59,7 +59,9 @@ namespace CollectibleSystem
                 var runtime = new RuntimeCollectibleStats
                 {
                     collectibleTypeId = stat.collectibleTypeId,
-                    totalCount = stat.totalCount 
+                    totalCount = stat.totalCount,
+                    collectedCount = 0,
+                    remainingCount = stat.totalCount
                 };
                 runtimeStats.Add(runtime);
                 runtimeDict[stat.collectibleTypeId] = runtime;
@@ -165,33 +167,43 @@ namespace CollectibleSystem
 
         public void LoadLevelStats(string saveKey)
         {
+            CalculateRemainingCounts();
             if (PlayerPrefs.HasKey(saveKey))
             {
                 string json = PlayerPrefs.GetString(saveKey);
                 LevelCollectibleStatsData data = JsonUtility.FromJson<LevelCollectibleStatsData>(json);
 
-                Debug.Log("Loading level stats for " + levelId + " from save key: " + saveKey);
-                Debug.Log("  Found " + data.collectibleStats.Count + " collectible types");
-                
-                runtimeStats.Clear();
+                Debug.Log($"[Stats] Загрузка прогресса для {levelId}. Найдено типов в сохранении: {data.collectibleStats.Count}");
+
+                // Накладываем сохраненные значения поверх чистой структуры
                 foreach (var savedStat in data.collectibleStats)
                 {
-                    runtimeStats.Add(new RuntimeCollectibleStats
+                    var existingRuntime = runtimeStats.Find(s => s.collectibleTypeId == savedStat.collectibleTypeId);
+                    if (existingRuntime != null)
                     {
-                        totalCount = savedStat.totalCount,
-                        collectibleTypeId = savedStat.collectibleTypeId,
-                        collectedCount = savedStat.collectedCount,
-                        remainingCount = savedStat.remainingCount
-                    });
-                    Debug.Log("    " + savedStat.collectibleTypeId + 
-                              ": Collected=" + savedStat.collectedCount + 
-                              ", Remaining=" + savedStat.remainingCount);
+                        existingRuntime.collectedCount = savedStat.collectedCount;
+                        existingRuntime.remainingCount = existingRuntime.totalCount - savedStat.collectedCount;
+                    }
                 }
             }
             else
             {
                 Debug.Log("No saved data found for " + levelId + " (save key: " + saveKey + ")");
             }
+        }
+
+        public bool IsLevelFullyCleared()
+        {
+            if (runtimeStats == null || runtimeStats.Count == 0) return false;
+
+            foreach (var stat in runtimeStats)
+            {
+                if (stat.remainingCount > 0)
+                {
+                    return false; 
+                }
+            }
+            return true;
         }
 
         public void DisplayLevelProgress(string levelId, LevelCollectibleStats levelStatsAsset)

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
 namespace CollectibleSystem
@@ -17,31 +17,21 @@ namespace CollectibleSystem
         
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Debug.Log("Предмет коснулся объекта: " + collision.name);
             var collector = collision.gameObject.GetComponent<ICollectibleCollector>();
-            
+
             if (collector != null)
-            {   
-                // Check if this specific unique ID has already been collected
-                if (!string.IsNullOrEmpty(uniqueId) && CollectibleManager.Instance.IsUniqueIdCollected(uniqueId))
-                {
-                    Debug.Log("Предмет с уникальным ID уже был собран ранее: " + uniqueId);
-                    gameObject.SetActive(false);
-                    return;
-                }
-                
+            {
+  
                 collector.Collect(this);
-                
                 Collect();
             }
         }
         
         private void Start()
         {
-            // Check if this specific unique ID has already been collected at level start
             if (!string.IsNullOrEmpty(uniqueId) && CollectibleManager.Instance.IsUniqueIdCollected(uniqueId))
             {
-                Debug.Log("Предмет с уникальным ID отключен при старте уровня: " + uniqueId);
+                Debug.Log($"[Collectible] Предмет {uniqueId} отключен при старте, так как уже был собран ранее.");
                 gameObject.SetActive(false);
             }
         }

@@ -54,8 +54,18 @@ namespace CollectibleSystem
         {
             if (collectible.Type == null) return;
 
-            SaveBehavior behavior = collectible.Type.SaveBehavior;
             string uid = collectible.UniqueId;
+
+            if (!string.IsNullOrEmpty(uid))
+            {
+                if (collectedUniqueIds.Contains(uid) || tmp_collectedUniqueIds.Contains(uid))
+                {
+                    Debug.Log($"[Collectible] Предмет с ID {uid} уже был собран ранее. Пропускаем.");
+                    return;
+                }
+            }
+
+            SaveBehavior behavior = collectible.Type.SaveBehavior;
 
             // 1. Сначала ВСЕГДА обновляем статистику уровня для UI (только 1 раз!)
             if (behavior != SaveBehavior.Never)
@@ -68,24 +78,24 @@ namespace CollectibleSystem
             {
                 UpdateItemCount(collectedItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) collectedUniqueIds.Add(uid);
+
                 AchievementSystemCore.Instance.UnlockAchievement("find_1_treasure");
                 AchievementSystemCore.Instance.UpdateStandartProgress("find_2_treasure");
 
                 SaveToPlayerPrefs();
                 // Сохраняем статистику уровня немедленно для этого типа
                 LevelStatsManager.Instance?.SaveCurrentLevelStats();
+                LevelStatsManager.Instance?.CheckLevelClearAchievements();
             }
             else if (behavior != SaveBehavior.OnCollection && behavior != SaveBehavior.Never)
             {
                 UpdateItemCount(temporaryItems, collectible.Type.Id, collectible.Quantity);
                 if (!string.IsNullOrEmpty(uid)) tmp_collectedUniqueIds.Add(uid);
-                // Здесь SaveCurrentLevelStats НЕ вызываем, ждем конца уровня
             }
 
             OnCollectibleCollected?.Invoke(collectible);
         }
 
-        // Вспомогательный метод, чтобы не дублировать код сложения
         private void UpdateItemCount(Dictionary<string, int> dict, string id, int amount)
         {
             if (dict.ContainsKey(id)) dict[id] += amount;
@@ -96,7 +106,7 @@ namespace CollectibleSystem
         {
             Debug.Log("Saving temporary items (OnLevelComplete items)");
 
-            string coinId = "coin"; 
+            string coinId = "coin";
             int coinsEarnedThisLevel = 0;
 
             if (temporaryItems.ContainsKey(coinId))
@@ -127,8 +137,21 @@ namespace CollectibleSystem
 
             // Save level stats to persist the updated counts
             LevelStatsManager.Instance?.SaveCurrentLevelStats();
+            LevelStatsManager.Instance?.CheckLevelClearAchievements();
 
             Debug.Log("Temporary items saved successfully");
+        }
+
+        // === ИСПРАВЛЕНИЕ 2: Очистка временных предметов при проигрыше / перезапуске ===
+        /// <summary>
+        /// Полностью очищает временный карман собранных монет. 
+        /// Обязательно вызывать при проигрыше или выходе в меню!
+        /// </summary>
+        public void ClearTemporaryItems()
+        {
+            temporaryItems.Clear();
+            tmp_collectedUniqueIds.Clear();
+            Debug.Log("[Collectible] Временные предметы текущей сессии успешно сброшены.");
         }
 
         public void SaveToPlayerPrefs()
@@ -155,13 +178,11 @@ namespace CollectibleSystem
 
                 if (data != null)
                 {
-                    // Восстанавливаем словарь предметов
                     for (int i = 0; i < data.keys.Count; i++)
                     {
                         collectedItems[data.keys[i]] = data.values[i];
                     }
 
-                    // Восстанавливаем уникальные ID
                     if (data.uniqueIds != null)
                     {
                         collectedUniqueIds = new HashSet<string>(data.uniqueIds);
@@ -174,19 +195,13 @@ namespace CollectibleSystem
 
         public int GetItemCount(string itemId)
         {
-            if (collectedItems.TryGetValue(itemId, out int count))
-            {
-                return count;
-            }
+            if (collectedItems.TryGetValue(itemId, out int count)) return count;
             return 0;
         }
 
         public int GetTemporaryItemCount(string itemId)
         {
-            if (temporaryItems.TryGetValue(itemId, out int count))
-            {
-                return count;
-            }
+            if (temporaryItems.TryGetValue(itemId, out int count)) return count;
             return 0;
         }
 
