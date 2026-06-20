@@ -7,9 +7,8 @@ namespace AchievementSystem
 {
     public class AchievementSystemCore : MonoBehaviour
     {
-        [Header("Achievement Configuration")]
-        [Tooltip("All AchievementType ScriptableObjects in the game")]
-        [SerializeField] private List<AchievementType> allAchievements = new List<AchievementType>();
+        [Header("Achievement database")]
+        [SerializeField] private AchievementDatabase achievDatabase;
 
         [Header("UI References")]
         [Tooltip("Prefab for AchievementNotificationUI (optional, can be null if UI is separate)")]
@@ -69,10 +68,10 @@ namespace AchievementSystem
             }
 
             // Register all achievement types
-            if (allAchievements != null && allAchievements.Count > 0)
+            if (achievDatabase.allAchievements != null && achievDatabase.allAchievements.Count > 0)
             {
-                _achievementManager.RegisterAchievementTypes(allAchievements);
-                Debug.Log($"[AchievementSystemCore] Registered {allAchievements.Count} achievements.");
+                _achievementManager.RegisterAchievementTypes(achievDatabase.allAchievements);
+                Debug.Log($"[AchievementSystemCore] Registered {achievDatabase.allAchievements.Count} achievements.");
             }
             else
             {
@@ -208,7 +207,7 @@ namespace AchievementSystem
         /// </summary>
         public List<AchievementType> GetAllAchievements()
         {
-            return allAchievements;
+            return achievDatabase.allAchievements;
         }
 
         /// <summary>
