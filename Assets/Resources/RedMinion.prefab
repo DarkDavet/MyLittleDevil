@@ -502,7 +502,7 @@ MonoBehaviour:
   minY: -4
   maxY: 4
   speed: 2
-  _maxfireRate: 5
+  _maxfireRate: 0.5
   _minfireRate: 0.25
   enemyLayer:
     serializedVersion: 2
