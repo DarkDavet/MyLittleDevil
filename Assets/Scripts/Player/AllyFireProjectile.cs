@@ -6,23 +6,18 @@ using UnityEngine;
 /// </summary>
 public class AllyFireProjectile : BaseProjectile
 {
-    /// <summary>
-    /// Reference to the target enemy.
-    /// </summary>
-    private Transform enemy;
+    [Header("Detection Settings")]
+    [SerializeField] private float detectionRadius = 10f; 
+    [SerializeField] private LayerMask enemyLayer;    
 
-    /// <summary>
-    /// Initializes the projectile and sets its direction towards the enemy.
-    /// </summary>
+    private Transform enemy;
+    private readonly Collider2D[] detectionBuffer = new Collider2D[10];
+
     public override void OnObjectSpawn()
     {
         if (rb == null) rb = GetComponent<Rigidbody2D>();
 
-        var enemyObj = GameObject.FindGameObjectWithTag("Enemy");
-        if (enemyObj != null)
-        {
-            enemy = enemyObj.transform;
-        }
+        enemy = FindClosestEnemyInRadius();
 
         if (rb != null)
         {
@@ -44,10 +39,33 @@ public class AllyFireProjectile : BaseProjectile
         }
     }
 
-    /// <summary>
-    /// Handles collision and returns the projectile to the pool.
-    /// </summary>
-    /// <param name="collision">Collision data.</param>
+
+    private Transform FindClosestEnemyInRadius()
+    {
+        Vector3 currentPos = transform.position;
+
+        int count = Physics2D.OverlapCircleNonAlloc(currentPos, detectionRadius, detectionBuffer, enemyLayer);
+
+        Transform closest = null;
+        float minDistance = Mathf.Infinity;
+
+        for (int i = 0; i < count; i++)
+        {
+            Collider2D enemyCollider = detectionBuffer[i];
+
+            if (enemyCollider == null) continue;
+
+            float distance = Vector3.Distance(enemyCollider.transform.position, currentPos);
+            if (distance < minDistance)
+            {
+                closest = enemyCollider.transform;
+                minDistance = distance;
+            }
+        }
+
+        return closest;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (timer != null)
@@ -57,13 +75,16 @@ public class AllyFireProjectile : BaseProjectile
         }
         PoolManager.Instance.ReturnToPool("AllyFire", gameObject);
     }
-    /// <summary>
-    /// Returns the projectile to the pool after a specified time.
-    /// </summary>
-    /// <returns>Coroutine enumerator.</returns>
+
     protected IEnumerator ReturnToPoolAfterTime()
     {
         yield return new WaitForSeconds(timeLimit);
         PoolManager.Instance.ReturnToPool("AllyFire", gameObject);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }
 }

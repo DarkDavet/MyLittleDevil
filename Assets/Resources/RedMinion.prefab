@@ -502,12 +502,13 @@ MonoBehaviour:
   minY: -4
   maxY: 4
   speed: 2
-  _maxfireRate: 1
-  _minfireRate: 0.5
+  _maxfireRate: 5
+  _minfireRate: 0.25
   enemyLayer:
     serializedVersion: 2
     m_Bits: 512
   _projectileSpawnPoint: {fileID: 2740952783815515699}
+  lifeTime: 10
 --- !u!1 &7264490128202506341
 GameObject:
   m_ObjectHideFlags: 0
