@@ -34,7 +34,7 @@ public class RebindButton : MonoBehaviour
         rebindButton.onClick.RemoveListener(StartRebinding);
     }
 
-    private void UpdateButtonText()
+    public void UpdateButtonText()
     {
         // Получаем читаемое имя клавиши (например, "Space" или "Left Click")
         string displayString = actionReference.action.GetBindingDisplayString();
@@ -70,8 +70,5 @@ public class RebindButton : MonoBehaviour
 
         rebindButton.interactable = true;
         UpdateButtonText();
-
-        // Сохраняем новые настройки на диск
-        SettingsManager.Instance.inputSettings.SaveBindings();
     }
 }
