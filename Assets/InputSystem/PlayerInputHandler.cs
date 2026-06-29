@@ -21,6 +21,14 @@ public class PlayerInputHandler : MonoBehaviour
         _fireShooting = GetComponent<FireShooting>();
         _iceShooting = GetComponent<IceShooting>();
         _controls = new PlayerControls();
+
+        if (PlayerPrefs.HasKey("CustomControlBindings"))
+        {
+            string json = PlayerPrefs.GetString("CustomControlBindings");
+
+            // Загружаем сохраненную раскладку прямо в этот экземпляр управления игрока
+            _controls.asset.LoadBindingOverridesFromJson(json);
+        }
     }
 
     private void OnEnable()

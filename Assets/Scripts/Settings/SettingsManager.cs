@@ -11,7 +11,7 @@ public class SettingsManager : MonoBehaviour
     public AudioMixer audioMixer;
 
     [Header("Controls")]
-    public InputSettingsManager inpotSettings;
+    public InputSettingsManager inputSettings;
 
     private void Awake()
     {
@@ -19,7 +19,7 @@ public class SettingsManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            LoadSettings();
+            // LoadSettings();
         }
         else
         {
