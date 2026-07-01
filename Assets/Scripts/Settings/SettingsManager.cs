@@ -32,23 +32,23 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        foreach (var sub in _subsystems) sub.CacheCurrentState();
+    }
+
     private void InitializeAll()
     {
         foreach (var sub in _subsystems) sub.Initialize();
     }
 
-    // ВЫЗЫВАТЬ ПРИ НАЖАТИИ НА КНОПКУ "НАСТРОЙКИ" В МЕНЮ
-    public void OpenSettingsMenu()
-    {
-        foreach (var sub in _subsystems) sub.CacheCurrentState();
-    }
 
     // КНОПКА "ПРИМЕНИТЬ"
     public void ApplyAllSettings()
     {
         foreach (var sub in _subsystems) sub.ApplyAndSave();
         confirmationPopup.SetActive(false);
-        gameObject.SetActive(false);
+        UIWindowsManager.Instance.OpenWindow(WindowID.Main);
     }
 
     // КНОПКА "СБРОСИТЬ"
@@ -66,7 +66,7 @@ public class SettingsManager : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
+            UIWindowsManager.Instance.OpenWindow(WindowID.Main);
         }
     }
 
@@ -75,7 +75,7 @@ public class SettingsManager : MonoBehaviour
     {
         foreach (var sub in _subsystems) sub.DiscardChanges();
         if (confirmationPopup != null) confirmationPopup.SetActive(false);
-        gameObject.SetActive(false);
+        UIWindowsManager.Instance.OpenWindow(WindowID.Main);
     }
 
     private bool HasAnyUnsavedChanges()

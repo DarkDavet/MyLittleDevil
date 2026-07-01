@@ -15,6 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 | `Assets/Scripts/Player/` | Player movement, health, shooting |
 | `Assets/Scripts/Enemies/` | AI enemies, bosses, minions, projectiles |
 | `Assets/Scripts/UI/` | UI managers, health bars, input controllers |
+| `Assets/Scripts/UI/WindowManagement/` | Generic window manager with DOTween animations |
 | `Assets/Scripts/Managers/` | Global managers (Audio, Scene, Coroutine, Pool) |
 | `Assets/Scripts/CommandPattern/` | Undo/redo system for time-reverse feature |
 | `Assets/Scripts/CustomizationSystem/` | Item shop, equipping, visual preview |
@@ -84,6 +85,16 @@ Unity Input System (`PlayerControls` generated class) mapped in `PlayerInputHand
 ### Dialogue System
 
 Located in `Assets/TestFeatures/DialogueSystem/`. `DialogueSetup` (ScriptableObject) holds dialogue entries. `DialogueSystem` manages flow. `DLG_EntryPoint` is the scene-level trigger. Dialogue scenes (DLG_0 through DLG_9) are separate scenes loaded between levels.
+
+### Window Management
+
+Located in `Assets/Scripts/UI/WindowManagement/`. A singleton-based window system for screen-like UIs (main menu, pause, settings, shop, etc.).
+
+- `WindowID` (enum) — unique identifiers (`None`, `Main`, `Levels`, `Shop`, `Achievements`, `Settings`). Extensible; add values in this file.
+- `UIWindow` (abstract base) — each managed window inherits this. Provides `Open()` (fade-in + scale-up via DOTween) and `Close()` (scale-down + fade-out → deactivate). Subclasses override `OnOpen()` and `OnClose()` for custom logic (pause time, load data, etc.).
+- `UIWindowsManager` (singleton) — registers windows from the inspector `windows` list keyed by `WindowID`. Only one window can be open at a time. Public methods: `OpenWindow(id)`, `OpenWindowFromButton(id)` (for Button.OnClick), `CloseCurrentWindow()`, `IsWindowOpen(id)`.
+
+To add a new window: extend `WindowID` enum, create a prefab with a `CanvasGroup` and a subclass of `UIWindow`, assign the `WindowID` in the inspector, and drop the prefab into the `UIWindowsManager.windows` list.
 
 ### Scenes
 
