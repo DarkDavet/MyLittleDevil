@@ -1773,7 +1773,6 @@ GameObject:
   - component: {fileID: 77224682}
   - component: {fileID: 77224681}
   - component: {fileID: 77224680}
-  - component: {fileID: 77224679}
   - component: {fileID: 77224684}
   - component: {fileID: 77224685}
   m_Layer: 5
@@ -1783,23 +1782,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &77224679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 77224678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slotPrefab: {fileID: 7858960309282191168, guid: 0d1efd6c4e8242949a534be1c02b21a1, type: 3}
-  slotsContainer: {fileID: 413392066}
-  totalCountText: {fileID: 1354183696}
-  unlockedCountText: {fileID: 830531630}
-  closeButton: {fileID: 286762752}
 --- !u!114 &77224680
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1910,6 +1892,10 @@ MonoBehaviour:
   fadeDuration: 0.3
   openScale: {x: 1, y: 1, z: 1}
   closeScale: {x: 0.8, y: 0.8, z: 0.8}
+  slotPrefab: {fileID: 7858960309282191168, guid: 0d1efd6c4e8242949a534be1c02b21a1, type: 3}
+  slotsContainer: {fileID: 413392066}
+  totalCountText: {fileID: 1354183696}
+  unlockedCountText: {fileID: 830531630}
 --- !u!1001 &87135165
 PrefabInstance:
   m_ObjectHideFlags: 0
