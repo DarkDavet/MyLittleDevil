@@ -391,8 +391,8 @@ RectTransform:
   - {fileID: 42804650}
   - {fileID: 1515210208}
   - {fileID: 176445681}
-  m_Father: {fileID: 852220916}
-  m_RootOrder: 1
+  m_Father: {fileID: 1493179672}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1868,8 +1868,8 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 77224678}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -90}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2178,6 +2178,8 @@ GameObject:
   - component: {fileID: 108140359}
   - component: {fileID: 108140358}
   - component: {fileID: 108140363}
+  - component: {fileID: 108140365}
+  - component: {fileID: 108140364}
   m_Layer: 5
   m_Name: SettingsWindow
   m_TagString: Untagged
@@ -2270,7 +2272,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 852220916}
+  - {fileID: 1493179672}
   m_Father: {fileID: 1373094062}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2295,6 +2297,42 @@ MonoBehaviour:
   fadeDuration: 0.3
   openScale: {x: 1, y: 1, z: 1}
   closeScale: {x: 0.8, y: 0.8, z: 0.8}
+  settingsManager: {fileID: 108140365}
+  confirmationPopup: {fileID: 19324497}
+--- !u!114 &108140364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108140357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d3b2be2bafaf4e42b3271234799433b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputActions: {fileID: -944628639613478452, guid: 8f03e263f35a7a946a6e5b330fe99b08, type: 3}
+  rebindButtons:
+  - {fileID: 1285309845}
+  - {fileID: 627538650}
+  - {fileID: 1148179360}
+  - {fileID: 578653157}
+  - {fileID: 735594848}
+  - {fileID: 191713413}
+  - {fileID: 49343857}
+--- !u!114 &108140365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108140357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee7025915ac5f1243aab786f2c9010b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inputSettings: {fileID: 108140364}
 --- !u!1 &113846639
 GameObject:
   m_ObjectHideFlags: 0
@@ -3231,9 +3269,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 852220917}
-        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
-        m_MethodName: DiscardAndClose
+      - m_Target: {fileID: 108140363}
+        m_TargetAssemblyTypeName: SettingsWindow, Assembly-CSharp
+        m_MethodName: ConfirmDiscard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9542,7 +9580,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 217}
   m_SizeDelta: {x: 0, y: 800}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &776531831
@@ -10227,7 +10265,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 903894716}
   m_HandleRect: {fileID: 903894714}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.72875
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10428,81 +10466,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   windowID: 1
---- !u!1 &852220915
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 852220916}
-  - component: {fileID: 852220917}
-  - component: {fileID: 852220918}
-  m_Layer: 5
-  m_Name: SettingsWindow
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &852220916
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852220915}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1493179672}
-  - {fileID: 19324498}
-  m_Father: {fileID: 108140362}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &852220917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852220915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee7025915ac5f1243aab786f2c9010b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputSettings: {fileID: 852220918}
-  confirmationPopup: {fileID: 19324497}
---- !u!114 &852220918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 852220915}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d3b2be2bafaf4e42b3271234799433b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inputActions: {fileID: -944628639613478452, guid: 8f03e263f35a7a946a6e5b330fe99b08, type: 3}
-  rebindButtons:
-  - {fileID: 1285309845}
-  - {fileID: 627538650}
-  - {fileID: 1148179360}
-  - {fileID: 578653157}
-  - {fileID: 735594848}
-  - {fileID: 191713413}
-  - {fileID: 49343857}
 --- !u!1001 &871562005
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10920,8 +10883,8 @@ RectTransform:
   m_Father: {fileID: 1325400619}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.27125007}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0.72875}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11530,14 +11493,14 @@ PrefabInstance:
     - target: {fileID: 4908847063831339023, guid: af12ada8bb2f79f4396d0dab71adb517, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 852220917}
+      objectReference: {fileID: 108140363}
     - target: {fileID: 4908847063831339023, guid: af12ada8bb2f79f4396d0dab71adb517, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 19324497}
     - target: {fileID: 4908847063831339023, guid: af12ada8bb2f79f4396d0dab71adb517, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: TryCloseSettingsMenu
+      value: TryClose
       objectReference: {fileID: 0}
     - target: {fileID: 4908847063831339023, guid: af12ada8bb2f79f4396d0dab71adb517, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
@@ -11545,7 +11508,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4908847063831339023, guid: af12ada8bb2f79f4396d0dab71adb517, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SettingsManager, Assembly-CSharp
+      value: SettingsWindow, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 4908847063831339023, guid: af12ada8bb2f79f4396d0dab71adb517, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
@@ -12610,7 +12573,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1072277534}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 108140363}
+        m_TargetAssemblyTypeName: SettingsWindow, Assembly-CSharp
+        m_MethodName: ApplySettings
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1072277534
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12795,7 +12770,6 @@ GameObject:
   - component: {fileID: 1116482395}
   - component: {fileID: 1116482394}
   - component: {fileID: 1116482393}
-  - component: {fileID: 1116482396}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -12869,18 +12843,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1116482396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1116482392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 948f4100a11a5c24981795d21301da5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1116615581
 GameObject:
   m_ObjectHideFlags: 0
@@ -16818,14 +16780,15 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1493179671}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 943271316}
   - {fileID: 1809221253}
-  m_Father: {fileID: 852220916}
+  - {fileID: 19324498}
+  m_Father: {fileID: 108140362}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -16846,7 +16809,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7264151, g: 0.63321465, b: 0.63321465, a: 0.74509805}
+  m_Color: {r: 0.7264151, g: 0.6263617, b: 0.6263617, a: 0.74509805}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -17164,9 +17127,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 852220917}
-        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
-        m_MethodName: ApplyAllSettings
+      - m_Target: {fileID: 108140363}
+        m_TargetAssemblyTypeName: SettingsWindow, Assembly-CSharp
+        m_MethodName: ApplySettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -20985,9 +20948,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 852220917}
-        m_TargetAssemblyTypeName: SettingsManager, Assembly-CSharp
-        m_MethodName: ResetAllSettings
+      - m_Target: {fileID: 108140363}
+        m_TargetAssemblyTypeName: SettingsWindow, Assembly-CSharp
+        m_MethodName: ResetSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

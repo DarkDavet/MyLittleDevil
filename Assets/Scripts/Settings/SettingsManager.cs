@@ -1,17 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Audio;
 
+/// <summary>
+/// Pure settings logic — manages subsystem lifecycle and persistence.
+/// Contains no UI code. Attach this as DontDestroyOnLoad in a persistent scene.
+/// UI interaction is handled by a separate SettingsWindow component.
+/// </summary>
 public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance;
 
     [Header("Подсистемы настроек")]
     public InputSettingsManager inputSettings;
-
-    [Header("UI Окна")]
-    public GameObject confirmationPopup;
 
     private List<ISettingsSubsystem> _subsystems = new List<ISettingsSubsystem>();
 
@@ -32,7 +32,7 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    public void CashCurrentState()
     {
         foreach (var sub in _subsystems) sub.CacheCurrentState();
     }
@@ -42,47 +42,32 @@ public class SettingsManager : MonoBehaviour
         foreach (var sub in _subsystems) sub.Initialize();
     }
 
+    // === PUBLIC LOGIC API — call these from UI ===
 
-    // КНОПКА "ПРИМЕНИТЬ"
+    /// <summary>Apply all changed settings and persist them to disk.</summary>
     public void ApplyAllSettings()
     {
         foreach (var sub in _subsystems) sub.ApplyAndSave();
-        confirmationPopup.SetActive(false);
-        UIWindowsManager.Instance.OpenWindow(WindowID.Main);
     }
 
-    // КНОПКА "СБРОСИТЬ"
+    /// <summary>Reset all settings to their default values.</summary>
     public void ResetAllSettings()
     {
         foreach (var sub in _subsystems) sub.ResetToDefault();
     }
 
-    // КНОПКА "НАЗАД / ЗАКРЫТЬ"
-    public void TryCloseSettingsMenu()
-    {
-        if (HasAnyUnsavedChanges())
-        {
-            if (confirmationPopup != null) confirmationPopup.SetActive(true);
-        }
-        else
-        {
-            UIWindowsManager.Instance.OpenWindow(WindowID.Main);
-        }
-    }
-
-    // ПОП-АП: КНОПКА "НЕТ" (ВЫЙТИ БЕЗ СОХРАНЕНИЯ)
-    public void DiscardAndClose()
+    /// <summary>Rollback all settings to the state they were in when the menu opened.</summary>
+    public void DiscardAllSettings()
     {
         foreach (var sub in _subsystems) sub.DiscardChanges();
-        if (confirmationPopup != null) confirmationPopup.SetActive(false);
-        UIWindowsManager.Instance.OpenWindow(WindowID.Main);
     }
 
-    private bool HasAnyUnsavedChanges()
+    /// <summary>Returns true if any subsystem has unsaved changes since the last cache.</summary>
+    public bool HasUnsavedChanges()
     {
         foreach (var sub in _subsystems)
         {
-            if (sub.HasUnsavedChanges()) return true; // Если хоть у одной подсистемы есть изменения
+            if (sub.HasUnsavedChanges()) return true;
         }
         return false;
     }

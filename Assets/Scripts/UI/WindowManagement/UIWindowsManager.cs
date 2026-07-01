@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -89,6 +89,7 @@ public class UIWindowsManager : MonoBehaviour
             currentWindow.Close();
             currentWindow = null;
         }
+        OpenWindow(WindowID.Main);
     }
 
     /// <summary>Returns true if the window with the given ID is currently open.</summary>
