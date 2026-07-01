@@ -88,13 +88,27 @@ Located in `Assets/TestFeatures/DialogueSystem/`. `DialogueSetup` (ScriptableObj
 
 ### Window Management
 
-Located in `Assets/Scripts/UI/WindowManagement/`. A singleton-based window system for screen-like UIs (main menu, pause, settings, shop, etc.).
+Located in `Assets/Scripts/UI/WindowManagement/`. A singleton-based window system for screen-like UIs (main menu, settings, shop, achievements, etc.). Windows are registered in the Unity inspector and controlled by `WindowID`. Each window animates with a fade + scale effect via DOTween. `SetUpdate(true)` on all DOTween calls ensures animations run even when `Time.timeScale == 0`.
 
-- `WindowID` (enum) — unique identifiers (`None`, `Main`, `Levels`, `Shop`, `Achievements`, `Settings`). Extensible; add values in this file.
-- `UIWindow` (abstract base) — each managed window inherits this. Provides `Open()` (fade-in + scale-up via DOTween) and `Close()` (scale-down + fade-out → deactivate). Subclasses override `OnOpen()` and `OnClose()` for custom logic (pause time, load data, etc.).
-- `UIWindowsManager` (singleton) — registers windows from the inspector `windows` list keyed by `WindowID`. Only one window can be open at a time. Public methods: `OpenWindow(id)`, `OpenWindowFromButton(id)` (for Button.OnClick), `CloseCurrentWindow()`, `IsWindowOpen(id)`.
+**Core files:**
 
-To add a new window: extend `WindowID` enum, create a prefab with a `CanvasGroup` and a subclass of `UIWindow`, assign the `WindowID` in the inspector, and drop the prefab into the `UIWindowsManager.windows` list.
+| File | Purpose |
+|---|---|
+| `WindowID.cs` | Enum — unique window identifiers (`None`, `Main`, `Levels`, `Shop`, `Achievements`, `Settings`) |
+| `UIWindow.cs` | Abstract base — `Open()` (fade-in + scale-up), `Close()` (scale-down + fade-out → deactivate), `OnOpen()`/`OnClose()` hooks |
+| `UIWindowsManager.cs` | Singleton — registers windows by `WindowID`, open/close routing, auto-fallback to Main on close |
+| `WindowButton.cs` | Attach to Button GameObject — opens a selected `WindowID` on click |
+
+**`UIWindowsManager` public methods:**
+- `OpenWindow(id)` — opens a window by ID (closes current first)
+- `OpenWindowFromButton(id)` — inspector-friendly overload for Button.OnClick (enum dropdown)
+- `CloseCurrentWindow()` — closes current window, then opens Main as fallback
+- `IsWindowOpen(id)` — returns true if a window with the given ID is active
+
+**Window implementations:**
+- `AchievementsWindow` — **fully implemented**. Slot management, count display, `IAchievementListener` for live updates. Inspector fields: `slotPrefab`, `slotsContainer`, `totalCountText`, `unlockedCountText`.
+- `SettingsWindow` — **fully implemented**. Delegates logic to `SettingsManager`, owns UI state (confirmation popup). Methods: `ApplySettings()`, `ResetSettings()`, `TryClose()`, `ConfirmDiscard()`. Inspector fields: `settingsManager`, `confirmationPopup`.
+- `MainMenuWindow`, `LevelsWindow`, `ShopWindow` — **placeholders** with `OnOpen()` TODO comments.
 
 ### Scenes
 
