@@ -3,98 +3,68 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputSettingsManager : MonoBehaviour
+public class InputSettingsManager : MonoBehaviour, ISettingsSubsystem
 {
     public InputActionAsset inputActions;
-    public GameObject confirmationPopup;
-
     [SerializeField] private List<RebindButton> rebindButtons = new List<RebindButton>();
 
     private const string SaveKey = "CustomControlBindings";
-    private string _workingJsonBindings;
+    private string _savedJsonBindings;   // То, что реально на диске
+    private string _cachedJsonBindings;  // Снимок при открытии меню
 
-    private void Awake()
-    {
-        LoadBindings();
-    }
-
-    public void SaveBindings()
-    {
-        string json = inputActions.SaveBindingOverridesAsJson();
-        PlayerPrefs.SetString(SaveKey, json);
-        PlayerPrefs.Save();
-    }
-
-    private void LoadBindings()
+    public void Initialize()
     {
         if (PlayerPrefs.HasKey(SaveKey))
         {
-            string json = PlayerPrefs.GetString(SaveKey);
-            inputActions.LoadBindingOverridesFromJson(json);
-            _workingJsonBindings = json;
+            _savedJsonBindings = PlayerPrefs.GetString(SaveKey);
+            inputActions.LoadBindingOverridesFromJson(_savedJsonBindings);
         }
         else
         {
-            _workingJsonBindings = inputActions.SaveBindingOverridesAsJson();
+            _savedJsonBindings = inputActions.SaveBindingOverridesAsJson();
         }
         inputActions.Enable();
     }
 
-    public void ApplyAndSaveBindings()
+    public void CacheCurrentState()
     {
-        // Берем текущее состояние из ассета (куда игрок накликал новые клавиши) и жестко пишем на диск
-        _workingJsonBindings = inputActions.SaveBindingOverridesAsJson();
-        PlayerPrefs.SetString(SaveKey, _workingJsonBindings);
-        PlayerPrefs.Save();
-        Debug.Log("Настройки управления успешно применены и сохранены!");
+        _cachedJsonBindings = inputActions.SaveBindingOverridesAsJson();
     }
 
-    // Вызывается, если игрок нажал "Отмена" или закрыл окно БЕЗ сохранения
-    public void CancelAndDiscardChanges()
+    public void ApplyAndSave()
     {
-        // Откатываем ассет к состоянию последнего сохранения (или дефолту)
+        _savedJsonBindings = inputActions.SaveBindingOverridesAsJson();
+        PlayerPrefs.SetString(SaveKey, _savedJsonBindings);
+        PlayerPrefs.Save();
+    }
+
+    public void DiscardChanges()
+    {
         inputActions.RemoveAllBindingOverrides();
-        if (!string.IsNullOrEmpty(_workingJsonBindings))
+        if (!string.IsNullOrEmpty(_cachedJsonBindings))
         {
-            inputActions.LoadBindingOverridesFromJson(_workingJsonBindings);
+            inputActions.LoadBindingOverridesFromJson(_cachedJsonBindings);
         }
-        RefreshAllUIButtons(); 
+        RefreshAllUIButtons();
     }
 
     public void ResetToDefault()
     {
         inputActions.RemoveAllBindingOverrides();
-
         RefreshAllUIButtons();
-        Debug.Log("Управление сброшено к дефолтному (нажмите Применить для сохранения)");
     }
 
     public bool HasUnsavedChanges()
     {
-        string currentJson = inputActions.SaveBindingOverridesAsJson();
-        return currentJson != _workingJsonBindings;
-    }
-
-    public void TryCloseSettingsMenu(GameObject settingsPanel)
-    {
-        if (HasUnsavedChanges())
-        {
-            if (confirmationPopup != null)
-            {
-                confirmationPopup.SetActive(true);
-            }
-        }
-        else
-        {
-            settingsPanel.SetActive(false);
-        }
+        // Сравниваем текущее состояние в меню с кэшем, созданным при входе
+        return inputActions.SaveBindingOverridesAsJson() != _cachedJsonBindings;
     }
 
     public void RefreshAllUIButtons()
     {
         foreach (var btn in rebindButtons)
         {
-            btn.UpdateButtonText();
+            if (btn != null) btn.UpdateButtonText();
         }
     }
 }

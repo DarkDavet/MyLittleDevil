@@ -7,11 +7,13 @@ public class SettingsManager : MonoBehaviour
 {
     public static SettingsManager Instance;
 
-    [Header("Audio")]
-    public AudioMixer audioMixer;
-
-    [Header("Controls")]
+    [Header("Подсистемы настроек")]
     public InputSettingsManager inputSettings;
+
+    [Header("UI Окна")]
+    public GameObject confirmationPopup;
+
+    private List<ISettingsSubsystem> _subsystems = new List<ISettingsSubsystem>();
 
     private void Awake()
     {
@@ -19,7 +21,10 @@ public class SettingsManager : MonoBehaviour
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            // LoadSettings();
+
+            if (inputSettings != null) _subsystems.Add(inputSettings);
+
+            InitializeAll();
         }
         else
         {
@@ -27,43 +32,58 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-    // --- ГРАФИКА ---
-    public void SetFullscreen(bool isFullscreen)
+    private void InitializeAll()
     {
-        Screen.fullScreen = isFullscreen;
-        PlayerPrefs.SetInt("Fullscreen", isFullscreen ? 1 : 0);
+        foreach (var sub in _subsystems) sub.Initialize();
     }
 
-    public void SetVSync(bool isVSync)
+    // ВЫЗЫВАТЬ ПРИ НАЖАТИИ НА КНОПКУ "НАСТРОЙКИ" В МЕНЮ
+    public void OpenSettingsMenu()
     {
-        QualitySettings.vSyncCount = isVSync ? 1 : 0;
-        PlayerPrefs.SetInt("VSync", isVSync ? 1 : 0);
+        foreach (var sub in _subsystems) sub.CacheCurrentState();
     }
 
-    // --- АУДИО ---
-    public void SetVolume(string parameterName, float value)
+    // КНОПКА "ПРИМЕНИТЬ"
+    public void ApplyAllSettings()
     {
-        // Переводим значение слайдера (0..1) в децибелы (-80..0)
-        float dB = value > 0 ? Mathf.Log10(value) * 20 : -80f;
-        audioMixer.SetFloat(parameterName, dB);
-        PlayerPrefs.SetFloat(parameterName, value);
+        foreach (var sub in _subsystems) sub.ApplyAndSave();
+        confirmationPopup.SetActive(false);
+        gameObject.SetActive(false);
     }
 
-    // --- ЗАГРУЗКА ---
-    private void LoadSettings()
+    // КНОПКА "СБРОСИТЬ"
+    public void ResetAllSettings()
     {
-        // Графика
-        bool isFullscreen = PlayerPrefs.GetInt("Fullscreen", 1) == 1;
-        Screen.fullScreen = isFullscreen;
+        foreach (var sub in _subsystems) sub.ResetToDefault();
+    }
 
-        bool isVSync = PlayerPrefs.GetInt("VSync", 1) == 1;
-        QualitySettings.vSyncCount = isVSync ? 1 : 0;
+    // КНОПКА "НАЗАД / ЗАКРЫТЬ"
+    public void TryCloseSettingsMenu()
+    {
+        if (HasAnyUnsavedChanges())
+        {
+            if (confirmationPopup != null) confirmationPopup.SetActive(true);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
-        // Аудио (Громкость по умолчанию: 0.75f)
-        float master = PlayerPrefs.GetFloat("MasterVol", 0.75f);
-        SetVolume("MasterVol", master);
+    // ПОП-АП: КНОПКА "НЕТ" (ВЫЙТИ БЕЗ СОХРАНЕНИЯ)
+    public void DiscardAndClose()
+    {
+        foreach (var sub in _subsystems) sub.DiscardChanges();
+        if (confirmationPopup != null) confirmationPopup.SetActive(false);
+        gameObject.SetActive(false);
+    }
 
-        float music = PlayerPrefs.GetFloat("MusicVol", 0.75f);
-        SetVolume("MusicVol", music);
+    private bool HasAnyUnsavedChanges()
+    {
+        foreach (var sub in _subsystems)
+        {
+            if (sub.HasUnsavedChanges()) return true; // Если хоть у одной подсистемы есть изменения
+        }
+        return false;
     }
 }
