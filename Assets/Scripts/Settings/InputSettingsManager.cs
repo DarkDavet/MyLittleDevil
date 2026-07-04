@@ -1,12 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InputSettingsManager : MonoBehaviour, ISettingsSubsystem
 {
     public InputActionAsset inputActions;
-    [SerializeField] private List<RebindButton> rebindButtons = new List<RebindButton>();
+
+    /// <summary>Fired when binding state changes — UI should refresh displayed texts.</summary>
+    public event Action RefreshUIRequested;
 
     private const string SaveKey = "CustomControlBindings";
     private string _savedJsonBindings;   // То, что реально на диске
@@ -45,13 +46,13 @@ public class InputSettingsManager : MonoBehaviour, ISettingsSubsystem
         {
             inputActions.LoadBindingOverridesFromJson(_cachedJsonBindings);
         }
-        RefreshAllUIButtons();
+        FireRefreshUI();
     }
 
     public void ResetToDefault()
     {
         inputActions.RemoveAllBindingOverrides();
-        RefreshAllUIButtons();
+        FireRefreshUI();
     }
 
     public bool HasUnsavedChanges()
@@ -60,11 +61,9 @@ public class InputSettingsManager : MonoBehaviour, ISettingsSubsystem
         return inputActions.SaveBindingOverridesAsJson() != _cachedJsonBindings;
     }
 
-    public void RefreshAllUIButtons()
+    /// <summary>Notify all UI listeners that binding state has changed.</summary>
+    protected void FireRefreshUI()
     {
-        foreach (var btn in rebindButtons)
-        {
-            if (btn != null) btn.UpdateButtonText();
-        }
+        RefreshUIRequested?.Invoke();
     }
 }

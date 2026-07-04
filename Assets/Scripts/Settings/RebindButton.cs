@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -11,11 +9,16 @@ public class RebindButton : MonoBehaviour
     public InputActionReference actionReference;
 
     [Header("UI Элементы")]
-    public Button rebindButton;
     public TextMeshProUGUI buttonText;
     public TextMeshProUGUI actionNameText;
 
+    private Button rebindButton;
+
     private InputActionRebindingExtensions.RebindingOperation rebindingOperation;
+    private void Awake()
+    {
+        rebindButton = GetComponent<Button>();
+    }
 
     private void OnEnable()
     {
@@ -26,12 +29,21 @@ public class RebindButton : MonoBehaviour
 
             UpdateButtonText();
         }
-        rebindButton.onClick.AddListener(StartRebinding);
+        if (rebindButton != null)
+        {
+            rebindButton.onClick.AddListener(StartRebinding);
+        }
+
+        if (SettingsManager.Instance != null)
+            SettingsManager.Instance.inputSettings.RefreshUIRequested += UpdateButtonText;
     }
 
     private void OnDisable()
     {
         rebindButton.onClick.RemoveListener(StartRebinding);
+
+        if (SettingsManager.Instance != null)
+            SettingsManager.Instance.inputSettings.RefreshUIRequested -= UpdateButtonText;
     }
 
     public void UpdateButtonText()
