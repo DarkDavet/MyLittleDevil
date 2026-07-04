@@ -32,6 +32,9 @@ public class SettingsWindow : UIWindow
         {
             graphicsSettings.RefreshUIRequested += UpdateGraphicsUI;
         }
+
+        // Обновляем UI при каждом открытии окна, чтобы подгрузить актуальные данные
+        UpdateGraphicsUI();
     }
 
     private void OnDisable()
@@ -42,43 +45,82 @@ public class SettingsWindow : UIWindow
         }
     }
 
+    private void Start()
+    {
+        InitResolutionDropdown();
+        InitQualityDropdown();
+    }
+
+    private void InitResolutionDropdown()
+    {
+        if (resolutionDropdown == null || graphicsSettings == null) return;
+
+        var resolutions = graphicsSettings.GetAvailableResolutions();
+        var options = new List<TMP_Dropdown.OptionData>();
+
+        for (int i = 0; i < resolutions.Length; i++)
+        {
+            options.Add(new TMP_Dropdown.OptionData(graphicsSettings.FormatResolutionWithFullscreen(resolutions[i])));
+        }
+
+        resolutionDropdown.options.Clear();
+        resolutionDropdown.AddOptions(options);
+    }
+
+    private void InitQualityDropdown()
+    {
+        if (qualityDropdown == null) return;
+
+        qualityDropdown.options.Clear();
+
+  
+        List<string> options = new List<string>(QualitySettings.names);
+        qualityDropdown.AddOptions(options);
+    }
+
     private void UpdateGraphicsUI()
     {
+        if (graphicsSettings == null) return;
+
+        // 1. Качество
         if (qualityDropdown != null)
         {
-            qualityDropdown.value = graphicsSettings.GetQualityLevel();
+            qualityDropdown.SetValueWithoutNotify(graphicsSettings.GetQualityLevel());
+            qualityDropdown.RefreshShownValue();
         }
 
+        // 2. Вертикальная синхронизация
         if (vSyncToggle != null)
         {
-            vSyncToggle.isOn = graphicsSettings.GetVSync();
+            vSyncToggle.SetIsOnWithoutNotify(graphicsSettings.GetVSync());
         }
 
-        if (frameRate30Button != null) frameRate30Button.interactable = graphicsSettings.GetFrameRate() != 30;
-        if (frameRate60Button != null) frameRate60Button.interactable = graphicsSettings.GetFrameRate() != 60;
-        if (frameRateUnlockedButton != null) frameRateUnlockedButton.interactable = graphicsSettings.GetFrameRate() != -1;
+        // 3. Фреймрейт (Кнопки)
+        int currentFrameRate = graphicsSettings.GetFrameRate();
+        if (frameRate30Button != null) frameRate30Button.interactable = currentFrameRate != 30;
+        if (frameRate60Button != null) frameRate60Button.interactable = currentFrameRate != 60;
+        if (frameRateUnlockedButton != null) frameRateUnlockedButton.interactable = currentFrameRate != -1;
 
+        // 4. Полноэкранный режим
         if (fullscreenToggle != null)
         {
-            fullscreenToggle.isOn = graphicsSettings.GetFullscreen();
+            fullscreenToggle.SetIsOnWithoutNotify(graphicsSettings.GetFullscreen());
         }
 
+        // 5. Разрешение экрана
         if (resolutionDropdown != null)
         {
+            // Перерисовываем текст разрешений (чтобы обновилась приписка Fullscreen)
+            InitResolutionDropdown();
+
             var resolutions = graphicsSettings.GetAvailableResolutions();
-            var options = new List<TMP_Dropdown.OptionData>();
+            var savedRes = graphicsSettings.GetCurrentResolutionSave();
+
             for (int i = 0; i < resolutions.Length; i++)
             {
-                options.Add(new TMP_Dropdown.OptionData(graphicsSettings.FormatResolutionWithFullscreen(resolutions[i])));
-            }
-            resolutionDropdown.options.Clear();
-            resolutionDropdown.AddOptions(options);
-            for (int i = 0; i < resolutions.Length; i++)
-            {
-                if (resolutions[i].width == Screen.currentResolution.width &&
-                    resolutions[i].height == Screen.currentResolution.height)
+                if (resolutions[i].width == savedRes.width && resolutions[i].height == savedRes.height)
                 {
-                    resolutionDropdown.value = i;
+                    resolutionDropdown.SetValueWithoutNotify(i);
                     break;
                 }
             }
@@ -86,63 +128,70 @@ public class SettingsWindow : UIWindow
         }
     }
 
-    // === UI Interaction Methods (called from UI buttons/toggles) ===
+    // === UI Interaction Methods ===
 
     public void SetQualityLevel(int level)
     {
         graphicsSettings?.SetQualityLevel(level);
+        UpdateGraphicsUI(); // Сразу обновляем интерфейс
     }
 
     public void SetVSync(bool isOn)
     {
         graphicsSettings?.SetVSync(isOn);
+        UpdateGraphicsUI();
     }
 
     public void SetFrameRate30()
     {
         graphicsSettings?.SetFrameRate(30);
+        UpdateGraphicsUI();
     }
 
     public void SetFrameRate60()
     {
         graphicsSettings?.SetFrameRate(60);
+        UpdateGraphicsUI();
     }
 
     public void SetFrameRateUnlocked()
     {
         graphicsSettings?.SetFrameRate(-1);
+        UpdateGraphicsUI();
     }
 
     public void SetFullscreen(bool isOn)
     {
         graphicsSettings?.SetFullscreen(isOn);
+        UpdateGraphicsUI(); // Здесь вызов обновит и суффиксы в дропдауне разрешений
     }
 
     public void SetResolution(int index)
     {
         graphicsSettings?.SetResolution(index);
+        UpdateGraphicsUI();
     }
 
     protected override void OnOpen()
     {
         base.OnOpen();
-        settingsManager?.CashCurrentState();
+        settingsManager?.CacheCurrentState(); // Исправлена опечатка Cash -> Cache
+        UpdateGraphicsUI();
     }
 
-    /// <summary>Called from UI "Apply" button.</summary>
     public void ApplySettings()
     {
         settingsManager?.ApplyAllSettings();
         CloseWindow();
     }
 
-    /// <summary>Called from UI "Reset" button.</summary>
     public void ResetSettings()
     {
         settingsManager?.ResetAllSettings();
+        // Если ResetAllSettings внутри себя вызывает FireRefreshUI, 
+        // то UpdateGraphicsUI вызовется автоматически по подписке.
     }
 
-    /// <summary>Called from UI "Close/Back" button — shows confirmation if there are unsaved changes.</summary>
     public void TryClose()
     {
         if (settingsManager != null && settingsManager.HasUnsavedChanges())
@@ -158,14 +207,9 @@ public class SettingsWindow : UIWindow
         }
     }
 
-    /// <summary>Called from popup "Yes" button — discards changes and closes.</summary>
     public void ConfirmDiscard()
     {
         settingsManager?.DiscardAllSettings();
-        if (confirmationPopup != null)
-        {
-            confirmationPopup.SetActive(false);
-        }
         CloseWindow();
     }
 

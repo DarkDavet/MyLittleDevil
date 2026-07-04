@@ -27,6 +27,7 @@ public class SettingsManager : MonoBehaviour
             if (graphicsSettings != null) _subsystems.Add(graphicsSettings);
 
             InitializeAll();
+            CacheCurrentState();
         }
         else
         {
@@ -34,7 +35,7 @@ public class SettingsManager : MonoBehaviour
         }
     }
 
-    public void CashCurrentState()
+    public void CacheCurrentState()
     {
         foreach (var sub in _subsystems) sub.CacheCurrentState();
     }
@@ -50,6 +51,7 @@ public class SettingsManager : MonoBehaviour
     public void ApplyAllSettings()
     {
         foreach (var sub in _subsystems) sub.ApplyAndSave();
+        CacheCurrentState();
     }
 
     /// <summary>Reset all settings to their default values.</summary>

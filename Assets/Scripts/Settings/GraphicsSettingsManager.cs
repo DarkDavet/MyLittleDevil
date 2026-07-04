@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 /// <summary>
@@ -8,7 +8,7 @@ using UnityEngine;
 public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
 {
     [Serializable]
-    private struct ResolutionSave : IEquatable<ResolutionSave>
+    public struct ResolutionSave : IEquatable<ResolutionSave>
     {
         public int width;
         public int height;
@@ -61,17 +61,26 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
             var json = PlayerPrefs.GetString(ResolutionKey);
             _savedResolution = JsonUtility.FromJson<ResolutionSave>(json);
         }
+        else
+        {
+            _savedResolution = new ResolutionSave
+            {
+                width = Screen.currentResolution.width,
+                height = Screen.currentResolution.height,
+                fullscreen = Screen.fullScreen
+            };
+        }
 
         ApplyAllSettings();
     }
 
     public void CacheCurrentState()
     {
-        _cachedQualityLevel = QualitySettings.names.Length > 0 ? QualitySettings.GetQualityLevel() : 0;
-        _cachedVSync = QualitySettings.vSyncCount;
-        _cachedFrameRate = Application.targetFrameRate;
-        _cachedFullscreen = Screen.fullScreen;
-        _cachedResolution = GetCurrentResolutionSave();
+        _cachedQualityLevel = _savedQualityLevel; 
+        _cachedVSync = _savedVSync ? 1 : 0;
+        _cachedFrameRate = _savedFrameRate;
+        _cachedFullscreen = _savedFullscreen;
+        _cachedResolution = _savedResolution;
     }
 
     public void ApplyAndSave()
@@ -129,21 +138,21 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
     public bool HasUnsavedChanges()
     {
         return GetQualityLevel() != _cachedQualityLevel ||
-               GetVSync() != (_cachedVSync == 1) ||
-               GetFrameRate() != _cachedFrameRate ||
-               GetFullscreen() != _cachedFullscreen ||
-               GetCurrentResolutionSave().Equals(_cachedResolution);
+           GetVSync() != (_cachedVSync == 1) ||
+           GetFrameRate() != _cachedFrameRate ||
+           GetFullscreen() != _cachedFullscreen ||
+           !_savedResolution.Equals(_cachedResolution);
     }
 
     // === Getters (used by UI) ===
 
-    public int GetQualityLevel() => QualitySettings.GetQualityLevel();
+    public int GetQualityLevel() => _savedQualityLevel;
 
-    public bool GetVSync() => QualitySettings.vSyncCount == 1;
+    public bool GetVSync() => _savedVSync;
 
-    public int GetFrameRate() => Application.targetFrameRate;
+    public int GetFrameRate() => _savedFrameRate;
 
-    public bool GetFullscreen() => Screen.fullScreen;
+    public bool GetFullscreen() => _savedFullscreen;
 
     public Resolution GetCurrentResolution()
     {
@@ -165,7 +174,7 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
 
     public string FormatResolutionWithFullscreen(Resolution resolution)
     {
-        string suffix = Screen.fullScreen ? " (Fullscreen)" : "";
+        string suffix = _savedFullscreen ? " (Fullscreen)" : "";
         return FormatResolution(resolution) + suffix;
     }
 
@@ -200,7 +209,7 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
             {
                 width = resolutions[resolutionIndex].width,
                 height = resolutions[resolutionIndex].height,
-                fullscreen = Screen.fullScreen
+                fullscreen = _savedFullscreen
             };
         }
     }
@@ -235,18 +244,18 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
         {
             width = native.width,
             height = native.height,
-            fullscreen = Screen.fullScreen
+            fullscreen = _savedFullscreen
         };
     }
 
-    private ResolutionSave GetCurrentResolutionSave()
+    public ResolutionSave GetCurrentResolutionSave()
     {
         Resolution current = Screen.currentResolution;
         return new ResolutionSave
         {
             width = current.width,
             height = current.height,
-            fullscreen = Screen.fullScreen
+            fullscreen = _savedFullscreen
         };
     }
 
