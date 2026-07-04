@@ -221,25 +221,28 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
         QualitySettings.SetQualityLevel(_savedQualityLevel, true);
         QualitySettings.vSyncCount = _savedVSync ? 1 : 0;
         Application.targetFrameRate = _savedFrameRate;
-        Screen.fullScreen = _savedFullscreen;
+        //Screen.fullScreen = _savedFullscreen;     delete after testing
         ApplyResolution();
     }
 
     private void ApplyResolution()
     {
         Resolution[] resolutions = GetAvailableResolutions();
+        FullScreenMode mode = _savedFullscreen ? FullScreenMode.FullScreenWindow : FullScreenMode.Windowed;
         for (int i = 0; i < resolutions.Length; i++)
         {
             if (resolutions[i].width == _savedResolution.width &&
                 resolutions[i].height == _savedResolution.height)
             {
-                Screen.SetResolution(resolutions[i].width, resolutions[i].height, _savedResolution.fullscreen);
+                Screen.SetResolution(resolutions[i].width, resolutions[i].height, mode);
                 return;
             }
         }
 
         // Resolution not found — fall back to native
         Resolution native = Screen.currentResolution;
+        Screen.SetResolution(native.width, native.height, mode);
+
         _savedResolution = new ResolutionSave
         {
             width = native.width,

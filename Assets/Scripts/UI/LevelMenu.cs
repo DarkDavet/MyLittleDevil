@@ -14,6 +14,7 @@ public class LevelMenu : MonoBehaviour
     private void Awake()
     {
         RefreshMenu();
+      //  PlayerPrefs.DeleteAll(); //Delete after testing
     }
 
     public void RefreshMenu()

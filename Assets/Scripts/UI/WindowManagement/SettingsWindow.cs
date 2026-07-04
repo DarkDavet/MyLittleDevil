@@ -33,7 +33,9 @@ public class SettingsWindow : UIWindow
             graphicsSettings.RefreshUIRequested += UpdateGraphicsUI;
         }
 
-        // Обновляем UI при каждом открытии окна, чтобы подгрузить актуальные данные
+        InitQualityDropdown();
+        InitResolutionDropdown();
+
         UpdateGraphicsUI();
     }
 
@@ -43,12 +45,6 @@ public class SettingsWindow : UIWindow
         {
             graphicsSettings.RefreshUIRequested -= UpdateGraphicsUI;
         }
-    }
-
-    private void Start()
-    {
-        InitResolutionDropdown();
-        InitQualityDropdown();
     }
 
     private void InitResolutionDropdown()
@@ -110,20 +106,23 @@ public class SettingsWindow : UIWindow
         // 5. Разрешение экрана
         if (resolutionDropdown != null)
         {
-            // Перерисовываем текст разрешений (чтобы обновилась приписка Fullscreen)
-            InitResolutionDropdown();
+            InitResolutionDropdown(); // Пересоздаем список вариантов
 
             var resolutions = graphicsSettings.GetAvailableResolutions();
             var savedRes = graphicsSettings.GetCurrentResolutionSave();
 
+            int targetIndex = 0;
             for (int i = 0; i < resolutions.Length; i++)
             {
                 if (resolutions[i].width == savedRes.width && resolutions[i].height == savedRes.height)
                 {
-                    resolutionDropdown.SetValueWithoutNotify(i);
+                    targetIndex = i;
                     break;
                 }
             }
+
+            resolutionDropdown.SetValueWithoutNotify(-1);
+            resolutionDropdown.SetValueWithoutNotify(targetIndex);
             resolutionDropdown.RefreshShownValue();
         }
     }
@@ -163,7 +162,8 @@ public class SettingsWindow : UIWindow
     public void SetFullscreen(bool isOn)
     {
         graphicsSettings?.SetFullscreen(isOn);
-        UpdateGraphicsUI(); // Здесь вызов обновит и суффиксы в дропдауне разрешений
+        InitResolutionDropdown();
+        UpdateGraphicsUI(); 
     }
 
     public void SetResolution(int index)
