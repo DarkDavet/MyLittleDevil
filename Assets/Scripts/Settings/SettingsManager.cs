@@ -12,6 +12,7 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Подсистемы настроек")]
     public InputSettingsManager inputSettings;
+    public GraphicsSettingsManager graphicsSettings;
 
     private List<ISettingsSubsystem> _subsystems = new List<ISettingsSubsystem>();
 
@@ -23,6 +24,7 @@ public class SettingsManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
 
             if (inputSettings != null) _subsystems.Add(inputSettings);
+            if (graphicsSettings != null) _subsystems.Add(graphicsSettings);
 
             InitializeAll();
         }
