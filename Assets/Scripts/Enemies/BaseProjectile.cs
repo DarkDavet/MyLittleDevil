@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEditor.EditorTools;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public class BaseProjectile : MonoBehaviour, IPooledObject
