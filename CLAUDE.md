@@ -86,6 +86,37 @@ Unity Input System (`PlayerControls` generated class) mapped in `PlayerInputHand
 
 Located in `Assets/TestFeatures/DialogueSystem/`. `DialogueSetup` (ScriptableObject) holds dialogue entries. `DialogueSystem` manages flow. `DLG_EntryPoint` is the scene-level trigger. Dialogue scenes (DLG_0 through DLG_9) are separate scenes loaded between levels.
 
+### Settings System
+
+Located in `Assets/Scripts/Settings/`. A pluggable subsystem architecture for game settings. `SettingsManager` is the only singleton and singleton orchestrator; subsystems are child components that implement `ISettingsSubsystem`. Logic layer is fully decoupled from UI via events.
+
+**Core files:**
+
+| File | Purpose |
+|---|---|
+| `ISettingsSubsystem.cs` | Interface — `Initialize()`, `CacheCurrentState()`, `ApplyAndSave()`, `DiscardChanges()`, `ResetToDefault()`, `HasUnsavedChanges()`, `RefreshUIRequested` event |
+| `SettingsManager.cs` | Singleton — registers subsystems, iterates over them for all operations |
+| `InputSettingsManager.cs` | Input binding subsystem — loads/saves/rejects JSON overrides via Unity Input System, fires `RefreshUIRequested` |
+| `RebindButton.cs` | UI component — interactive key rebinding via `PerformInteractiveRebinding()`, subscribes to `RefreshUIRequested` via `SettingsManager.Instance.inputSettings` |
+| `GraphicsSettingsManager.cs` | Graphics settings subsystem — manages quality level, VSync, frame rate, fullscreen, resolution. Resolution stored as JSON (width/height/fullscreen) for cross-device portability. Fires `RefreshUIRequested` |
+
+**Architecture:**
+
+```
+SettingsManager (singleton, DontDestroyOnLoad)
+  ├── InputSettingsManager ──┐
+  └── GraphicsSettingsManager┼── ISettingsSubsystem
+                             └── RefreshUIRequested event ──→ UI listeners
+```
+
+- Only `SettingsManager` is a singleton. Subsystems are registered via the Unity inspector and added to `_subsystems` list.
+- Each subsystem fires `RefreshUIRequested` when its state changes. UI components subscribe/unsubscribe in `OnEnable`/`OnDisable`.
+- Changes are batched: `CacheCurrentState()` is called on window open, `ApplyAndSave()` persists on "Apply" click, `DiscardChanges()` rolls back to cached snapshot.
+- `RebindButton` is self-contained (uses `GetComponent<Button>()` in `Awake()`), subscribes via `SettingsManager.Instance.inputSettings.RefreshUIRequested`.
+- `GraphicsSettingsManager` uses `GetAvailableResolutions()` (platform-aware: mobile returns single resolution, PC returns `Screen.resolutions`), `FormatResolutionWithFullscreen()` for display text, `SetResolution(int)` saves width/height/fullscreen as JSON. Resolution lookup on load searches `Screen.resolutions` and falls back to native if not found.
+
+**UI layer:** `SettingsWindow` extends `UIWindow`, owns all UI refs, delegates logic to `SettingsManager`. Subscribes to both subsystems' events.
+
 ### Window Management
 
 Located in `Assets/Scripts/UI/WindowManagement/`. A singleton-based window system for screen-like UIs (main menu, settings, shop, achievements, etc.). Windows are registered in the Unity inspector and controlled by `WindowID`. Each window animates with a fade + scale effect via DOTween. `SetUpdate(true)` on all DOTween calls ensures animations run even when `Time.timeScale == 0`.
@@ -107,7 +138,7 @@ Located in `Assets/Scripts/UI/WindowManagement/`. A singleton-based window syste
 
 **Window implementations:**
 - `AchievementsWindow` — **fully implemented**. Slot management, count display, `IAchievementListener` for live updates. Inspector fields: `slotPrefab`, `slotsContainer`, `totalCountText`, `unlockedCountText`.
-- `SettingsWindow` — **fully implemented**. Delegates logic to `SettingsManager`, owns UI state (confirmation popup). Methods: `ApplySettings()`, `ResetSettings()`, `TryClose()`, `ConfirmDiscard()`. Inspector fields: `settingsManager`, `confirmationPopup`.
+- `SettingsWindow` — **fully implemented**. Extends `UIWindow`, owns all UI refs. Delegates logic to `SettingsManager`. Subscribes to `InputSettingsManager.RefreshUIRequested` and `GraphicsSettingsManager.RefreshUIRequested` via `OnEnable`/`OnDisable`. Initializes dropdowns in `OnOpen()` (not `OnEnable` to avoid double-build). Methods: `SetQualityLevel(int)`, `SetVSync(bool)`, `SetFrameRate30/60/Unlocked()`, `SetFullscreen(bool)`, `SetResolution(int)`, `ApplySettings()`, `ResetSettings()`, `TryClose()`, `ConfirmDiscard()`. Inspector fields: `settingsManager`, `graphicsSettings`, `qualityDropdown` (TMP_Dropdown), `vSyncToggle` (Toggle), `frameRate30/60/UnlockedButton` (Button), `fullscreenToggle` (Toggle), `resolutionDropdown` (TMP_Dropdown), `confirmationPopup` (GameObject).
 - `MainMenuWindow`, `LevelsWindow`, `ShopWindow` — **placeholders** with `OnOpen()` TODO comments.
 
 ### Scenes
