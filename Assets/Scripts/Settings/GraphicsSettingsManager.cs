@@ -251,15 +251,9 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
         };
     }
 
-    public ResolutionSave GetCurrentResolutionSave()
+    public ResolutionSave GetSelectedResolutionSave()
     {
-        Resolution current = Screen.currentResolution;
-        return new ResolutionSave
-        {
-            width = current.width,
-            height = current.height,
-            fullscreen = _savedFullscreen
-        };
+        return _savedResolution;
     }
 
     protected void FireRefreshUI()

@@ -56,7 +56,7 @@ public class SettingsWindow : UIWindow
 
         for (int i = 0; i < resolutions.Length; i++)
         {
-            options.Add(new TMP_Dropdown.OptionData(graphicsSettings.FormatResolutionWithFullscreen(resolutions[i])));
+            options.Add(new TMP_Dropdown.OptionData(graphicsSettings.FormatResolution(resolutions[i])));
         }
 
         resolutionDropdown.options.Clear();
@@ -106,10 +106,10 @@ public class SettingsWindow : UIWindow
         // 5. Разрешение экрана
         if (resolutionDropdown != null)
         {
-            InitResolutionDropdown(); // Пересоздаем список вариантов
+            InitResolutionDropdown();
 
             var resolutions = graphicsSettings.GetAvailableResolutions();
-            var savedRes = graphicsSettings.GetCurrentResolutionSave();
+            var savedRes = graphicsSettings.GetSelectedResolutionSave();
 
             int targetIndex = 0;
             for (int i = 0; i < resolutions.Length; i++)
@@ -162,7 +162,6 @@ public class SettingsWindow : UIWindow
     public void SetFullscreen(bool isOn)
     {
         graphicsSettings?.SetFullscreen(isOn);
-        InitResolutionDropdown();
         UpdateGraphicsUI(); 
     }
 
@@ -175,7 +174,7 @@ public class SettingsWindow : UIWindow
     protected override void OnOpen()
     {
         base.OnOpen();
-        settingsManager?.CacheCurrentState(); // Исправлена опечатка Cash -> Cache
+        settingsManager?.CacheCurrentState(); 
         UpdateGraphicsUI();
     }
 
