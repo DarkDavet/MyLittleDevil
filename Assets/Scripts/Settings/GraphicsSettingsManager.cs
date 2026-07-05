@@ -221,7 +221,6 @@ public class GraphicsSettingsManager : MonoBehaviour, ISettingsSubsystem
         QualitySettings.SetQualityLevel(_savedQualityLevel, true);
         QualitySettings.vSyncCount = _savedVSync ? 1 : 0;
         Application.targetFrameRate = _savedFrameRate;
-        //Screen.fullScreen = _savedFullscreen;     delete after testing
         ApplyResolution();
     }
 

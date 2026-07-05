@@ -32,11 +32,6 @@ public class SettingsWindow : UIWindow
         {
             graphicsSettings.RefreshUIRequested += UpdateGraphicsUI;
         }
-
-        InitQualityDropdown();
-        InitResolutionDropdown();
-
-        UpdateGraphicsUI();
     }
 
     private void OnDisable()
@@ -174,7 +169,9 @@ public class SettingsWindow : UIWindow
     protected override void OnOpen()
     {
         base.OnOpen();
-        settingsManager?.CacheCurrentState(); 
+        settingsManager?.CacheCurrentState();
+        InitQualityDropdown();
+        InitResolutionDropdown();
         UpdateGraphicsUI();
     }
 
