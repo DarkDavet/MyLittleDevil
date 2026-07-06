@@ -118,6 +118,54 @@ SettingsManager (singleton, DontDestroyOnLoad)
 - `RebindButton` is self-contained (uses `GetComponent<Button>()` in `Awake()`), subscribes via `SettingsManager.Instance.inputSettings.RefreshUIRequested`.
 - `GraphicsSettingsManager` uses `GetAvailableResolutions()` (platform-aware: mobile returns single resolution, PC returns `Screen.resolutions`), `FormatResolutionWithFullscreen()` for display text, `SetResolution(int)` saves width/height/fullscreen as JSON. Resolution lookup on load searches `Screen.resolutions` and falls back to native if not found.
 
+### Audio System
+
+Located in `Assets/Scripts/Audio/`. `AudioManager` is a singleton (`DontDestroyOnLoad`) that owns all audio playback — SFX sounds and music — and exposes master/music/SFX volume control via `AudioSettingsManager`.
+
+**Sound data** is organized as **ScriptableObjects**:
+
+| File | Purpose |
+|---|---|
+| `Sound.cs` | `[System.Serializable]` class — clip, volume (0–1), pitch, loop, type (Music/SFX). Has `source` (AudioSource) set at runtime. |
+| `SoundPack.cs` | `[CreateAssetMenu]` ScriptableObject — groups `List<Sound>` by category. Create via right-click → Audio → Sound Pack. |
+| `AudioManager.cs` | Singleton — loads sounds from packs at runtime, plays them, manages music fade transitions. |
+
+**Architecture:**
+
+```
+AudioManager (singleton, DontDestroyOnLoad)
+  ├── SoundPack[] soundPacks   ← inspector field (drag packs here)
+  ├── List<Sound> sounds       ← flattened from packs at runtime
+  ├── _musicSource             ← ONE shared AudioSource for all music
+  ├── SFX → individual AudioSource per sound
+  └── Volume multipliers
+       ├── _masterVolume
+       ├── _musicVolume
+       └── _sfxVolume
+```
+
+**Music playback rules:**
+
+- **ONE `_musicSource`** for all music tracks — clip, pitch, loop are updated when switching. SFX sounds get individual AudioSources.
+- **DOTween.Sequence** — music crossfades use `DOTween.Sequence()` with `.Append(tween)` → `.AppendCallback()` → `.Append(tween)`. One `_musicFadeTween` field holds the entire sequence. **Never** chain separate `DOTween.To()` calls with `OnComplete` callbacks — the async callback creates race conditions when `StopMusic()` is called mid-fade.
+- `PlayMusic(name)` — fades out current track, loads new clip, fades in. Always resets `_musicSource.clip`.
+- `PlaySfx(name)` — plays immediately via the sound's dedicated AudioSource.
+- Both methods enforce `SoundType` — `PlaySfx` refuses non-SFX sounds and vice versa.
+- Each scene's entry point (`EntryPoint`, `DLG_EntryPoint`) has a `musicTrackId` string field. `Start()` calls `AudioManager.instance.PlayMusic(musicTrackId)` if the field is non-empty.
+
+**Key methods:**
+
+| Method | Purpose |
+|---|---|
+| `PlayMusic(string name)` | Crossfade music track (DOTween.Sequence) |
+| `PlaySfx(string name)` | Play sound effect immediately |
+| `StopMusic()` | Kill current tween, stop `_musicSource`, clear state |
+| `PauseMusic()` / `ResumeMusic()` | Pause/resume `_musicSource` |
+| `GetMusicSource()` | Returns `_musicSource` |
+| `SetMaster/Music/SfxVolume(float)` | Update volume, `UpdateMusicVolume()` syncs live |
+
+**DOTween gotcha:** Always use `DOTween.Sequence()` for multi-step music transitions. The sequence is a single object — call `.Kill()` on it and everything dies. Separate tweens with `OnComplete` callbacks fire on different ticks; calling `StopMusic()` mid-tick leaves the callback dangling with null `_currentMusicSound`.
+
 **UI layer:** `SettingsWindow` extends `UIWindow`, owns all UI refs, delegates logic to `SettingsManager`. Subscribes to all three subsystems' events.
 
 ### Window Management
