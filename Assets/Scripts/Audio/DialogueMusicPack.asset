@@ -16,21 +16,21 @@ MonoBehaviour:
   sounds:
   - name: dlg_1
     clip: {fileID: 8300000, guid: fc7476b0a644e0b43beb81ea4b985485, type: 3}
-    volume: 0.5
+    volume: 0.25
     pitch: 2
     loop: 1
     type: 0
     source: {fileID: 0}
   - name: dlg_2
     clip: {fileID: 8300000, guid: a08f631d53b0ce44c863dec5ea56280f, type: 3}
-    volume: 0.5
+    volume: 0.25
     pitch: 2
     loop: 1
     type: 0
     source: {fileID: 0}
   - name: dlg_3
     clip: {fileID: 8300000, guid: 78b00baa24b6e094fa36ccd141fd2853, type: 3}
-    volume: 0.5
+    volume: 0.25
     pitch: 2
     loop: 1
     type: 0

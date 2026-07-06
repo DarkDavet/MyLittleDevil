@@ -876,6 +876,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 95d0cdd672d5c2e4c9b16d301fad3131, type: 2}
     - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: musicTrackId
+      value: Boss_fight_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: initialStateType
       value: 1
       objectReference: {fileID: 0}
@@ -1417,6 +1421,7 @@ MonoBehaviour:
   _healthBar: {fileID: 1525247353}
   _healthBarHeart: {fileID: 489977970}
   _nimb: {fileID: 1582227206}
+  achiev_id: 
 --- !u!1 &1582227206 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1425281294615371236, guid: 05ea0fe4d1d234541a68936a6c813769, type: 3}

@@ -16,14 +16,14 @@ MonoBehaviour:
   sounds:
   - name: level_1
     clip: {fileID: 8300000, guid: b2e4fcd1149ea0644b2cb819e77b7831, type: 3}
-    volume: 0.5
+    volume: 0.25
     pitch: 2
     loop: 1
     type: 0
     source: {fileID: 0}
   - name: level_2
     clip: {fileID: 8300000, guid: cd9cbabbef6a6ea47931a444b07c1fb2, type: 3}
-    volume: 0.5
+    volume: 0.25
     pitch: 2
     loop: 1
     type: 0

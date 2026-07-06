@@ -16,7 +16,7 @@ MonoBehaviour:
   sounds:
   - name: Boss_fight_1
     clip: {fileID: 8300000, guid: 2f43a0748e9c092478f56e8e53d3bc9d, type: 3}
-    volume: 0.5
+    volume: 0.25
     pitch: 2
     loop: 1
     type: 0
