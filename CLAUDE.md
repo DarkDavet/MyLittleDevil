@@ -99,14 +99,17 @@ Located in `Assets/Scripts/Settings/`. A pluggable subsystem architecture for ga
 | `InputSettingsManager.cs` | Input binding subsystem — loads/saves/rejects JSON overrides via Unity Input System, fires `RefreshUIRequested` |
 | `RebindButton.cs` | UI component — interactive key rebinding via `PerformInteractiveRebinding()`, subscribes to `RefreshUIRequested` via `SettingsManager.Instance.inputSettings` |
 | `GraphicsSettingsManager.cs` | Graphics settings subsystem — manages quality level, VSync, frame rate, fullscreen, resolution. Resolution stored as JSON (width/height/fullscreen) for cross-device portability. Fires `RefreshUIRequested` |
+| `AudioSettingsManager.cs` | Audio settings subsystem — manages master, music, and SFX volume (0–1 floats). Persists to `PlayerPrefs`. Fires `RefreshUIRequested` |
 
 **Architecture:**
 
 ```
 SettingsManager (singleton, DontDestroyOnLoad)
-  ├── InputSettingsManager ──┐
-  └── GraphicsSettingsManager┼── ISettingsSubsystem
-                             └── RefreshUIRequested event ──→ UI listeners
+  ├── InputSettingsManager
+  ├── GraphicsSettingsManager
+  └── AudioSettingsManager          ──┐
+         each ── ISettingsSubsystem   │
+                            RefreshUIRequested event ──→ UI listeners
 ```
 
 - Only `SettingsManager` is a singleton. Subsystems are registered via the Unity inspector and added to `_subsystems` list.
@@ -115,7 +118,7 @@ SettingsManager (singleton, DontDestroyOnLoad)
 - `RebindButton` is self-contained (uses `GetComponent<Button>()` in `Awake()`), subscribes via `SettingsManager.Instance.inputSettings.RefreshUIRequested`.
 - `GraphicsSettingsManager` uses `GetAvailableResolutions()` (platform-aware: mobile returns single resolution, PC returns `Screen.resolutions`), `FormatResolutionWithFullscreen()` for display text, `SetResolution(int)` saves width/height/fullscreen as JSON. Resolution lookup on load searches `Screen.resolutions` and falls back to native if not found.
 
-**UI layer:** `SettingsWindow` extends `UIWindow`, owns all UI refs, delegates logic to `SettingsManager`. Subscribes to both subsystems' events.
+**UI layer:** `SettingsWindow` extends `UIWindow`, owns all UI refs, delegates logic to `SettingsManager`. Subscribes to all three subsystems' events.
 
 ### Window Management
 
@@ -138,7 +141,7 @@ Located in `Assets/Scripts/UI/WindowManagement/`. A singleton-based window syste
 
 **Window implementations:**
 - `AchievementsWindow` — **fully implemented**. Slot management, count display, `IAchievementListener` for live updates. Inspector fields: `slotPrefab`, `slotsContainer`, `totalCountText`, `unlockedCountText`.
-- `SettingsWindow` — **fully implemented**. Extends `UIWindow`, owns all UI refs. Delegates logic to `SettingsManager`. Subscribes to `InputSettingsManager.RefreshUIRequested` and `GraphicsSettingsManager.RefreshUIRequested` via `OnEnable`/`OnDisable`. Initializes dropdowns in `OnOpen()` (not `OnEnable` to avoid double-build). Methods: `SetQualityLevel(int)`, `SetVSync(bool)`, `SetFrameRate30/60/Unlocked()`, `SetFullscreen(bool)`, `SetResolution(int)`, `ApplySettings()`, `ResetSettings()`, `TryClose()`, `ConfirmDiscard()`. Inspector fields: `settingsManager`, `graphicsSettings`, `qualityDropdown` (TMP_Dropdown), `vSyncToggle` (Toggle), `frameRate30/60/UnlockedButton` (Button), `fullscreenToggle` (Toggle), `resolutionDropdown` (TMP_Dropdown), `confirmationPopup` (GameObject).
+- `SettingsWindow` — **fully implemented**. Extends `UIWindow`, owns all UI refs. Delegates logic to `SettingsManager`. Subscribes to `InputSettingsManager.RefreshUIRequested`, `GraphicsSettingsManager.RefreshUIRequested`, and `AudioSettingsManager.RefreshUIRequested` via `OnEnable`/`OnDisable`. Initializes dropdowns in `OnOpen()` (not `OnEnable` to avoid double-build). Methods: `SetQualityLevel(int)`, `SetVSync(bool)`, `SetFrameRate30/60/Unlocked()`, `SetFullscreen(bool)`, `SetResolution(int)`, `SetMasterVolume(float)`, `SetMusicVolume(float)`, `SetSfxVolume(float)`, `ApplySettings()`, `ResetSettings()`, `TryClose()`, `ConfirmDiscard()`. Inspector fields: `settingsManager`, `graphicsSettings`, `audioSettings`, `qualityDropdown` (TMP_Dropdown), `vSyncToggle` (Toggle), `frameRate30/60/UnlockedButton` (Button), `fullscreenToggle` (Toggle), `resolutionDropdown` (TMP_Dropdown), `masterVolumeSlider` (Slider), `musicVolumeSlider` (Slider), `sfxVolumeSlider` (Slider), `confirmationPopup` (GameObject).
 - `MainMenuWindow`, `LevelsWindow`, `ShopWindow` — **placeholders** with `OnOpen()` TODO comments.
 
 ### Scenes
