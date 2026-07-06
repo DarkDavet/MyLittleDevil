@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 
 public enum SoundType
@@ -10,6 +10,7 @@ public enum SoundType
 /// <summary>
 /// Singleton audio manager. Plays sounds by name and exposes master/music/SFX volume control.
 /// Volume multipliers are applied on top of each Sound's base volume in Awake.
+/// PlaySfx() and PlayMusic() enforce type correctness — a sound must match its method's type.
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class AudioManager : MonoBehaviour
     [Range(0f, 1f)] [SerializeField] private float _masterVolume = 1f;
     [Range(0f, 1f)] [SerializeField] private float _musicVolume = 1f;
     [Range(0f, 1f)] [SerializeField] private float _sfxVolume = 1f;
+
+    [Header("Current Music")]
+    [SerializeField] private Sound _currentMusicSound;
 
     // === Getters (used by AudioSettingsManager and UI) ===
 
@@ -47,6 +51,77 @@ public class AudioManager : MonoBehaviour
         _sfxVolume = Mathf.Clamp01(volume);
     }
 
+    // === Music playback helpers (used by MusicController) ===
+
+    /// <summary>Returns the AudioSource for the currently playing music track.</summary>
+    public AudioSource GetMusicSource()
+    {
+        if (_currentMusicSound != null && _currentMusicSound.source != null)
+        {
+            return _currentMusicSound.source;
+        }
+        return null;
+    }
+
+    /// <summary>Stops the currently playing music track.</summary>
+    public void StopMusic()
+    {
+        if (_currentMusicSound != null && _currentMusicSound.source != null)
+        {
+            _currentMusicSound.source.Stop();
+            _currentMusicSound = null;
+        }
+    }
+
+    /// <summary>Pauses the currently playing music track.</summary>
+    public void PauseMusic()
+    {
+        if (_currentMusicSound != null && _currentMusicSound.source != null)
+        {
+            _currentMusicSound.source.Pause();
+        }
+    }
+
+    /// <summary>Resumes a paused music track.</summary>
+    public void ResumeMusic()
+    {
+        if (_currentMusicSound != null && _currentMusicSound.source != null)
+        {
+            _currentMusicSound.source.UnPause();
+        }
+    }
+
+    /// <summary>
+    /// Plays a music sound by name, tracking it as the current music source.
+    /// Does not call Play() on the AudioSource — MusicController handles playback via fade-in.
+    /// </summary>
+    public void PlayMusic(string name)
+    {
+        Sound s = Array.Find(sounds, sound => sound.name == name);
+        if (s == null)
+        {
+            Debug.LogWarning("Music sound: " + name + " not found!");
+            return;
+        }
+
+        if (s.type != SoundType.Music)
+        {
+            Debug.LogWarning("AudioManager: sound '" + name + "' is not marked as Music type! Use PlaySfx() for SFX sounds.");
+            return;
+        }
+
+        _currentMusicSound = s;
+        ApplyMusicVolumeToSource(s);
+    }
+
+    private void ApplyMusicVolumeToSource(Sound s)
+    {
+        if (s.source != null)
+        {
+            s.source.volume = s.volume * _musicVolume * _masterVolume;
+        }
+    }
+
     private void Awake()
     {
         if (instance == null)
@@ -70,24 +145,26 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    public void Play(string name)
-    {
-        Play(name, SoundType.SFX);
-    }
-
-    public void Play(string name, SoundType type)
+    /// <summary>
+    /// Plays a sound effect by name. The sound must be marked as SoundType.SFX.
+    /// </summary>
+    public void PlaySfx(string name)
     {
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
         {
-            Debug.LogWarning("Sound: " + name + " not found!");
+            Debug.LogWarning("SFX sound: " + name + " not found!");
             return;
         }
 
-        // Apply volume multipliers: base * type-specific * master
-        float typeMultiplier = s.type == SoundType.Music ? _musicVolume : _sfxVolume;
-        s.source.volume = s.volume * typeMultiplier * _masterVolume;
+        if (s.type != SoundType.SFX)
+        {
+            Debug.LogWarning("AudioManager: sound '" + name + "' is not marked as SFX type! Use PlayMusic() for music sounds.");
+            return;
+        }
 
+        float volume = s.volume * _sfxVolume * _masterVolume;
+        s.source.volume = volume;
         s.source.Play();
     }
 }
