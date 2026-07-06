@@ -12,6 +12,9 @@ public class DLG_EntryPoint : MonoBehaviour
     [Header("Dialogue ID:")]
     [SerializeField] private string dlg_Id;
 
+    [Header("Music")]
+    [SerializeField] private string musicTrackId;
+
     private void Awake()
     {
         GameEvents.OnDialogueFinished += OnDialogueFinished;
@@ -20,6 +23,11 @@ public class DLG_EntryPoint : MonoBehaviour
     {
         dlgSystem.Init(dlgStorage);
         dlgUI.Init();
+
+        if (!string.IsNullOrEmpty(musicTrackId))
+        {
+            AudioManager.instance.PlayMusic(musicTrackId);
+        }
 
         dlgSystem.StartDialogue(dlg_Id);
     }

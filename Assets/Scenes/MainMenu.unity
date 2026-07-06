@@ -8631,6 +8631,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioManager
       objectReference: {fileID: 0}
+    - target: {fileID: 1589312453197200003, guid: 1602be9811cad924f95c272fc71d5c80, type: 3}
+      propertyPath: soundPacks.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1589312453197200003, guid: 1602be9811cad924f95c272fc71d5c80, type: 3}
+      propertyPath: soundPacks.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 2879cce8f13aec64b8da5d2af8d78e78, type: 2}
+    - target: {fileID: 1589312453197200003, guid: 1602be9811cad924f95c272fc71d5c80, type: 3}
+      propertyPath: soundPacks.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: d2d3bc10d2a0b7b4d948a844b71ce1b7, type: 2}
+    - target: {fileID: 1589312453197200003, guid: 1602be9811cad924f95c272fc71d5c80, type: 3}
+      propertyPath: soundPacks.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 93b3f1c9d66d3554ab04cdbe3578641b, type: 2}
+    - target: {fileID: 1589312453197200003, guid: 1602be9811cad924f95c272fc71d5c80, type: 3}
+      propertyPath: soundPacks.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: 01ccebd075a491d408926d0b18140ff0, type: 2}
+    - target: {fileID: 1589312453197200003, guid: 1602be9811cad924f95c272fc71d5c80, type: 3}
+      propertyPath: soundPacks.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: 39895919c136f4547bc24f0e114765d6, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1602be9811cad924f95c272fc71d5c80, type: 3}
 --- !u!1001 &613645329

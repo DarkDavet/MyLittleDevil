@@ -10,6 +10,9 @@ public class EntryPoint : MonoBehaviour
     [SerializeField] private PlayerInputHandler playerInputHandler;
     [SerializeField] private InitialStateType initialStateType;
 
+    [Header("Music")]
+    [SerializeField] private string musicTrackId;
+
     private void Awake()
     {
         GameEvents.OnTutorialFinished += InitState;
@@ -17,6 +20,12 @@ public class EntryPoint : MonoBehaviour
     private void Start()
     {
         playerInputHandler.DisablePlayerControls();
+
+        if (!string.IsNullOrEmpty(musicTrackId))
+        {
+            AudioManager.instance.PlayMusic(musicTrackId);
+        }
+
         if (sceneData != null && sceneData.collectibleStats != null)
         {
             CollectibleSystem.LevelStatsManager.Instance.InitializeStatsForLevel(sceneData);

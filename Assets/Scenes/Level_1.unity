@@ -2544,6 +2544,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 6bef1a23a044500478a5ee40bac560a5, type: 2}
     - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
+      propertyPath: musicTrackId
+      value: level_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1416190783792932159, guid: 267d24637db3f4643a74665b767f3ce6, type: 3}
       propertyPath: playerInputHandler
       value: 
       objectReference: {fileID: 2093300711531099765}

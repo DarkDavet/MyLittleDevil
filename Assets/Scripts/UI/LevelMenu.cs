@@ -17,6 +17,12 @@ public class LevelMenu : MonoBehaviour
       //  PlayerPrefs.DeleteAll(); //Delete after testing
     }
 
+    //placeholder of future entry point of main menu
+    private void Start()
+    {
+        AudioManager.instance.StopMusic();
+    }
+
     public void RefreshMenu()
     {
         foreach (var btn in levelButtons)
