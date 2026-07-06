@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -13,6 +14,7 @@ public class SettingsWindow : UIWindow
     [Header("Logic")]
     [SerializeField] private SettingsManager settingsManager;
     [SerializeField] private GraphicsSettingsManager graphicsSettings;
+    [SerializeField] private AudioSettingsManager audioSettings;
 
     [Header("UI - Graphics")]
     [SerializeField] private TMP_Dropdown qualityDropdown;
@@ -23,6 +25,11 @@ public class SettingsWindow : UIWindow
     [SerializeField] private Toggle fullscreenToggle;
     [SerializeField] private TMP_Dropdown resolutionDropdown;
 
+    [Header("UI - Audio")]
+    [SerializeField] private Slider masterVolumeSlider;
+    [SerializeField] private Slider musicVolumeSlider;
+    [SerializeField] private Slider sfxVolumeSlider;
+
     [Header("UI")]
     [SerializeField] private GameObject confirmationPopup;
 
@@ -32,6 +39,11 @@ public class SettingsWindow : UIWindow
         {
             graphicsSettings.RefreshUIRequested += UpdateGraphicsUI;
         }
+
+        if (audioSettings != null)
+        {
+            audioSettings.RefreshUIRequested += UpdateAudioUI;
+        }
     }
 
     private void OnDisable()
@@ -39,6 +51,11 @@ public class SettingsWindow : UIWindow
         if (graphicsSettings != null)
         {
             graphicsSettings.RefreshUIRequested -= UpdateGraphicsUI;
+        }
+
+        if (audioSettings != null)
+        {
+            audioSettings.RefreshUIRequested -= UpdateAudioUI;
         }
     }
 
@@ -64,7 +81,7 @@ public class SettingsWindow : UIWindow
 
         qualityDropdown.options.Clear();
 
-  
+
         List<string> options = new List<string>(QualitySettings.names);
         qualityDropdown.AddOptions(options);
     }
@@ -122,6 +139,26 @@ public class SettingsWindow : UIWindow
         }
     }
 
+    private void UpdateAudioUI()
+    {
+        if (audioSettings == null) return;
+
+        if (masterVolumeSlider != null)
+        {
+            masterVolumeSlider.value = audioSettings.GetMasterVolume();
+        }
+
+        if (musicVolumeSlider != null)
+        {
+            musicVolumeSlider.value = audioSettings.GetMusicVolume();
+        }
+
+        if (sfxVolumeSlider != null)
+        {
+            sfxVolumeSlider.value = audioSettings.GetSfxVolume();
+        }
+    }
+
     // === UI Interaction Methods ===
 
     public void SetQualityLevel(int level)
@@ -157,13 +194,31 @@ public class SettingsWindow : UIWindow
     public void SetFullscreen(bool isOn)
     {
         graphicsSettings?.SetFullscreen(isOn);
-        UpdateGraphicsUI(); 
+        UpdateGraphicsUI();
     }
 
     public void SetResolution(int index)
     {
         graphicsSettings?.SetResolution(index);
         UpdateGraphicsUI();
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        audioSettings?.SetMasterVolume(volume);
+        UpdateAudioUI();
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        audioSettings?.SetMusicVolume(volume);
+        UpdateAudioUI();
+    }
+
+    public void SetSfxVolume(float volume)
+    {
+        audioSettings?.SetSfxVolume(volume);
+        UpdateAudioUI();
     }
 
     protected override void OnOpen()
@@ -173,6 +228,7 @@ public class SettingsWindow : UIWindow
         InitQualityDropdown();
         InitResolutionDropdown();
         UpdateGraphicsUI();
+        UpdateAudioUI();
     }
 
     public void ApplySettings()
@@ -184,8 +240,8 @@ public class SettingsWindow : UIWindow
     public void ResetSettings()
     {
         settingsManager?.ResetAllSettings();
-        // Если ResetAllSettings внутри себя вызывает FireRefreshUI, 
-        // то UpdateGraphicsUI вызовется автоматически по подписке.
+        // Если ResetAllSettings внутри себя вызывает FireRefreshUI,
+        // то UpdateGraphicsUI / UpdateAudioUI вызовется автоматически по подписке.
     }
 
     public void TryClose()

@@ -1575,7 +1575,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 108140363}
+        m_TargetAssemblyTypeName: SettingsWindow, Assembly-CSharp
+        m_MethodName: SetMasterVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &72486959
 GameObject:
   m_ObjectHideFlags: 0
@@ -2244,6 +2256,7 @@ GameObject:
   - component: {fileID: 108140365}
   - component: {fileID: 108140364}
   - component: {fileID: 108140366}
+  - component: {fileID: 108140367}
   m_Layer: 5
   m_Name: SettingsWindow
   m_TagString: Untagged
@@ -2363,6 +2376,7 @@ MonoBehaviour:
   closeScale: {x: 0.8, y: 0.8, z: 0.8}
   settingsManager: {fileID: 108140365}
   graphicsSettings: {fileID: 108140366}
+  audioSettings: {fileID: 108140367}
   qualityDropdown: {fileID: 1254596285}
   vSyncToggle: {fileID: 1058154918}
   frameRate30Button: {fileID: 1435726424}
@@ -2370,6 +2384,9 @@ MonoBehaviour:
   frameRateUnlockedButton: {fileID: 1458436271}
   fullscreenToggle: {fileID: 1437728524}
   resolutionDropdown: {fileID: 1467605377}
+  masterVolumeSlider: {fileID: 72428037}
+  musicVolumeSlider: {fileID: 909169974}
+  sfxVolumeSlider: {fileID: 191655507}
   confirmationPopup: {fileID: 19324497}
 --- !u!114 &108140364
 MonoBehaviour:
@@ -2398,6 +2415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputSettings: {fileID: 108140364}
   graphicsSettings: {fileID: 108140366}
+  audioSettings: {fileID: 108140367}
 --- !u!114 &108140366
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2408,6 +2426,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 078371ddfacd73b4fb976c53729ba535, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &108140367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 108140357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 797dd9945570032478bed0bd7a146527, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &113846639
@@ -3686,7 +3716,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 108140367}
+        m_TargetAssemblyTypeName: AudioSettingsManager, Assembly-CSharp
+        m_MethodName: SetSfxVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &191713411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5941,7 +5983,7 @@ GameObject:
   - component: {fileID: 373180672}
   - component: {fileID: 373180673}
   m_Layer: 5
-  m_Name: row_5
+  m_Name: master_vol_row
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8696,7 +8738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3878728176093874248, guid: ce34f2d7d85d9db4187b783b935ab1c9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -10.936218
+      value: -10.936279
       objectReference: {fileID: 0}
     - target: {fileID: 8199850805457529060, guid: ce34f2d7d85d9db4187b783b935ab1c9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
@@ -10342,8 +10384,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 217}
-  m_SizeDelta: {x: 0, y: 800}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 1000}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &776531831
 GameObject:
@@ -11271,8 +11313,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 903894716}
   m_HandleRect: {fileID: 903894714}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.72875
+  m_Value: 1
+  m_Size: 0.58299994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12024,8 +12066,8 @@ RectTransform:
   m_Father: {fileID: 1325400619}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.72875}
+  m_AnchorMin: {x: 0, y: 0.41700006}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -12157,7 +12199,19 @@ MonoBehaviour:
   m_Value: 0
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 108140367}
+        m_TargetAssemblyTypeName: AudioSettingsManager, Assembly-CSharp
+        m_MethodName: SetMusicVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &916201486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20681,7 +20735,7 @@ GameObject:
   - component: {fileID: 1713387090}
   - component: {fileID: 1713387091}
   m_Layer: 5
-  m_Name: row_7
+  m_Name: sfx_row
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -22638,7 +22692,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1949132029}
   m_Layer: 5
-  m_Name: row_4_title
+  m_Name: audio_title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23657,7 +23711,7 @@ GameObject:
   - component: {fileID: 2019719392}
   - component: {fileID: 2019719393}
   m_Layer: 5
-  m_Name: row_6
+  m_Name: music_row
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

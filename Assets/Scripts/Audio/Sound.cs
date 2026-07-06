@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 [System.Serializable]
@@ -16,6 +15,8 @@ public class Sound
     public float pitch;
 
     public bool loop;
+
+    public SoundType type = SoundType.SFX;
 
     [HideInInspector]
     public AudioSource source;
