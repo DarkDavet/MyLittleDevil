@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b09fe48783ea6948bff4db39a7f3536, type: 3}
+  m_Name: FightMusicPack
+  m_EditorClassIdentifier: 
+  packName: FightMusicPack
+  sounds:
+  - name: Boss_fight_1
+    clip: {fileID: 8300000, guid: 2f43a0748e9c092478f56e8e53d3bc9d, type: 3}
+    volume: 0.5
+    pitch: 2
+    loop: 1
+    type: 0
+    source: {fileID: 0}

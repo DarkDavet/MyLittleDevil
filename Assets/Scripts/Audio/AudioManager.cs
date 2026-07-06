@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ public enum SoundType
 
 /// <summary>
 /// Singleton audio manager. Plays sounds by name and exposes master/music/SFX volume control.
-/// Volume multipliers are applied on top of each Sound's base volume in Awake.
+/// Loads sounds from SoundPack ScriptableObjects at runtime.
 /// PlaySfx() and PlayMusic() enforce type correctness — a sound must match its method's type.
 /// Music fade transitions are handled internally by AudioManager (the only singleton).
 /// </summary>
@@ -18,7 +19,10 @@ public class AudioManager : MonoBehaviour
 {
     // === Fields ===
 
-    public Sound[] sounds;
+    [Header("Sound Packs")]
+    public SoundPack[] soundPacks;
+
+    [NonSerialized] public List<Sound> sounds = new List<Sound>();
 
     public static AudioManager instance;
 
@@ -49,6 +53,26 @@ public class AudioManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
 
+        FlattenPacks();
+        CreateAudioSources();
+    }
+
+    private void FlattenPacks()
+    {
+        sounds.Clear();
+        if (soundPacks == null) return;
+
+        for (int i = 0; i < soundPacks.Length; i++)
+        {
+            if (soundPacks[i] != null && soundPacks[i].sounds != null)
+            {
+                sounds.AddRange(soundPacks[i].sounds);
+            }
+        }
+    }
+
+    private void CreateAudioSources()
+    {
         foreach (Sound s in sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();
@@ -102,7 +126,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlayMusic(string name)
     {
-        Sound newMusic = Array.Find(sounds, s => s.name == name);
+        Sound newMusic = sounds.Find(s => s.name == name);
         if (newMusic == null)
         {
             Debug.LogWarning("AudioManager: music sound '" + name + "' not found!");
@@ -169,7 +193,7 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     public void PlaySfx(string name)
     {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
+        Sound s = sounds.Find(sound => sound.name == name);
         if (s == null)
         {
             Debug.LogWarning("AudioManager: SFX sound '" + name + "' not found!");
