@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public enum SoundType
@@ -11,9 +12,12 @@ public enum SoundType
 /// Singleton audio manager. Plays sounds by name and exposes master/music/SFX volume control.
 /// Volume multipliers are applied on top of each Sound's base volume in Awake.
 /// PlaySfx() and PlayMusic() enforce type correctness — a sound must match its method's type.
+/// Music fade transitions are handled internally by AudioManager (the only singleton).
 /// </summary>
 public class AudioManager : MonoBehaviour
 {
+    // === Fields ===
+
     public Sound[] sounds;
 
     public static AudioManager instance;
@@ -23,8 +27,37 @@ public class AudioManager : MonoBehaviour
     [Range(0f, 1f)] [SerializeField] private float _musicVolume = 1f;
     [Range(0f, 1f)] [SerializeField] private float _sfxVolume = 1f;
 
-    [Header("Current Music")]
+    [Header("Music")]
     [SerializeField] private Sound _currentMusicSound;
+    [SerializeField] private float _fadeDuration = 1.5f;
+    [SerializeField] private float _minFadeVolume = 0.01f;
+
+    private Tween _fadeTween;
+
+    // === Unity Lifecycle ===
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+        DontDestroyOnLoad(gameObject);
+
+        foreach (Sound s in sounds)
+        {
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.clip;
+            s.source.volume = s.volume;
+            s.source.pitch = s.pitch;
+            s.source.loop = s.loop;
+        }
+    }
 
     // === Getters (used by AudioSettingsManager and UI) ===
 
@@ -51,7 +84,7 @@ public class AudioManager : MonoBehaviour
         _sfxVolume = Mathf.Clamp01(volume);
     }
 
-    // === Music playback helpers (used by MusicController) ===
+    // === Music Playback ===
 
     /// <summary>Returns the AudioSource for the currently playing music track.</summary>
     public AudioSource GetMusicSource()
@@ -63,9 +96,47 @@ public class AudioManager : MonoBehaviour
         return null;
     }
 
-    /// <summary>Stops the currently playing music track.</summary>
+    /// <summary>
+    /// Plays a music track by name with fade transitions.
+    /// If another track is playing, it fades out then the new one fades in.
+    /// </summary>
+    public void PlayMusic(string name)
+    {
+        Sound newMusic = Array.Find(sounds, s => s.name == name);
+        if (newMusic == null)
+        {
+            Debug.LogWarning("AudioManager: music sound '" + name + "' not found!");
+            return;
+        }
+
+        if (newMusic.type != SoundType.Music)
+        {
+            Debug.LogWarning("AudioManager: sound '" + name + "' is not marked as Music type! Use PlaySfx() for SFX sounds.");
+            return;
+        }
+
+        // If the same track is already playing, do nothing
+        if (_currentMusicSound != null && _currentMusicSound.name == name)
+        {
+            return;
+        }
+
+        // If something is already playing, fade it out first
+        if (_currentMusicSound != null)
+        {
+            FadeOutAndPlay(newMusic);
+        }
+        else
+        {
+            FadeIn(newMusic);
+        }
+    }
+
+    /// <summary>Stops the currently playing music track immediately.</summary>
     public void StopMusic()
     {
+        KillFadeTween();
+
         if (_currentMusicSound != null && _currentMusicSound.source != null)
         {
             _currentMusicSound.source.Stop();
@@ -91,59 +162,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Plays a music sound by name, tracking it as the current music source.
-    /// Does not call Play() on the AudioSource — MusicController handles playback via fade-in.
-    /// </summary>
-    public void PlayMusic(string name)
-    {
-        Sound s = Array.Find(sounds, sound => sound.name == name);
-        if (s == null)
-        {
-            Debug.LogWarning("Music sound: " + name + " not found!");
-            return;
-        }
-
-        if (s.type != SoundType.Music)
-        {
-            Debug.LogWarning("AudioManager: sound '" + name + "' is not marked as Music type! Use PlaySfx() for SFX sounds.");
-            return;
-        }
-
-        _currentMusicSound = s;
-        ApplyMusicVolumeToSource(s);
-    }
-
-    private void ApplyMusicVolumeToSource(Sound s)
-    {
-        if (s.source != null)
-        {
-            s.source.volume = s.volume * _musicVolume * _masterVolume;
-        }
-    }
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
-
-        foreach (Sound s in sounds)
-        {
-            s.source = gameObject.AddComponent<AudioSource>();
-            s.source.clip = s.clip;
-            s.source.volume = s.volume;
-            s.source.pitch = s.pitch;
-            s.source.loop = s.loop;
-        }
-    }
+    // === SFX Playback ===
 
     /// <summary>
     /// Plays a sound effect by name. The sound must be marked as SoundType.SFX.
@@ -153,7 +172,7 @@ public class AudioManager : MonoBehaviour
         Sound s = Array.Find(sounds, sound => sound.name == name);
         if (s == null)
         {
-            Debug.LogWarning("SFX sound: " + name + " not found!");
+            Debug.LogWarning("AudioManager: SFX sound '" + name + "' not found!");
             return;
         }
 
@@ -166,5 +185,60 @@ public class AudioManager : MonoBehaviour
         float volume = s.volume * _sfxVolume * _masterVolume;
         s.source.volume = volume;
         s.source.Play();
+    }
+
+    // === Internal: Fade Logic ===
+
+    private void FadeOutAndPlay(Sound newMusic)
+    {
+        KillFadeTween();
+
+        AudioSource currentSource = _currentMusicSound.source;
+
+        _fadeTween = DOTween.To(() => currentSource.volume, v => currentSource.volume = v, _minFadeVolume, _fadeDuration)
+            .SetEase(Ease.OutQuad)
+            .SetUpdate(true)
+            .OnComplete(() =>
+            {
+                // Stop the old music
+                currentSource.Stop();
+                _currentMusicSound = null;
+
+                // Start the new music with fade-in
+                FadeIn(newMusic);
+            });
+    }
+
+    private void FadeIn(Sound music)
+    {
+        KillFadeTween();
+
+        _currentMusicSound = music;
+        AudioSource source = music.source;
+
+        // Set initial volume to minimum for fade-in
+        source.volume = _minFadeVolume;
+        source.pitch = music.pitch;
+        source.loop = music.loop;
+
+        // Fade to full music volume
+        float targetVolume = music.volume * _musicVolume * _masterVolume;
+
+        _fadeTween = DOTween.To(() => source.volume, v => source.volume = v, targetVolume, _fadeDuration)
+            .SetEase(Ease.OutQuad)
+            .SetUpdate(true)
+            .OnStart(() =>
+            {
+                source.Play();
+            });
+    }
+
+    private void KillFadeTween()
+    {
+        if (_fadeTween != null)
+        {
+            _fadeTween.Kill();
+            _fadeTween = null;
+        }
     }
 }

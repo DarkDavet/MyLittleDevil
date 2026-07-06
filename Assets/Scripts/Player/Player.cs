@@ -93,7 +93,7 @@ public class Player: MonoBehaviour, ICollectibleCollector
         if (item)
         {
             inventory.AddItem(item.item, 1);
-            FindObjectOfType<AudioManager>().Play("PickItem");
+            FindObjectOfType<AudioManager>().PlaySfx("PickItem");
             Destroy(other.gameObject);
         }
     }
@@ -101,7 +101,7 @@ public class Player: MonoBehaviour, ICollectibleCollector
     public void Collect(Collectible collectible)
     {
         CollectibleManager.Instance.Collect(collectible);
-        FindObjectOfType<AudioManager>().Play("PickItem");
+        FindObjectOfType<AudioManager>().PlaySfx("PickItem");
     }
 
     private void OnApplicationQuit()

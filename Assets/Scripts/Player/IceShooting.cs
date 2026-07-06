@@ -26,7 +26,7 @@ public class IceShooting : Shooting
 
             animator.SetTrigger("IceShoot");
             PoolManager.Instance.SpawnFromPool("Ice", _projectileSpawnPoint.position, Quaternion.identity);
-            FindObjectOfType<AudioManager>().Play("IceAttack");
+            FindObjectOfType<AudioManager>().PlaySfx("IceAttack");
         }
     }
 }

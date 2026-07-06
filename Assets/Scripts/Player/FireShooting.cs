@@ -27,7 +27,7 @@ public class FireShooting : Shooting
 
             animator.SetTrigger("Shoot");
             PoolManager.Instance.SpawnFromPool("Fire", _projectileSpawnPoint.position, Quaternion.identity);
-            FindObjectOfType<AudioManager>().Play("FireAttack");
+            FindObjectOfType<AudioManager>().PlaySfx("FireAttack");
         }
     }
 }

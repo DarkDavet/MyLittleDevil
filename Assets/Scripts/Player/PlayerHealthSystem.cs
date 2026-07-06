@@ -54,7 +54,7 @@ public class PlayerHealthSystem : MonoBehaviour, IHealable
     public void Heal(int amount)
     {
         currentHealth += amount;
-        FindObjectOfType<AudioManager>().Play("Heal");
+        FindObjectOfType<AudioManager>().PlaySfx("Heal");
         if (currentHealth > maxHealth) currentHealth = maxHealth;
         GameEvents.TriggerUpdatedPlayerHealth(currentHealth);
         CheckDeadStatus();

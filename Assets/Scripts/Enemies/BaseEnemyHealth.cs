@@ -30,7 +30,7 @@ public class BaseEnemyHealth : MonoBehaviour, IHealable
     public virtual void TakeDamage(int damage)
     {
         currentHealth -= damage;
-        FindObjectOfType<AudioManager>().Play("Hit");
+        FindObjectOfType<AudioManager>().PlaySfx("Hit");
 
         if (currentHealth <= 0)
         {
@@ -43,7 +43,7 @@ public class BaseEnemyHealth : MonoBehaviour, IHealable
         GameObject explosionEffect = Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);
         if (explosionEffect != null) Destroy(explosionEffect, 3f);
         Destroy(gameObject);
-        FindObjectOfType<AudioManager>().Play("EnemyDeath");
+        FindObjectOfType<AudioManager>().PlaySfx("EnemyDeath");
         AchievementSystemCore.Instance.UpdateStandartProgress("defeat_2_angels");
     }
 
