@@ -29,13 +29,14 @@ public class CreditsController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(endDelay);
-
-        UnlockFinishAchiev();
-        sceneLoader.ReturnToMainMenu();
+;
+        CreditsFinished();
     }
 
-    public void UnlockFinishAchiev()
+    public void CreditsFinished()
     {
         AchievementSystemCore.Instance.UnlockAchievement("finish_the_game");
+        sceneLoader.UnlockNewScene();
+        sceneLoader.ReturnToMainMenu();
     }
 }
