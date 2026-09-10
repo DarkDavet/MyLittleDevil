@@ -54,36 +54,37 @@ public class HealProjectile : BaseProjectile
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 1. ПРОВЕРКА НА ЛЕЧЕНИЕ: Входит ли слой объекта в маску разрешенных для ХИЛА?
+        // 1. ЛОГИКА ЛЕЧЕНИЯ: Слой объекта входит в маску разрешенных для ХИЛА
         if ((_targetLayer.value & (1 << collision.gameObject.layer)) != 0)
         {
-            // Слой совпадает -> Пытаемся лечить
             if (collision.TryGetComponent<IHealable>(out var health))
             {
-                // Лечим только живых и раненых
+                // Лечим, только если цель ранена и жива
                 if (health.CurrentHealth > 0 && health.CurrentHealth < health.MaxHealth)
                 {
                     health.Heal(_healAmount);
-                    ReturnToPool();
                 }
-                // Если у союзника полное здоровье, снаряд просто летит сквозь него дальше
-            }
-        }
-        else
-        {
-            // 2. ЛОГИКА УРОНА: Слой НЕ совпадает (значит, это враг для этой станции)
-            // Пытаемся нанести урон (замените IDamageable на ваш компонент урона, если нужно)
-            if (collision.TryGetComponent<IDamagable>(out var damageable))
-            {
-                // Наносим урон (можно использовать _healAmount или вынести отдельную переменную под урон)
-                damageable.TakeDamage(_healAmount);
 
-                // Снаряд успешно поразил врага, возвращаем его в пул
+                // Снаряд коснулся валидной цели (союзника) — возвращаем в пул в любом случае,
+                // чтобы он не преследовал объект с полным здоровьем.
                 ReturnToPool();
             }
-            // Если это стена или объект без компонента урона, снаряд летит дальше
+        }
+        // 2. ЛОГИКА УРОНА: Слой НЕ совпадает (значит, это противоположная команда/враг)
+        else
+        {
+            // Замените IDamageable и TakeDamage на ваши компоненты урона, если они называются иначе
+            if (collision.TryGetComponent<IDamagable>(out var damageable))
+            {
+                damageable.TakeDamage(_healAmount);
+
+                // Снаряд нанес урон врагу, возвращаем его в пул
+                ReturnToPool();
+            }
+            // Если это объект без компонента урона (например, декорация), снаряд летит дальше
         }
     }
+
 
 
     private void ReturnToPool()
