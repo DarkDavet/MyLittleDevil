@@ -48,6 +48,11 @@ public class CustomizationShopUI : MonoBehaviour
 
     public void CloseShop()
     {
+        if (customizationManager != null)
+        {
+            customizationManager.ResetPreviewToEquippedItems();
+        }
+
         mainPanel.SetActive(false);
         selectedItem = null;
         if (detailPanelController != null)

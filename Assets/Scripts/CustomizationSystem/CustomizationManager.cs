@@ -130,6 +130,19 @@ public class CustomizationManager : MonoBehaviour
         }
     }
 
+    public void ResetPreviewToEquippedItems()
+    {
+        // Очищаем текущий выбор, чтобы старый предмет не висел в памяти менеджера
+        currentSelectedItem = null;
+
+        // Возвращаем персонажу только те вещи, которые реально сохранены и надеты
+        if (previewer != null)
+        {
+            previewer.ApplyAllSavedItems();
+        }
+    }
+
+
     public void RefreshAllShopSlots()
     {
         // Теперь этот метод можно заменить вызовом shopUI.RefreshShop(),
