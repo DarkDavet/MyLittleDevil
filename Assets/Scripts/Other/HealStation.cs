@@ -11,6 +11,7 @@ public class HealStation: MonoBehaviour
     [SerializeField] protected float _fireRate = 1f;
     [SerializeField] private int healAmount = 1; // Сколько лечит снаряд
     [SerializeField] private float _spread = 10f;
+    [SerializeField] private string _projectileTag;
 
     private float nextTimeToShoot = 0f;
     private Collider2D[] results = new Collider2D[10];
@@ -43,10 +44,11 @@ public class HealStation: MonoBehaviour
 
     public void HealShoot(Transform target)
     {
-        var projectileGo = PoolManager.Instance.SpawnFromPool("EnemyHeal", _projectileSpawnPoint.position, Quaternion.identity);
+        var projectileGo = PoolManager.Instance.SpawnFromPool(_projectileTag, _projectileSpawnPoint.position, Quaternion.identity);
         if (projectileGo.TryGetComponent<HealProjectile>(out var proj))
         {
             proj.SetTarget(target);
+            proj.SetTargetLayer(targetLayer);
 
             float randomOffset = Random.Range(-_spread, _spread);
             projectileGo.transform.Rotate(0, 0, randomOffset);

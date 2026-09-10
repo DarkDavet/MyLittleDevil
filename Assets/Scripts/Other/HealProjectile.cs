@@ -5,9 +5,11 @@ using static UnityEngine.GraphicsBuffer;
 
 public class HealProjectile : BaseProjectile
 {
+    [SerializeField] private string projectileTag;
     public float rotateSpeed = 500f;
 
     private Transform _target;
+    private LayerMask _targetLayer;
     private int _healAmount;
 
     public void SetTarget(Transform target)
@@ -23,6 +25,8 @@ public class HealProjectile : BaseProjectile
         }
     }
     public void SetHealAmount(int amount) => _healAmount = amount;
+    // Этот метод вызывается из HealStation.HealShoot перед выстрелом
+    public void SetTargetLayer(LayerMask layerMask) => _targetLayer = layerMask;
 
     public override void OnObjectSpawn()
     {
@@ -48,14 +52,39 @@ public class HealProjectile : BaseProjectile
         transform.Translate(Vector3.right * speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) 
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<IHealable>(out var health))
+        // 1. ПРОВЕРКА НА ЛЕЧЕНИЕ: Входит ли слой объекта в маску разрешенных для ХИЛА?
+        if ((_targetLayer.value & (1 << collision.gameObject.layer)) != 0)
         {
-            health.Heal(_healAmount);
-            ReturnToPool();
+            // Слой совпадает -> Пытаемся лечить
+            if (collision.TryGetComponent<IHealable>(out var health))
+            {
+                // Лечим только живых и раненых
+                if (health.CurrentHealth > 0 && health.CurrentHealth < health.MaxHealth)
+                {
+                    health.Heal(_healAmount);
+                    ReturnToPool();
+                }
+                // Если у союзника полное здоровье, снаряд просто летит сквозь него дальше
+            }
+        }
+        else
+        {
+            // 2. ЛОГИКА УРОНА: Слой НЕ совпадает (значит, это враг для этой станции)
+            // Пытаемся нанести урон (замените IDamageable на ваш компонент урона, если нужно)
+            if (collision.TryGetComponent<IDamagable>(out var damageable))
+            {
+                // Наносим урон (можно использовать _healAmount или вынести отдельную переменную под урон)
+                damageable.TakeDamage(_healAmount);
+
+                // Снаряд успешно поразил врага, возвращаем его в пул
+                ReturnToPool();
+            }
+            // Если это стена или объект без компонента урона, снаряд летит дальше
         }
     }
+
 
     private void ReturnToPool()
     {
@@ -64,7 +93,7 @@ public class HealProjectile : BaseProjectile
             StopCoroutine(timer);
             timer = null; 
         }
-        PoolManager.Instance.ReturnToPool("EnemyHeal", gameObject);
+        PoolManager.Instance.ReturnToPool(projectileTag, gameObject);
     }
 
     protected IEnumerator ReturnToPoolAfterTime()

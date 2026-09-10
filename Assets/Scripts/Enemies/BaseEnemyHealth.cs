@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseEnemyHealth : MonoBehaviour, IHealable
+public class BaseEnemyHealth : MonoBehaviour, IHealable, IDamagable
 {
     [SerializeField] private int maxHealth;
     [SerializeField] private int currentHealth;

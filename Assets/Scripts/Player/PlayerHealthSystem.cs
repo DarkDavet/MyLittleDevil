@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHealthSystem : MonoBehaviour, IHealable
+public class PlayerHealthSystem : MonoBehaviour, IHealable, IDamagable
 {
     /// <summary>
     /// Maximum health value for the player.
