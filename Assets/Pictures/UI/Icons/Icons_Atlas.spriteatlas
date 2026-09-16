@@ -36,17 +36,26 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 35776ade5894653449a5d0b1af268b7e, type: 3}
     - {fileID: 2800000, guid: 1cf6ee98d160f514380c680fcbc10119, type: 3}
     - {fileID: 2800000, guid: 91e12957d372c2f4abe7cb64a30d0831, type: 3}
+    - {fileID: 2800000, guid: d73d48a7f1aae0541876aa59c0341beb, type: 3}
+    - {fileID: 2800000, guid: ddaa8c51e61cc32479141c479fc1aa93, type: 3}
+    - {fileID: 2800000, guid: 2b619c475a5bd9442a87c5332f7af78b, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: ddaa8c51e61cc32479141c479fc1aa93, type: 3}
+  - {fileID: 21300000, guid: 2b619c475a5bd9442a87c5332f7af78b, type: 3}
   - {fileID: 21300000, guid: 91e12957d372c2f4abe7cb64a30d0831, type: 3}
+  - {fileID: 21300000, guid: d73d48a7f1aae0541876aa59c0341beb, type: 3}
   - {fileID: 21300000, guid: 1cf6ee98d160f514380c680fcbc10119, type: 3}
   - {fileID: 21300000, guid: 4459775df2f1e2f4b9e72d8599e4023a, type: 3}
   - {fileID: 21300000, guid: 35776ade5894653449a5d0b1af268b7e, type: 3}
   m_PackedSpriteNamesToIndex:
+  - blue_icon
+  - red_icon
   - Fire_crystal_Icon
+  - shield_item
   - ExtractIcon
   - DevilFruitIconHealVer
   - DevilFruitIconUpdated

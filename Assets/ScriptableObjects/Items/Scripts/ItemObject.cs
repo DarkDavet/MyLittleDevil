@@ -7,6 +7,7 @@ public enum ItemType
     Time,
     Health,
     Ally,
+    Shield,
     Default
 }
 

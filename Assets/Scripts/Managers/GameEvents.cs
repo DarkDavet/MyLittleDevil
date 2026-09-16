@@ -22,6 +22,7 @@ public class GameEvents
 
     public static event Action OnIceMinionSpawned;
     public static event Action OnFireMinionSpawned;
+    public static event Action OnHeroShieldActivated;
 
 
     public static void TriggerLoose() => OnLoose?.Invoke();
@@ -37,4 +38,5 @@ public class GameEvents
 
     public static void TriggerIceMinionSpawned() => OnIceMinionSpawned?.Invoke();
     public static void TriggerFireMinionSpawned() => OnFireMinionSpawned?.Invoke();
+    public static void TriggerHeroShieldActivated() => OnHeroShieldActivated?.Invoke();
 }
