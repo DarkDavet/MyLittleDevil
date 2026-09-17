@@ -68,12 +68,38 @@ public class PlayerHealthSystem : MonoBehaviour, IHealable, IDamagable
     private IEnumerator ShieldDurationRoutine(float duration)
     {
         isImmortal = true;
-        if (playerEffects != null) playerEffects.SetShieldVisual(true);
 
-        yield return new WaitForSeconds(duration);
+        if (playerEffects != null)
+        {
+            playerEffects.ActivateShieldVisual(); 
+        }
+
+        float blinkWarningDuration = 1.5f;
+
+        if (duration > blinkWarningDuration)
+        {
+            yield return new WaitForSeconds(duration - blinkWarningDuration);
+
+            if (playerEffects != null)
+            {
+                playerEffects.StartShieldBlinking(blinkWarningDuration);
+            }
+
+            yield return new WaitForSeconds(blinkWarningDuration);
+        }
+        else
+        {
+            if (playerEffects != null) playerEffects.StartShieldBlinking(duration);
+            yield return new WaitForSeconds(duration);
+        }
 
         isImmortal = false;
-        if (playerEffects != null) playerEffects.SetShieldVisual(false);
+
+        if (playerEffects != null)
+        {
+            playerEffects.DeactivateShieldVisual(); 
+        }
+
         shieldCoroutine = null;
 
     }
