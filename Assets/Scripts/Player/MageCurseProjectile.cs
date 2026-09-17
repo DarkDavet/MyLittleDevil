@@ -49,11 +49,21 @@ public class MageCurseProjectile : BaseProjectile
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            PlayerInputHandler inputHandler = collision.gameObject.GetComponent<PlayerInputHandler>();
+            PlayerHealthSystem health = collision.gameObject.GetComponent<PlayerHealthSystem>();
 
-            if (inputHandler != null)
+            if (health != null && health.IsImmortal)
             {
-                inputHandler.DisableShootingForTime(silenceDuration);
+                Debug.Log("Заклинание немоты заблокировано щитом!");
+                // Здесь при желании можно запустить какой-нибудь красивый эффект 
+                // разрушения заклинания о щит
+            }
+            else
+            {
+                PlayerInputHandler inputHandler = collision.gameObject.GetComponent<PlayerInputHandler>();
+                if (inputHandler != null)
+                {
+                    inputHandler.DisableShootingForTime(silenceDuration);
+                }
             }
         }
 

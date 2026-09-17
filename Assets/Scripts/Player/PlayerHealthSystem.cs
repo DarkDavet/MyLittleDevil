@@ -13,6 +13,7 @@ public class PlayerHealthSystem : MonoBehaviour, IHealable, IDamagable
     public int MaxHealth { get => maxHealth; set => maxHealth = value; }
 
     private bool isImmortal = false;
+    public bool IsImmortal => isImmortal;
     private Coroutine shieldCoroutine;
     private PlayerEffects playerEffects;
 
