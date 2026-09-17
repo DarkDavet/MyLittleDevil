@@ -68,7 +68,6 @@ public class Player: MonoBehaviour, ICollectibleCollector
         if (collision.gameObject.CompareTag("Enemy") && _health != null)
         {
             _health.TakeDamage(1);
-            _animator.SetTrigger("Hit");
         }
         if (collision.gameObject.CompareTag("Danger"))
         {
